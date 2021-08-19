@@ -1,3 +1,4 @@
+var messageTable = [];
 
 var ws;
 function setConnected(connected) {
@@ -43,18 +44,31 @@ function showGreeting(message) {
     exceptionMessage = jsonLog.exceptionMessage;
     httpStatus = jsonLog.httpStatus;
 
-    var s = "<td>" + id + "</td>"
+   // messageContent":{"source":"APM-Checkmk","equipmentClass":"u_server_cluster","equipmentReference":"openshift12345","statusInformation":[{"statusName":"AV Program Status","statusValue":"FAULTY","statusAdditionalInfo":""}],"statusTime":"2020-03-26T10:15:40.857Z"},"httpStatus":"OK","authError":null,"errorMessage":null,"exceptionMessage":null}
+    var s = "<tr>"
+            + "<td>" + id + "</td>"
             + "<td>" + httpStatus + "</td>"
             + "<td>" + date + "</td>"
             + "<td>" + ((messageContent == null) ? '' : ('messageContent ' + JSON.stringify(messageContent))) + "</td>"
             + "<td>" + ((errorMessage == null) ? '' : ('errorMessage ' + JSON.stringify(errorMessage)))
             + ((authError == null) ? '' : ('authError ' + JSON.stringify(authError)))
             + ((exceptionMessage == null) ? '' : ('<BR>exceptionMessage ' + JSON.stringify(exceptionMessage)))
-            + "</td>";
+            + "</td>"
+            +"</tr>";
 
-    // messageContent":{"source":"APM-Checkmk","equipmentClass":"u_server_cluster","equipmentReference":"openshift12345","statusInformation":[{"statusName":"AV Program Status","statusValue":"FAULTY","statusAdditionalInfo":""}],"statusTime":"2020-03-26T10:15:40.857Z"},"httpStatus":"OK","authError":null,"errorMessage":null,"exceptionMessage":null}
+    messageTable.unshift(s); // adds to s the beginning
+    if (messageTable.length > 5){
+        messageTable.pop(); // removes from end
+    }
 
-    $("#greetings").append("<tr>" + s + "</tr>");
+    // create table
+    var tableStr;
+    for (let i = 0; i < messageTable.length; i++) {
+        tableStr+= messageTable[i];
+    }
+    $("#greetings").html(tableStr);
+
+    //$("#greetings").append("<tr>" + s + "</tr>");
 }
 
 function sendTestData() {
@@ -87,7 +101,7 @@ $(document).ready(function () {
         disconnect();
         document.getElementById('messageholder').innerHTML = '';
     });
-    
+
     $("#sendtestdata").click(function () {
         sendTestData()
     });

@@ -32,7 +32,7 @@ public class MVCController {
     static final int DEFAULT_ITEMS_PER_PAGE = 10;
 
     @Autowired
-    private MessageLoggerService messageLogger;
+    private MessageLoggerService messageLoggerService;
 
     @Autowired
     private RequestResponseLogRepository requestResponseLogRepository;
@@ -64,24 +64,24 @@ public class MVCController {
             ErrorMessage em = new ErrorMessage();
             em.setError_message(error_message);
             em.setError_type(error_type);
-            messageLogger.setTestErrorMessage(em);
+            messageLoggerService.setTestErrorMessage(em);
             message = "reply with error message set";
         } else if ("clearErrorMessage".equals(action)) {
-            messageLogger.setTestErrorMessage(null);
+            messageLoggerService.setTestErrorMessage(null);
             message = "no reply with error message";
         } else if ("changeCredentials".equals(action)) {
-            messageLogger.setPassword(password);
-            messageLogger.setUsername(username);
+            messageLoggerService.setPassword(password);
+            messageLoggerService.setUsername(username);
             message = "credentials changed username=" + username
                     + " password=" + password;
         }
 
-        username = messageLogger.getUsername();
+        username = messageLoggerService.getUsername();
         model.addAttribute("username", username);
-        password = messageLogger.getPassword();
+        password = messageLoggerService.getPassword();
         model.addAttribute("password", password);
 
-        ErrorMessage em = messageLogger.getTestErrorMessage();
+        ErrorMessage em = messageLoggerService.getTestErrorMessage();
         if (em != null) {
             error_message = em.getError_message();
             error_type = em.getError_type();
