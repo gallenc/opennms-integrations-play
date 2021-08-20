@@ -71,9 +71,9 @@ public class ScriptedApacheHttpServer {
                 if (m_keyStoreFileLocation != null) {
 
                     /* Initialize SSL context only if there is a keyStoreFile */
-                    URL url = ScriptedApacheHttpServer.class.getResource("/my.keystore");
+                    URL url = ScriptedApacheHttpServer.class.getResource(m_keyStoreFileLocation);
                     if (url == null) {
-                        System.out.println("Keystore not found");
+                        System.out.println("Keystore not found at url="+url);
                         System.exit(1);
                     }
                     m_sslContext = SSLContexts.custom()

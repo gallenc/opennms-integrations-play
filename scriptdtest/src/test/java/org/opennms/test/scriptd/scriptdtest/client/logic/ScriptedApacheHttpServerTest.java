@@ -94,10 +94,11 @@ public class ScriptedApacheHttpServerTest {
 
     @Test
     public void test() {
-        log.debug("starting server test");
-        int port = 8981;
+        log.debug("starting server test ");
+        int httpPort = 8981; //http://localhost:8981
+        int httpsPort = 8982; //https://localhost:8981 
         BlockingQueue jsonQueue = null;
-        String keyStoreFileLocation = null;
+        String keyStoreFileLocation = "/selfsigned.keystore";
 
         String[] allowedTargets = {"/",
                 "/opennms/tmf-api/serviceProblemManagement/v3/listener/serviceProblemAttributeValueChangeNotification",
@@ -107,20 +108,26 @@ public class ScriptedApacheHttpServerTest {
                 "/generic-listener/notification"
                 };
 
-        ScriptedApacheHttpServer server = new ScriptedApacheHttpServer(port, jsonQueue, allowedTargets, keyStoreFileLocation);
-
-        log.debug("starting server   ");
+        ScriptedApacheHttpServer server = new ScriptedApacheHttpServer(httpPort, jsonQueue, allowedTargets, null);
+        log.debug("starting http server on httpPort  "+httpPort);
         server.start();
-        log.debug("server started waiting 30 secs for for requests  ");
+        log.debug("http server started waiting 30 secs for for requests  ");
+        
+        ScriptedApacheHttpServer httpsServer = new ScriptedApacheHttpServer(httpsPort, jsonQueue, allowedTargets, keyStoreFileLocation);
+        log.debug("starting https server on httpsPort  "+httpsPort);
+        httpsServer.start();
+        log.debug("https server started waiting 30 secs for for requests  ");
+  
         // Pause for 30 seconds
         try {
             Thread.sleep(30000);
         } catch (InterruptedException e) {
-            log.debug("sleep interupted");
+            log.debug("sleep interrupted");
         }
 
-        log.debug("stopping server   ");
+        log.debug("stopping servers   ");
         server.stop();
+        httpsServer.stop();
 
         log.debug("Stopping server test");
 
