@@ -1,6 +1,6 @@
 /* Asynchronous Apache HTTP Client which is used as basis for bean shell script  */
 /* Author: Craig Gallen */
-/* Version : 1.8 */
+/* Version : 1.9 */
 
 package org.opennms.test.scriptd.scriptdtest.client.logic;
 
@@ -66,7 +66,7 @@ public class ScriptedApacheHttpAsyncClient {
     
     int m_timeout = TIMEOUT;
 
-	CloseableHttpAsyncClient m_client = null;
+    CloseableHttpAsyncClient m_client = null;
 
     BlockingQueue m_jsonQueue = new LinkedBlockingQueue(BOUND);
 

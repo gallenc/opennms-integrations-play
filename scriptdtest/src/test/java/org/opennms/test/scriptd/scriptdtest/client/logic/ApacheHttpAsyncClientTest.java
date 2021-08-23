@@ -20,7 +20,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.opennms.test.scriptd.scriptdtest.client.logic.ScriptedApacheHttpServerTest.log;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +30,17 @@ public class ApacheHttpAsyncClientTest {
 
     private static ScriptedApacheHttpServer server = null;
 
+    private static ScriptedApacheHttpServer httpsserver = null;
+
     final static int TEST_SERVER_PORT = 8981;
+
+    final static int TEST_HTTPS_SERVER_PORT = 8982;
 
     final String TEST_USERNAME = "username";
 
     final String TEST_PASSWORD = "password";
 
-    final String baseHTTPSUrl = "https://localhost:" + TEST_SERVER_PORT;
+    final String baseHTTPSUrl = "https://localhost:" + TEST_HTTPS_SERVER_PORT;
 
     final String baseHTTPUrl = "http://localhost:" + TEST_SERVER_PORT;
 
@@ -62,11 +65,11 @@ public class ApacheHttpAsyncClientTest {
             + "  ]\n"
             + "}";
 
-
     @BeforeClass
     public static void setUpServer() {
 
         log.debug("starting http server on port:" + TEST_SERVER_PORT);
+
 
         BlockingQueue jsonQueue = null;
         String keyStoreFileLocation = null;
@@ -76,14 +79,24 @@ public class ApacheHttpAsyncClientTest {
             "/opennms/tmf-api/serviceProblemManagement/v3/listener/serviceProblemCreateNotification",
             "/opennms/tmf-api/serviceProblemManagement/v3/listener/serviceProblemInformationRequiredNotification",
             "/opennms/tmf-api/serviceProblemManagement/v3//listener/serviceProblemStateChangeNotification",
-            "/generic-listener/notification"
+            "/generic-listener/notification",
+            "/tmf-api/serviceProblemManagement/v3/serviceProblem/"
         };
 
-        server = new ScriptedApacheHttpServer(TEST_SERVER_PORT, jsonQueue, allowedTargets, keyStoreFileLocation);
+
+        server = new ScriptedApacheHttpServer(TEST_SERVER_PORT, jsonQueue, allowedTargets, keyStoreFileLocation, null, null);
         server.start();
+
+        log.debug("starting https server on port:" + TEST_HTTPS_SERVER_PORT);
         
+        String keyStoreFileLocation2="/selfsigned.keystore";
+        String storePassword = "secret";
+        String keyPassword = "secret";
+        httpsserver = new ScriptedApacheHttpServer(TEST_HTTPS_SERVER_PORT, jsonQueue, allowedTargets, keyStoreFileLocation2, storePassword, keyPassword);
+        httpsserver.start();
+
         try {
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             log.debug("sleep interrupted");
         }
@@ -95,22 +108,22 @@ public class ApacheHttpAsyncClientTest {
     public static void tearDownServer() {
         log.debug("shutting down server waiting for stop");
         server.stop();
+        httpsserver.stop();
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             log.debug("sleep interrupted");
         }
         server = null;
+        httpsserver = null;
         log.debug("server stopped");
     }
 
     @Before
     public void before() {
         log.debug("before - starting server client and listener");
-
         scriptedClient.startListener();
         scriptedClient.startClient();
-
     }
 
     @After
@@ -118,14 +131,14 @@ public class ApacheHttpAsyncClientTest {
         log.debug("after  - stopping server client and listener");
         scriptedClient.stopClient();
         scriptedClient.stopListener();
-
     }
-    
+
     @Test
-    public void testJustStartServer(){
+    public void testJustStartServer() {
         log.debug("test just Start Server");
+        // Pause for 5 seconds
         try {
-            Thread.sleep(30000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             log.debug("sleep interrupted");
         }
@@ -146,9 +159,9 @@ public class ApacheHttpAsyncClientTest {
         scriptedClient.getRequest(baseHTTPSUrl + "/tmf-api/serviceProblemManagement/v3/serviceProblem", TEST_USERNAME, TEST_PASSWORD);
 
         log.debug("Waiting for responses");
-        // Pause for 10 seconds
+        // Pause for 5 seconds
         try {
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             log.debug("sleep interrupted");
         }
@@ -165,9 +178,9 @@ public class ApacheHttpAsyncClientTest {
         scriptedClient.deleteRequest(baseHTTPUrl + "/tmf-api/serviceProblemManagement/v3/serviceProblem/1", TEST_USERNAME, TEST_PASSWORD);
 
         log.debug("Waiting for responses");
-        // Pause for 10 seconds
+        // Pause for 5 seconds
         try {
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             log.debug("sleep interrupted");
         }
@@ -199,9 +212,9 @@ public class ApacheHttpAsyncClientTest {
         scriptedClient.postRequest(url, jsonString, TEST_USERNAME, TEST_PASSWORD);
 
         log.debug("Waiting for responses");
-        /* Pause for 10 seconds */
+        // Pause for 5 seconds
         try {
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             log.debug("sleep interrupted");
         }
@@ -249,9 +262,9 @@ public class ApacheHttpAsyncClientTest {
         scriptedClient.patchRequest(url, jsonString, TEST_USERNAME, TEST_PASSWORD);
 
         log.debug("Waiting for responses");
-        /* Pause for 10 seconds */
+        // Pause for 5 seconds
         try {
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             log.debug("sleep interrupted");
         }

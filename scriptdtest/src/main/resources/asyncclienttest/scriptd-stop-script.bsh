@@ -1,0 +1,20 @@
+
+/*    <stop-script language="beanshell"> */
+
+      log = bsf.lookupBean("log");
+      log.debug("running stop script");
+
+      log.debug("after  - stopping server client and listener");
+      scriptedClient.stopClient();
+      scriptedClient.stopListener();
+
+      log.debug("shutting down server waiting for stop");
+      scriptedHttpServer.stop();
+
+      log.debug("shutting down https server waiting for stop");
+      scriptedHttpsServer.stop();
+
+      scriptedHttpServer = null;
+      log.debug("server stopped");
+
+/*    </stop-script"> */

@@ -170,5 +170,17 @@ the specific language governing permissions and limitations under the License. -
             <name>Maven Central</name>
             <url>https://repo1.maven.org/maven2/</url>
         </repository>
+        
+        <!-- disable to avoid trying to load objects from spring each time -->
+        <repository>
+            <id>spring-release</id>
+            <url>https://repo.spring.io/plugins-release</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 </project>

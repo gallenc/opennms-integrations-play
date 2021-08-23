@@ -1,6 +1,6 @@
 /* Asynchronous Apache HTTP Client bean shell script for OpenNMS */
 /* Author: Craig Gallen */
-/* Version : 1.8 */
+/* Version : 1.9 */
 
     import java.io.BufferedReader;
     import java.io.IOException;
@@ -44,7 +44,7 @@
 /* replace this with a real message handler */
 defaultMessageHandler() {
     
-    public void handleReturnMessage(JSONObject message) {
+    public void handleIncomingMessage(JSONObject message) {
         log.debug("default messageHandler handling reply message: " + message);
     }
     
@@ -59,7 +59,7 @@ scriptedApacheHttpAsyncClient() {
 
     /* Apache HttpAsync setSocketTimeout(TIMEOUT).setConnectTimeout(TIMEOUT).setConnectionRequestTimeout(TIMEOUT) */
     /* 5 seconds timeout */
-    int TIMEOUT = 5000;
+    int TIMEOUT=5000;
 
     m_timeout = TIMEOUT;
 
@@ -71,7 +71,7 @@ scriptedApacheHttpAsyncClient() {
     
     m_messageHandler = defaultMessageHandler();
     
-    CredentialsProvider m_defaultCredentialsProvider=null;
+    CredentialsProvider m_defaultCredentialsProvider = null;
 
     public void setTimeout(int timeout) {
     	m_timeout = timeout;
@@ -82,7 +82,7 @@ scriptedApacheHttpAsyncClient() {
     }
 
     public void setMessageHandler(messageHandler) {
-        log.debug("scriptedApacheHttpAsyncClient setMessageHandler "+ messageHandler);
+        log.debug("scriptedApacheHttpAsyncClient setMessageHandler " + messageHandler);
         m_messageHandler = messageHandler;
     }
 
@@ -108,7 +108,6 @@ scriptedApacheHttpAsyncClient() {
 
         m_listener.interrupt();
         m_listener = null;
-
     }
 
     public synchronized void startListener() {
@@ -117,7 +116,7 @@ scriptedApacheHttpAsyncClient() {
         m_listener = new Thread(new Runnable() {
         
             public void handleMessage(JSONObject msg) {
-              try{
+              try {
                  log.debug("method handling reply message: " + msg);
                  m_messageHandler.handleIncomingMessage(msg);
               } catch (Exception ex) {
@@ -133,11 +132,11 @@ scriptedApacheHttpAsyncClient() {
                 try {
                     
                     /* consuming messages until poison message is received */
-                    while (true ) {
+                    while (true) {
                         /* note not casting here because it causes null object in beanshell */
-                        Object  rxmsg =  m_jsonQueue.take();
+                        Object rxmsg = m_jsonQueue.take();
                         JSONObject msg = (JSONObject) rxmsg;
-                        if (msg == null){
+                        if (msg == null) {
                             log.warn("listener message is null");
                         } else if (msg.get("poison") != null) {
                             log.debug("listener stopping on poison message: " + msg);
@@ -204,6 +203,7 @@ scriptedApacheHttpAsyncClient() {
             log.error("Client not started. call startClient() first");
             return;
         }
+
         HttpPut request = new HttpPut(url);
 
         request.setHeader("Content-type", "application/json");
@@ -269,11 +269,11 @@ scriptedApacheHttpAsyncClient() {
                     .setDefaultRequestConfig(requestConfig);
             
             /* set default credentials provider if present. */
-            if(m_defaultCredentialsProvider!=null) {
+            if (m_defaultCredentialsProvider != null) {
                 clientBuilder.setDefaultCredentialsProvider(m_defaultCredentialsProvider);
             }
             
-            m_client= clientBuilder.build();
+            m_client = clientBuilder.build();
 
             /* Start client */
             m_client.start();
@@ -318,7 +318,7 @@ scriptedApacheHttpAsyncClient() {
                     HttpResponse response = (HttpResponse) objectRresponse;
 
                     int status = response.getStatusLine().getStatusCode();
-                    log.debug(" response status: " + status+ " request: "+request.getRequestLine());
+                    log.debug(" response status: " + status + " request: " + request.getRequestLine());
 
                     StringBuffer contentbuff = new StringBuffer();
 
@@ -336,7 +336,7 @@ scriptedApacheHttpAsyncClient() {
                     
                     String content = contentbuff.toString();
 
-                    log.debug(" reply content status: " + status+ " request: "+request.getRequestLine() +" content: "+ content);
+                    log.debug(" reply content status: " + status + " request: " + request.getRequestLine() + " content: " + content);
 
                     JSONObject message = new JSONObject();
                     message.put("messageSource", "asyncClient");
@@ -360,11 +360,11 @@ scriptedApacheHttpAsyncClient() {
                                 message.put("jsonobject", (JSONObject) item);
                             }
                         } catch (Exception ex) {
-                            log.warn("cannot parse server response  status: " + status+ " request: "+ request.getRequestLine() + " content " + content);
+                            log.warn("cannot parse server response  status: " + status + " request: " + request.getRequestLine() + " content " + content);
                         }
                     }
 
-                    log.debug(" Response message status: " + status+ " request: "+request.getRequestLine() + " message " + message.toString());
+                    log.debug(" Response message status: " + status + " request: " + request.getRequestLine() + " message " + message.toString());
 
                     boolean notFull = m_jsonQueue.offer(message);
                     if (!notFull) {
@@ -390,16 +390,16 @@ scriptedApacheHttpAsyncClient() {
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);
                 ex.printStackTrace(pw);
-                log.error(" failed response. request: "+ request.getRequestLine()+"error:"+ sw.toString());
+                log.error(" failed response. request: " + request.getRequestLine() + "error:" + sw.toString());
             }
 
             public void cancelled() {
-                log.error(" cancelled response. request: "+ request.getRequestLine());
+                log.error(" cancelled response. request: " + request.getRequestLine());
             }
 
         };
 
-        if (username != null && ! username.isEmpty()) {
+        if (username != null && !username.isEmpty()) {
             
             /* set up basic authentication specifically for this request only if username specified */
             CredentialsProvider credentialsProvider = new BasicCredentialsProvider();

@@ -1,6 +1,6 @@
 /* Asynchronous Apache HTTP Server Original code for bean shell script for OpenNMS */
 /* Author: Craig Gallen */
-/* Version : 1.8 */
+/* Version : 1.9 */
 package org.opennms.test.scriptd.scriptdtest.client.logic;
 
 import java.io.BufferedReader;
@@ -53,13 +53,17 @@ public class ScriptedApacheHttpServer {
         private HttpServer m_server;
         private BlockingQueue m_jsonQueue = null;
         private String[] m_allowedTargets = null;
+        private String m_storePassword=null;
+        private String m_keyPassword=null;
 
-        public ScriptedApacheHttpServer(int port, BlockingQueue jsonQueue, String[] allowedTargets, String keyStoreFileLocation) {
+        public ScriptedApacheHttpServer(int port, BlockingQueue jsonQueue, String[] allowedTargets, String keyStoreFileLocation, String storePassword, String keyPassword) {
             super();
             this.port = port;
             this.m_keyStoreFileLocation = keyStoreFileLocation;
             this.m_jsonQueue = jsonQueue;
             this.m_allowedTargets = allowedTargets;
+            this.m_keyPassword = keyPassword;
+            this.m_storePassword = storePassword;
         }
 
         public void start() {
@@ -71,13 +75,13 @@ public class ScriptedApacheHttpServer {
                 if (m_keyStoreFileLocation != null) {
 
                     /* Initialize SSL context only if there is a keyStoreFile */
-                    URL url = ScriptedApacheHttpServer.class.getResource(m_keyStoreFileLocation);
+                    URL url = this.getClass().getResource(m_keyStoreFileLocation);
                     if (url == null) {
-                        System.out.println("Keystore not found at url="+url);
-                        System.exit(1);
+                        log.error("Keystore not found at location="+m_keyStoreFileLocation);
+                        throw new IllegalArgumentException("Keystore not found at location="+m_keyStoreFileLocation);
                     }
                     m_sslContext = SSLContexts.custom()
-                            .loadKeyMaterial(url, "secret".toCharArray(), "secret".toCharArray()).build();
+                            .loadKeyMaterial(url, m_storePassword.toCharArray(), m_keyPassword.toCharArray()).build();
                 }
 
                 SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(15000).setTcpNoDelay(true).build();

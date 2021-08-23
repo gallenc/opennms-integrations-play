@@ -1,6 +1,6 @@
 /* Asynchronous Apache HTTP Server bean shell script for OpenNMS */
 /* Author: Craig Gallen */
-/* Version : 1.8 */
+/* Version : 1.9 */
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-scriptedApacheHttpServer(int port, BlockingQueue m_jsonQueue, String[] m_allowedTargets, String m_keyStoreFileLocation) {
+scriptedApacheHttpServer(int port, BlockingQueue m_jsonQueue, String[] m_allowedTargets, String m_keyStoreFileLocation, String m_storePassword, String m_keyPassword) {
 
     private SSLContext m_sslContext = null;
     private HttpServer m_server;
@@ -57,13 +57,13 @@ scriptedApacheHttpServer(int port, BlockingQueue m_jsonQueue, String[] m_allowed
             if (m_keyStoreFileLocation != null) {
 
                 /* Initialize SSL context only if there is a keyStoreFile */
-                URL url = ScriptedApacheHttpServer.class.getResource("/my.keystore");
+                URL url = this.getClass().getResource(m_keyStoreFileLocation);
                 if (url == null) {
-                    System.out.println("Keystore not found");
-                    System.exit(1);
+                    log.error("Keystore not found on classpath:"+m_keyStoreFileLocation);
+                    throw new IllegalArgumentException("Keystore not found at location="+m_keyStoreFileLocation);
                 }
                 m_sslContext = SSLContexts.custom()
-                        .loadKeyMaterial(url, "secret".toCharArray(), "secret".toCharArray()).build();
+                        .loadKeyMaterial(url, m_storePassword.toCharArray(), m_keyPassword.toCharArray()).build();
             }
 
             SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(15000).setTcpNoDelay(true).build();

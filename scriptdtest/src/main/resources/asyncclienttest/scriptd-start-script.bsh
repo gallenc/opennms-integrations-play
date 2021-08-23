@@ -1,0 +1,72 @@
+
+/*    <start-script language="beanshell"> */
+
+      /* -----------------------------------------------*/
+      /* setting up client to talk to server            */
+      /* -----------------------------------------------*/
+
+      log = bsf.lookupBean("log");
+      log.debug("running start script");
+      
+      import java.util.ArrayList;
+      import java.util.List;
+
+      source("src/main/resources/scriptedApacheHttpAsyncClient.bsh");
+      scriptedClient = scriptedApacheHttpAsyncClient();
+      
+      /* set time out for async client http requests to 5 seconds */
+      /* scriptedClient.setTimeout(5000); */
+      
+      scriptedClient.setTimeout(5000);
+    
+      /* -----------------------------------------------*/
+      /* setting up http notification listening server  */
+      /* -----------------------------------------------*/
+
+      source("src/main/resources/scriptedApacheHttpServer.bsh");
+      
+      /* example sets allowed target urls on port 8981 with no https/SSL key file */
+      
+      /* port on which OpenNMS listens for notifications */
+      int port=8981;
+
+      /* allowed target notification url's http(s)://-opennms-ip-address-:port/-targets- */
+      String[] allowedTargets = {
+                "/opennms/tmf-api/serviceProblemManagement/v3/listener/serviceProblemAttributeValueChangeNotification",
+                "/opennms/tmf-api/serviceProblemManagement/v3/listener/serviceProblemCreateNotification",
+                "/opennms/tmf-api/serviceProblemManagement/v3/listener/serviceProblemInformationRequiredNotification",
+                "/opennms/tmf-api/serviceProblemManagement/v3/listener/serviceProblemStateChangeNotification",
+                "/opennms/tmf-api/generic-listener/notification"
+                };
+
+      /* if https is being used this is the keystore for certificates */
+      String keyStoreFileLocation = null;
+      
+      jsonQueue = null;
+      String storePassword = null;
+      String keyPassword = null;
+      scriptedHttpServer = scriptedApacheHttpServer(port, jsonQueue, allowedTargets, keyStoreFileLocation, storePassword, keyPassword);
+
+      log.debug("start script starting message listener");
+      scriptedClient.startListener();
+      log.debug("start script starting httpAsyncClient");
+      scriptedClient.startClient();
+
+      log.debug("start script starting spm notification listening http server");
+      scriptedHttpServer.start();
+
+      /* example sets allowed target urls on port 8982 with  https/SSL key file */
+      /* port on which OpenNMS listens for notifications */
+      int httpsport=8982;
+
+      /* if https is being used this is the keystore for certificates */
+      String keyStoreFileLocation2 = "/selfsigned.keystore";
+      storePassword = "secret";
+      keyPassword = "secret";
+      scriptedHttpsServer = scriptedApacheHttpServer(httpsport, jsonQueue, allowedTargets, keyStoreFileLocation2, storePassword, keyPassword);
+      scriptedHttpsServer.start();
+
+      log.debug("end of start script");
+
+
+/*    </start-script"> */

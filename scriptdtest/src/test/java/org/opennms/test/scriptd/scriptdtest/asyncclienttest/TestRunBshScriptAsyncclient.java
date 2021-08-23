@@ -1,4 +1,4 @@
-package org.opennms.test.scriptd.scriptdtest;
+package org.opennms.test.scriptd.scriptdtest.asyncclienttest;
 
 import java.util.Date;
 
@@ -27,8 +27,8 @@ import org.opennms.netmgt.xml.event.Event;
  * @author cgallen
  */
 //
-public class TestRunBshScript {
-    static final Logger log = LoggerFactory.getLogger(TestRunBshScript.class);
+public class TestRunBshScriptAsyncclient {
+    static final Logger log = LoggerFactory.getLogger(TestRunBshScriptAsyncclient.class);
 
     private static BSFManager mgr = new BSFManager();
 
@@ -45,7 +45,7 @@ public class TestRunBshScript {
 
         String startScript = "     log = bsf.lookupBean(\"log\"); \n"
                 + "   log.debug(\"start script logging enabled before importing source\"); \n"
-                + "   source(\"src/main/resources/scriptd-start-script.bsh\"); \n";
+                + "   source(\"src/main/resources/asyncclienttest/scriptd-start-script.bsh\"); \n";
 
         mgr.exec("beanshell", "", 0, 0, startScript);
 
@@ -56,10 +56,18 @@ public class TestRunBshScript {
     @After
     public void after() throws BSFException {
         log.debug("executing stop script");
+        
+        log.debug("waiting for messages to complete");
+        try {
+            // pause for 20 secs
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            log.debug("sleep interrupted");
+        }
 
         String stopScript = "     log = bsf.lookupBean(\"log\"); \n" 
                 + "   log.debug(\"running stop script\"); \n"
-                + "   source(\"src/main/resources/scriptd-stop-script.bsh\"); \n";
+                + "   source(\"src/main/resources/asyncclienttest/scriptd-stop-script.bsh\"); \n";
 
         mgr.exec("beanshell", "", 0, 0, stopScript);
         
@@ -81,7 +89,7 @@ public class TestRunBshScript {
 
         String onEventScript = "     log = bsf.lookupBean(\"log\"); \n" 
                 + "   log.debug(\"running onEvent script\"); \n"
-                + "   source(\"src/main/resources/scriptd-event-script.bsh\"); \n";
+                + "   source(\"src/main/resources/asyncclienttest/scriptd-event-script.bsh\"); \n";
 
         mgr.exec("beanshell", "", 0, 0, onEventScript);
 

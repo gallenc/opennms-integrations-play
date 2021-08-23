@@ -1,0 +1,30 @@
+
+/*    <event-script language="beanshell"> */
+
+log = bsf.lookupBean("log");
+log.debug("running on event script");
+event = bsf.lookupBean("event");
+log.debug("event:"+event);
+
+    int TEST_SERVER_PORT = 8981;
+
+    int TEST_HTTPS_SERVER_PORT = 8982;
+
+    String TEST_USERNAME = "username";
+
+    String TEST_PASSWORD = "password";
+
+    String baseHTTPSUrl = "https://localhost:" + TEST_HTTPS_SERVER_PORT;
+
+    String baseHTTPUrl = "http://localhost:" + TEST_SERVER_PORT;
+
+    /* get http request */
+    scriptedClient.getRequest(baseHTTPUrl + "/tmf-api/serviceProblemManagement/v3/serviceProblem/2", TEST_USERNAME, TEST_PASSWORD);
+
+
+    /* get https request */
+    scriptedClient.getRequest(baseHTTPSUrl + "/tmf-api/serviceProblemManagement/v3/serviceProblem/2", TEST_USERNAME, TEST_PASSWORD);
+
+    log.debug("end of on event script");
+
+/*    </event-script> */

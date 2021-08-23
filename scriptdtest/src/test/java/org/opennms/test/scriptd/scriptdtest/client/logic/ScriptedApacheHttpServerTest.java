@@ -108,19 +108,21 @@ public class ScriptedApacheHttpServerTest {
                 "/generic-listener/notification"
                 };
 
-        ScriptedApacheHttpServer server = new ScriptedApacheHttpServer(httpPort, jsonQueue, allowedTargets, null);
+        ScriptedApacheHttpServer server = new ScriptedApacheHttpServer(httpPort, jsonQueue, allowedTargets, null,null,null);
         log.debug("starting http server on httpPort  "+httpPort);
         server.start();
         log.debug("http server started waiting 30 secs for for requests  ");
         
-        ScriptedApacheHttpServer httpsServer = new ScriptedApacheHttpServer(httpsPort, jsonQueue, allowedTargets, keyStoreFileLocation);
+        String storePassword="secret";
+        String keyPassword="secret";
+        ScriptedApacheHttpServer httpsServer = new ScriptedApacheHttpServer(httpsPort, jsonQueue, allowedTargets, keyStoreFileLocation, storePassword, keyPassword);
         log.debug("starting https server on httpsPort  "+httpsPort);
         httpsServer.start();
         log.debug("https server started waiting 30 secs for for requests  ");
   
-        // Pause for 30 seconds
+        // Pause for 20 seconds
         try {
-            Thread.sleep(30000);
+            Thread.sleep(20000);
         } catch (InterruptedException e) {
             log.debug("sleep interrupted");
         }
@@ -128,6 +130,8 @@ public class ScriptedApacheHttpServerTest {
         log.debug("stopping servers   ");
         server.stop();
         httpsServer.stop();
+        server =null;
+        httpsServer=null;
 
         log.debug("Stopping server test");
 
