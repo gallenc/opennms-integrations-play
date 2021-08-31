@@ -22,7 +22,7 @@ import org.opennms.netmgt.xml.event.Event;
  * Because the test is  situated in a class path which includes the key OpenNMS classes, you
  * should be able to recreate the real onEvent situation.
  * 
- * The bean lookup comes from the tutorial 
+ * The beanshell bean lookup comes from the tutorial 
  * https://javasourcequery.com/example/org.apache.bsf.lookupBean
  * @author cgallen
  */

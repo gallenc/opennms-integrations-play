@@ -46,6 +46,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This test tests the java ( i.e. non scripted) https and https asynchronous clients and servers.
+ * If the simple java classes pass then these clients can be transposed to bean shell 
+ * @author cgallen
+ */
 public class ScriptedApacheHttpAsyncClient {
     static final Logger log = LoggerFactory.getLogger(ScriptedApacheHttpAsyncClient.class);
 

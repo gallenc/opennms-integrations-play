@@ -1,0 +1,32 @@
+---
+version: '3'
+
+volumes:
+  data-snmpd: {}
+
+services:
+# first snmp container
+  cameranetsnmp1:
+    image: polinux/snmpd
+    container_name: cameranetsnmp1
+    hostname: cameranetsnmp1
+    ports:
+      - "11161:161/udp"
+    #volumes:
+    #     - ./netsnmp/bootstrap.sh:/bootstrap.sh
+
+#second snmp container
+  cameranetsnmp2:
+    image: polinux/snmpd
+    container_name: cameranetsnmp2
+    hostname: cameranetsnmp2
+    ports:
+      - "12161:161/udp"
+
+#third snmp container
+  cameranetsnmp3:
+    image: polinux/snmpd
+    container_name: cameranetsnmp3
+    hostname: cameranetsnmp3
+    ports:
+      - "13161:161/udp"

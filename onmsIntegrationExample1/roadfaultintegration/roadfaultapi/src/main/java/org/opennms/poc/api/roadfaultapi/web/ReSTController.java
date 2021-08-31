@@ -95,9 +95,10 @@ public class ReSTController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(em);
         } else {
             for (MessageContent mcontent : messageArray) {
-                messageLogger.logmessage(mcontent, HttpStatus.OK, null, null, null);
+                // created == https status 201
+                messageLogger.logmessage(mcontent, HttpStatus.CREATED, null, null, null);
             }
-            return ResponseEntity.status(HttpStatus.OK).body(messageArray);
+            return ResponseEntity.status(HttpStatus.CREATED).body(messageArray);
         }
 
     }

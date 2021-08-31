@@ -1,0 +1,78 @@
+---
+version: '3'
+
+volumes:
+  data-postgres: {}
+  data-opennms: {}
+  data-opennms-cfg: {}
+
+services:
+  database:
+    image: ${DOCKER_REGISTRY:-docker.io}/postgres:${POSTGRES_VERSION:-13}
+    container_name: database
+    hostname: database
+    environment:
+      TZ: ${TIMEZONE:-America/New_York}
+      POSTGRES_HOST: database
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - data-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 30s
+      retries: 3
+
+  horizon:
+    image: ${DOCKER_REGISTRY:-docker.io}/${DOCKER_ORG:-opennms}/${HORIZON_OCI:-horizon}:${ONMS_VERSION:-bleeding}
+    container_name: horizon
+    hostname: horizon
+    sysctls:
+      net.ipv4.ping_group_range: "0 429496729"
+    depends_on:
+      - database
+    environment:
+      TZ: ${TIMEZONE:-America/New_York}
+    volumes:
+      - data-opennms:/opennms-data
+      - data-opennms-cfg:/opt/opennms/etc
+      - ./container-fs/opt/opennms/deploy:/opt/opennms/deploy
+      - ./container-fs/opt/opennms-overlay:/opt/opennms-overlay
+      - ./container-fs/etc/conf.d/confd.toml:/etc/confd/confd.toml
+    command: ["-s"]
+    ports:
+      - "8101:8101/tcp"
+      - "8980:8980/tcp"
+      - "10162:1162/udp"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "-I", "http://localhost:8980/opennms/login.jsp" ]
+      interval: 1m
+      timeout: 5s
+      retries: 3
+
+
+# first snmp container
+  cameranetsnmp1:
+    image: polinux/snmpd
+    container_name: cameranetsnmp1
+    hostname: cameranetsnmp1
+    ports:
+      - "11161:161/udp"
+
+#second snmp container
+  cameranetsnmp2:
+    image: polinux/snmpd
+    container_name: cameranetsnmp2
+    hostname: cameranetsnmp2
+    ports:
+      - "12161:161/udp"
+
+#third snmp container
+  cameranetsnmp3:
+    image: polinux/snmpd
+    container_name: cameranetsnmp3
+    hostname: cameranetsnmp3
+    ports:
+      - "13161:161/udp"

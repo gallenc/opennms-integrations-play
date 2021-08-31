@@ -17,7 +17,10 @@ import org.slf4j.LoggerFactory;
 import org.opennms.netmgt.xml.event.Event;
 
 /**
- * This test simulates the initiation on a beahshell script in an OpenNMS scriptd context.
+ * This test simulates the initiation on a beahshell script in an OpenNMS scriptd context
+ * In this case the shell scripts  create both HTTP and HTTPS servers running on ports 9881 and 8982 respectively
+ * On event a test message is sent to both servers
+ * 
  * It allows you to test the start, onevent and stop scripts as they will be created in the scriptd-configuration.xml
  * Because the test is  situated in a class path which includes the key OpenNMS classes, you
  * should be able to recreate the real onEvent situation.

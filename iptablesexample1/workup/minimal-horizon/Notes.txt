@@ -1,0 +1,278 @@
+
+## docker snmpd image
+https://hub.docker.com/r/polinux/snmpd
+
+```
+docker run -d --name snmpd -p 161:161/udp polinux/snmpd
+
+or
+
+docker run -d --name snmpd -p 161:161/udp -v /my-snmpd.conf:/etc/snmpd/snmpd.conf polinux/snmpd -c /etc/snmpd/snmod.conf
+```
+
+to get a command prompt
+```
+ docker-compose -f ./docker-compose-netsnmp.yaml exec -it cameranetsnmp /bin/bash
+
+docker container exec -it <container-id> bash
+
+snmpwalk -v1 -c public 0.0.0.0 
+(shows working)
+
+differnt port
+snmpwalk -v1 -c public 0.0.0.0:161
+
+or 
+snmpwalk -v1 -c public cameranetsnmp:161
+```
+
+note on windows need to use unallocated ports 
+docker desktop windows  ip address is host.docker.internal
+snmpwalk -v1 -c public host.docker.internal:11161  (cameranetsnmp1)
+snmpwalk -v1 -c public host.docker.internal:12161  (cameranetsnmp2)
+snmpwalk -v1 -c public host.docker.internal:13161  (cameranetsnmp3)
+
+ireasoning mib browser - needs java 8 on classpath
+https://www.ireasoning.com/downloadmibbrowserfree.php
+
+# running snmp on multiple ports
+```
+snmpd -f -Lo -Dread_config -H 2>&1 | grep "config path" | head -1
+read_config:path:  config path used for snmpd:/etc/snmp:/usr/share/snmp:/usr/lib64/snmp:/root/.snmp (persistent path:/var/lib/net-snmp)
+
+
+finding config files
+snmpd -Dread_config -H 2>&1 | grep "Reading" | sort -u
+```
+
+```
+snmpwalk -v1 -c public 0.0.0.0:161
+```
+mkdir /usr/share/snmp/agent1/
+echo "[snmp] persistentDir /var/net-snmp/agent1" >> /usr/share/snmp/agent1/snmpd.conf
+echo "agentAddress udp:11161" >> /usr/share/snmp/agent1/snmpd.conf
+echo "rwcommunity public" >> /usr/share/snmp/agent1/snmpd.conf
+env SNMPCONFPATH=/usr/share/snmp/agent1:/usr/share/snmp:/var/net-snmp/agent1 snmpd -Lo
+
+mkdir /usr/share/snmp/agent1/
+echo "[snmp] persistentDir /var/net-snmp/agent1" >> /usr/share/snmp/agent1/snmpd.conf
+echo "agentAddress udp:11161" >> /usr/share/snmp/agent1/snmpd.conf
+echo "rwcommunity public" >> /usr/share/snmp/agent1/snmpd.conf
+echo "trapsink     localhost:11162 public " >> /usr/share/snmp/agent1/snmpd.conf
+env SNMPCONFPATH=/usr/share/snmp/agent1:/usr/share/snmp:/var/net-snmp/agent1 snmpd -f -Lo -Dread_config -H 2>&1 | grep "config path" | head -1
+
+mkdir /usr/share/snmp/agent1/
+echo "[snmp] persistentDir /var/net-snmp/agent1" >> /usr/share/snmp/agent1/snmpd.conf
+echo "agentAddress udp:11161" >> /usr/share/snmp/agent1/snmpd.conf
+echo "rwcommunity public" >> /usr/share/snmp/agent1/snmpd.conf
+env SNMPCONFPATH=/usr/share/snmp/agent1:/var/net-snmp/agent1 snmpd -Lo
+
+https://osric.com/chris/accidental-developer/2017/08/running-centos-in-a-docker-container/
+
+nftables
+https://cryptsus.com/blog/setting-up-nftables-firewall.html
+https://jensd.be/1086/linux/forward-a-tcp-port-to-another-ip-or-port-using-nat-with-nftables
+
+iptables notes
+```
+
+https://fabianlee.org/2018/09/17/ubuntu-using-iptables-to-forward-tcp-and-udp-requests/
+
+running multiple netsnmp agents  docker-compose -f ./docker-compose-netsnmp.yaml exec cameranetsnmp /bin/bash
+https://net-snmp.sourceforge.io/wiki/index.php/Multiple_Agentsrwcommunity
+
+good starter https://net-snmp.sourceforge.io/tutorial/tutorial-5/demon/snmpd.html Net-SNMP Tutorial -- snmpd
+
+https://serverfault.com/questions/675665/how-to-selectively-use-mutliple-interfaces-with-net-snmp
+
+
+https://my.esecuredata.com/index.php?/knowledgebase/article/49/how-to-redirect-an-incoming-connection-to-a-different-ip-address-on-a-specific-port-using-iptables/
+
+good https://www.google.com/amp/s/www.digitalocean.com/community/tutorials/how-to-forward-ports-through-a-linux-gateway-with-iptables.amp
+
+
+https://fabianlee.org/2018/09/17/ubuntu-using-iptables-to-forward-tcp-and-udp-requests/
+
+https://www.google.com/amp/s/www.booleanworld.com/depth-guide-iptables-linux-firewall/amp/ 
+good
+
+https://serverfault.com/questions/690435/iptables-udp-port-forwarding
+
+really useful https://serverfault.com/questions/828769/need-iptables-port-forwarding-for-bidirectional-udp
+
+
+```
+
+More  notes
+https://hub.docker.com/r/jrei/systemd-centos
+docker run -d --name systemd-centos --tmpfs /tmp --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro jrei/systemd-centos
+Enter to the container docker exec -it systemd-centos sh
+
+ docker run -d --name systemd-centos7 --tmpfs /tmp --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro jrei/systemd-centos:7
+
+https://linuxize.com/post/how-to-install-iptables-on-centos-7/
+yum install -y initscripts
+sudo yum install iptables-services
+sudo systemctl start iptables
+https://bugzilla.redhat.com/show_bug.cgi?id=1763469 systemd service iptables.service no longer works - broken dependency on /etc/init.d/functions
+
+
+
+trying with debian https://hub.docker.com/r/jrei/systemd-debian
+(debian 10 moves to nftables)
+docker run -d --name systemd-debian9 --tmpfs /tmp --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro jrei/systemd-debian:9
+
+try to get permissions 
+docker run -d --cap-add=NET_ADMIN and --cap-add=NET_RAW  --name systemd-debian9 --tmpfs /tmp --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro jrei/systemd-debian:9
+
+docker run -d --name systemd-centos8 --cap-add=NET_ADMIN --cap-add=NET_RAW --tmpfs /tmp --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro jrei/systemd-centos:8
+yum install nftables
+systemctl start nftables
+nft list tables
+
+
+// not working
+https://oitibs.com/easy-debian-9-server-firewall/
+# Install IPTables Persistent Package
+apt-get update
+(apt-install apt-utils)
+apt-get install -y iptables-persistent
+# Add netfilter-persistent Startup
+invoke-rc.d netfilter-persistent save
+# Start netfilter-persistent Service
+service netfilter-persistent start
+
+(possibly also need echo exit 0 > /usr/sbin/policy-rc.d)
+cat -n /etc/iptables/rules.v4  lists current rules
+
+https://hub.docker.com/r/bitergia/centos-6/
+
+# Running on seperate centos 8 image
+
+if we want docker see
+https://phoenixnap.com/kb/how-to-install-docker-on-centos-8
+
+dnf install net-tools  (ifconfig etc)
+dnf install net-snmp-utils
+dnf install net-snmp
+
+systemctl start nftables
+nft list tables
+systemctl enable nftables
+
+history
+
+ifconfig ens33:0 192.168.88.150 netmask 255.255.255.0 up
+
+sudo nft add table nat
+sudo nft 'add chain nat postrouting { type nat hook postrouting priority 100 ; }'
+sudo nft 'add chain nat prerouting { type nat hook prerouting priority -100; }'
+sudo nft 'add rule nat prerouting ip daddr 10.1.1.1 udp dport { 161 } dnat 192.168.152.1:13161'
+sudo nft add rule nat postrouting masquerade
+
+
+
+
+
+
+new ruleset - translating example for nat to nftables
+
+enable forwarding sysctl -w net.ipv4.ip_forward=1
+
+https://serverfault.com/questions/828769/need-iptables-port-forwarding-for-bidirectional-udp
+iptables -t nat -A PREROUTING -s 10.1.2.10 -p udp --dport 5005 -j MARK --set-mark 0x1
+iptables -t nat -A PREROUTING -p udp -m mark --mark 0x1 -j DNAT --to-destination 10.1.2.20:5010
+iptables -t nat -A POSTROUTING -m mark --mark 0x1 -j SNAT --to-source 10.1.2.50
+
+becomes
+iptables -t nat -A PREROUTING -d 10.1.2.10 -p udp --dport 161 -j MARK --set-mark 0x1
+iptables -t nat -A PREROUTING -p udp -m mark --mark 0x1 -j DNAT --to-destination 192.168.172.1:13161
+iptables -t nat -A POSTROUTING -m mark --mark 0x1 -j SNAT --to-source 192.168.172.129
+
+ifconfig ens33:0 10.1.2.10 netmask 255.255.255.0 up
+nft flush ruleset
+nft list ruleset
+nft list tables
+nft -f file.txtnft 
+
+works
+```
+table ip nat {
+        chain PREROUTING {
+                type nat hook prerouting priority -110; policy accept;
+                ip daddr 10.1.2.11 udp dport { 161 }  dnat to 192.168.172.1:11161;
+                ip daddr 10.1.2.12 udp dport { 161 }  dnat to 192.168.172.1:12161;
+                ip daddr 10.1.2.13 udp dport { 161 }  dnat to 192.168.172.1:13161;
+
+                ip daddr 10.1.2.11 icmp type echo-request dnat to 192.168.172.1
+                ip daddr 10.1.2.12 icmp type echo-request dnat to 192.168.172.1
+                ip daddr 10.1.2.13 icmp type echo-request dnat to 192.168.172.1
+
+        }
+
+        chain INPUT {
+                type nat hook input priority 100; policy accept;
+        }
+
+        chain POSTROUTING {
+                type nat hook postrouting priority 110; policy accept;
+                masquerade
+        }
+
+        chain OUTPUT {
+                type nat hook output priority -100; policy accept;
+                ip daddr 10.1.2.11 udp dport { 161 }  dnat to 192.168.172.1:11161;
+                ip daddr 10.1.2.12 udp dport { 161 }  dnat to 192.168.172.1:12161;
+                ip daddr 10.1.2.13 udp dport { 161 }  dnat to 192.168.172.1:13161;
+
+                ip daddr 10.1.2.11 icmp type echo-request dnat to 192.168.172.1
+                ip daddr 10.1.2.12 icmp type echo-request dnat to 192.168.172.1
+                ip daddr 10.1.2.13 icmp type echo-request dnat to 192.168.172.1
+
+        }
+
+        chain trace_chain {
+                type filter hook prerouting priority -200; policy accept;
+                meta nftrace set 1
+        }
+}
+
+
+
+
+
+
+
+```
+
+
+
+
+```
+table ip nat {
+        chain PREROUTING {
+                type nat hook prerouting priority dstnat; policy accept;
+                ip daddr 10.1.2.10 udp dport { 161 } counter packets 0 bytes 0 meta mark set 0x00000001 dnat to 192.168.172.1:13161
+        }
+
+        chain INPUT {
+                type nat hook input priority 100; policy accept;
+        }
+
+        chain POSTROUTING {
+                type nat hook postrouting priority srcnat; policy accept;
+                meta mark 0x00000001 counter packets 0 bytes 0 snat to 192.168.172.129
+        }
+
+        chain OUTPUT {
+                type nat hook output priority -100; policy accept;
+        }
+
+        chain trace_chain {
+                type filter hook prerouting priority -200; policy accept;
+                meta nftrace set 1
+        }
+}
+
+```
+
