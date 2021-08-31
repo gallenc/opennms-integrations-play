@@ -22,6 +22,11 @@ This example uses docker-compose to create 3 snmp agents running on different po
 In this case, we are using docker-compose simply to create the snmpd agents and dicker directly to create a client with nftables enabled.
 
 ## start snmp containers
+I have used Centos 7 snmpd images from https://hub.docker.com/r/polinux/snmpd
+You could run these directly as containers without docker-compose but compose makes it easier to be consistant.
+
+You need to have docker and docker-compose installed. 
+Here is a brief tutorial showing how to do this on a centos 8 host https://www.howtoforge.com/install-and-use-docker-compose-on-centos-8/
 
 ```
 docker-compose -f ./docker-compose-netsnmp.yaml up -d
@@ -32,6 +37,8 @@ docker-compose -f ./docker-compose-netsnmp.yaml down
 
 ```
 ## create a test container to test nftables
+
+These steps could be moved into a docker-compose file but I am keeping this simple so that you could do it on a server.
 
 using docker to create and log into a small centos systemd container
 ```
