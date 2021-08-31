@@ -24,5 +24,8 @@ TODO: Write credits
 
 ## License
 
-[Apache License v2.0](LICENSE)  
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[GNU Affero General Public License](LICENSE)
+
+This code links to OpenNMS binaries licenced under the [GNU Affero General Public License](http://www.gnu.org/licenses/).
+
+This code also links to code pupished under the [Apache 2 Licence](http://www.apache.org/licenses/LICENSE-2.0.html)
