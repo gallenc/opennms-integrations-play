@@ -28,6 +28,8 @@ You could run these directly as containers without docker-compose but compose ma
 You need to have docker and docker-compose installed. 
 Here is a brief tutorial showing how to do this on a centos 8 host https://www.howtoforge.com/install-and-use-docker-compose-on-centos-8/
 
+Note that scaleing this to 6000 ports should be possible but we will need to watch the sise of the nat connection (connmark) table in the kernal and possibly generate the nftable script from an inventory.
+
 ```
 docker-compose -f ./docker-compose-netsnmp.yaml up -d
 
@@ -91,18 +93,19 @@ inside the container create/edit a file containing the nftables configuration.
 ```
 nano examplenftconfig.txt
 ```
-add the following contents
+Add the following contents (assuming 10.1.2.11 is the address of the server hosting the snmp agents).
+
 ```
 table ip nat {
        chain OUTPUT {
                 type nat hook output priority -100; policy accept;
-                ip daddr 10.1.2.11 udp dport { 161 }  dnat to 192.168.172.1:11161;
-                ip daddr 10.1.2.12 udp dport { 161 }  dnat to 192.168.172.1:12161;
-                ip daddr 10.1.2.13 udp dport { 161 }  dnat to 192.168.172.1:13161;
+                ip daddr 10.1.2.11 udp dport { 161 }  dnat to 172.17.0.1:11161;
+                ip daddr 10.1.2.12 udp dport { 161 }  dnat to 172.17.0.1:12161;
+                ip daddr 10.1.2.13 udp dport { 161 }  dnat to 172.17.0.1:13161;
 
-                ip daddr 10.1.2.11 icmp type echo-request dnat to 192.168.172.1;
-                ip daddr 10.1.2.12 icmp type echo-request dnat to 192.168.172.1;
-                ip daddr 10.1.2.13 icmp type echo-request dnat to 192.168.172.1;
+                ip daddr 10.1.2.11 icmp type echo-request dnat to 172.17.0.1;
+                ip daddr 10.1.2.12 icmp type echo-request dnat to 172.17.0.1;
+                ip daddr 10.1.2.13 icmp type echo-request dnat to 172.17.0.1;
         }
 }
 
@@ -127,13 +130,13 @@ The above example does the following mapping
 
 | SNMP Agent               | docker-compose service | corresponding ip address |
 | ------------------------ | ---------------------- | ------------------------ |
-| 192.168.172.1:11161      | cameranetsnmp1         | 10.1.2.11:161            |
-| 192.168.172.1:12161      | cameranetsnmp2         | 10.1.2.12:161            |
-| 192.168.172.1:13161      | cameranetsnmp2         | 10.1.2.13:161            |
+| 172.17.0.1:11161      | cameranetsnmp1         | 10.1.2.11:161            |
+| 172.17.0.1:12161      | cameranetsnmp2         | 10.1.2.12:161            |
+| 172.17.0.1:13161      | cameranetsnmp2         | 10.1.2.13:161            |
 
 Note that this allows an snmp client on the host to see each of the snmp agents on a different IP address.
 
 However it does not map any spontaneous traps from the agents. 
-THese would need to be mapped using an 'event translator'.
+These would need to be mapped using an 'event translator'.
 
 

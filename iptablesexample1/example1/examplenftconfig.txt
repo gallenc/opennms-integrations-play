@@ -1,13 +1,13 @@
 table ip nat {
        chain OUTPUT {
                 type nat hook output priority -100; policy accept;
-                ip daddr 10.1.2.11 udp dport { 161 }  dnat to 192.168.172.1:11161;
-                ip daddr 10.1.2.12 udp dport { 161 }  dnat to 192.168.172.1:12161;
-                ip daddr 10.1.2.13 udp dport { 161 }  dnat to 192.168.172.1:13161;
+                ip daddr 10.1.2.11 udp dport { 161 }  dnat to 172.17.0.1:11161;
+                ip daddr 10.1.2.12 udp dport { 161 }  dnat to 172.17.0.1:12161;
+                ip daddr 10.1.2.13 udp dport { 161 }  dnat to 172.17.0.1:13161;
 
-                ip daddr 10.1.2.11 icmp type echo-request dnat to 192.168.172.1;
-                ip daddr 10.1.2.12 icmp type echo-request dnat to 192.168.172.1;
-                ip daddr 10.1.2.13 icmp type echo-request dnat to 192.168.172.1;
+                ip daddr 10.1.2.11 icmp type echo-request dnat to 172.17.0.1;
+                ip daddr 10.1.2.12 icmp type echo-request dnat to 172.17.0.1;
+                ip daddr 10.1.2.13 icmp type echo-request dnat to 172.17.0.1;
         }
 }
 
