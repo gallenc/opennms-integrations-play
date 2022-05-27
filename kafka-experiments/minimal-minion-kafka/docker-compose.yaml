@@ -53,6 +53,7 @@ services:
       KAFKA_NUM_PARTITIONS: 5 # The number of partitions > the number of Minions per Location, default is 1
     ports:
       - "29092:29092/tcp"
+      - "9092:9092/tcp"
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest

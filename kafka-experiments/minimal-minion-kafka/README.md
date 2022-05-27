@@ -1,4 +1,4 @@
-# Kafka / opennms docker compose
+# Setting up opennms-kafka-producer test environment with docker compose
 
 provides a running OpenNMS with a kafka broker and a minion.
 
@@ -21,8 +21,13 @@ the .env file sets the version of opennms to use - currently 29.0.3
 docker-compose up -d
 ```
 
+eventually you should see the OpenNMS UI at http://localhost:8980
+
+you should also see the kafka ui at http://localhost:8080/
+
 # To activate and test alarms forwarder.
 Based on https://docs.opennms.com/horizon/29/operation/kafka-producer/kafka-producer.html
+(see also https://rmoff.net/2018/08/02/kafka-listeners-explained/)
 
 Please note that the kafka broker in docker-compose is running on port 29092  not 9092 as described in the docs.
 
@@ -53,8 +58,7 @@ bootstrap.servers = broker:29092
 This file is put in the docker-compose project
 container-fs\horizon\opt\opennms-overlay\etc\org.opennms.features.kafka.producer.client.cfg before the line opennms-karaf-health
 
-Also added feature into org.apache.karaf.features.cfg
-```
+Also added opennms-kafka-producer feature into org.apache.karaf.features.cfg before the line opennms-karaf-health
 ...
   opennms-search, \
   opennms-kafka-producer, \
@@ -62,10 +66,17 @@ Also added feature into org.apache.karaf.features.cfg
 
 ```
 
-to test use
+to test alarm list use the following karaf cli commands. (note if no alarms in system, these lines will be empty).
 ```
-admin@opennms()> opennms:kafka-list-alarms
 admin@opennms()> opennms:kafka-sync-alarms
+Performing synchronization of alarms from the database with those in the ktable.
+Executed 0 updates in 3ms.
+
+Number of reduction keys in ktable: 1
+Number of reduction keys in the db: 1 (1 alarms total)
+admin@opennms()> opennms:kafka-list-alarms
+uei.opennms.org/internal/importer/importSuccessful:file:/opt/opennms/etc/imports/Minions.xml
+        OpenNMS-defined internal event: importer process successfully completed
 ```
 
 
