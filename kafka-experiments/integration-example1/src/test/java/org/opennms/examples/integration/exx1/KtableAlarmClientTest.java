@@ -10,13 +10,13 @@ import org.opennms.features.kafka.producer.model.OpennmsModelProtos.Alarm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class KafkaAlarmClientTest {
-	private static final Logger LOG = LoggerFactory.getLogger(KafkaAlarmClientTest.class);
+class KtableAlarmClientTest {
+	private static final Logger LOG = LoggerFactory.getLogger(KtableAlarmClientTest.class);
 
 	@Test
 	void test() throws IOException {
 		LOG.debug("Starting test");
-		KafkaAlarmClient kclient = new KafkaAlarmClient();
+		KtableAlarmClient kclient = new KtableAlarmClient();
 		
 		kclient.setAlarmTopic("alarms");
 		kclient.init();

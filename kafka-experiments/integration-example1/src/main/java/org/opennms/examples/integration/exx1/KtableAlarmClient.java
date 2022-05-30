@@ -34,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
@@ -50,6 +51,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StoreQueryParameters;
@@ -80,9 +83,9 @@ import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public class KafkaAlarmClient implements Runnable {
+public class KtableAlarmClient implements Runnable {
 
-	private static final Logger LOG = LoggerFactory.getLogger(KafkaAlarmClient.class);
+	private static final Logger LOG = LoggerFactory.getLogger(KtableAlarmClient.class);
 
 	private static final String ALARM_STORE_NAME = "alarm_store";
 
@@ -96,6 +99,7 @@ public class KafkaAlarmClient implements Runnable {
 	private ScheduledExecutorService scheduler;
 	private KTable<String, byte[]> alarmBytesKtable;
 	private KTable<String, OpennmsModelProtos.Alarm> alarmKtable;
+
 
 	private Path kafkaDir;
 
@@ -117,6 +121,8 @@ public class KafkaAlarmClient implements Runnable {
 	public void init() throws IOException {
 
 		final Properties streamProperties = loadStreamsProperties();
+
+		// create kafka ktable
 
 		final StreamsBuilder builder = new StreamsBuilder();
 
@@ -178,6 +184,8 @@ public class KafkaAlarmClient implements Runnable {
 				LOG.warn("Failed to shut down the alarm data sync scheduler.", e);
 			}
 		}
+
+
 		if (streams != null) {
 			streams.close(Duration.ofMinutes(2));
 		}
@@ -189,12 +197,10 @@ public class KafkaAlarmClient implements Runnable {
 		}
 	}
 
-	private Properties loadStreamsProperties() throws IOException {
-		final Properties kafkaClientPoperties = new Properties();
+	public Properties loadStreamsProperties() throws IOException {
+		
+		final Properties kafkaClientPoperties = LoadProperties.load();
 
-		try (final InputStream stream = this.getClass().getResourceAsStream("/kafkaclient.properties")) {
-			kafkaClientPoperties.load(stream);
-		}
 
 		final Properties streamsProperties = new Properties();
 		// Default values
@@ -214,11 +220,11 @@ public class KafkaAlarmClient implements Runnable {
 		// Override the deserializers unconditionally
 		streamsProperties.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 		streamsProperties.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.ByteArray().getClass());
-		
-		if(LOG.isDebugEnabled()) {
-			String msg = "Kafka Client Strting configuration :\n";
-			for( String key : streamsProperties.stringPropertyNames()) {
-				msg+="   "+key.toString()+"="+streamsProperties.getProperty(key)+"\n";
+
+		if (LOG.isDebugEnabled()) {
+			String msg = "Kafka Client Starting configuration :\n";
+			for (String key : streamsProperties.stringPropertyNames()) {
+				msg += "   " + key.toString() + "=" + streamsProperties.getProperty(key) + "\n";
 			}
 			LOG.debug(msg);
 		}
