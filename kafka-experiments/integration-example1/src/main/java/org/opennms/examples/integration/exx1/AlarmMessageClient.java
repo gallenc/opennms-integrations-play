@@ -63,7 +63,7 @@ public class AlarmMessageClient implements Runnable {
 	}
 
 	public void destroy() {
-		LOG.info("shutting down alarm event consumer");
+		LOG.info("shutting down alarm message consumer");
 
 		closed.set(true);
 		if (scheduler != null) {
@@ -71,7 +71,7 @@ public class AlarmMessageClient implements Runnable {
 			try {
 				scheduler.awaitTermination(2, TimeUnit.MINUTES);
 			} catch (final InterruptedException e) {
-				LOG.warn("Failed to shut down the alarm data sync scheduler.", e);
+				LOG.warn("Failed to shut down the alarm message consumer.", e);
 			}
 		}
 
@@ -115,6 +115,7 @@ public class AlarmMessageClient implements Runnable {
 			final ConsumerRecords<String, byte[]> consumerRecords = alarmConsumer.poll(Duration.ofMillis(1000));
 
 			LOG.debug("received " + consumerRecords.count() + " alarmRecords");
+			
 			consumerRecords.forEach(record -> {
 				String reductionKey = record.key();
 				final byte[] alarmBytes = record.value();
