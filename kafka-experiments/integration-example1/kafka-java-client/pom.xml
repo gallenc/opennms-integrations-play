@@ -7,10 +7,10 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>kafka-client</artifactId>
+	<artifactId>kafka-java-client</artifactId>
 	<packaging>jar</packaging>
 
-	<description>simple non-spring kafka client</description>
+	<description>simple non-spring kafka client example</description>
 
 	<dependencies>
 

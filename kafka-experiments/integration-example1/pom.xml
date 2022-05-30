@@ -23,7 +23,7 @@
    </properties>
 
    <modules>
-      <module>client</module>
+      <module>kafka-java-client</module>
       <module>web</module>
    </modules>
 

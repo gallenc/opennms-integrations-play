@@ -16,7 +16,7 @@
 
 		<dependency>
 			<groupId>org.opennms.examples.integration</groupId>
-			<artifactId>kafka-client</artifactId>
+			<artifactId>kafka-java-client</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
