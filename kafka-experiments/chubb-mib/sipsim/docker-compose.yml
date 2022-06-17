@@ -1,0 +1,24 @@
+##  see https://github.com/tandrup/docker-snmpsim
+##  see https://hub.docker.com/r/tandrup/snmpsim/tags
+##  see https://snmplabs.thola.io/snmpsim/quickstart.html
+##  see https://www.ibm.com/support/pages/how-use-snmpsim-simulate-network-device-based-snmp-walk-file
+
+---
+version: '3'
+
+services:
+  snmpsim:
+    image: ${DOCKER_REGISTRY:-docker.io}/tandrup/snmpsim:${SNMPSIM_VERSION:-v0.4}
+    container_name: snmpsim
+    hostname: snmpsim
+    environment:
+      EXTRA_FLAGS: "--v3-user=testing --v3-auth-key=testing123"
+    volumes:
+      # - ./container-fs/sipsim/snmpwalks:/usr/local/snmpsim/data
+      - ./container-fs/sipsim/data/chubb.snmprec:/usr/local/snmpsim/data/chubb.snmprec
+      - ./container-fs/sipsim/mibs:/usr/local/snmpsim/mibs
+      - ./container-fs/sipsim/pysnmp_mibs:/usr/local/snmpsim/pysnmp_mibs
+    ports:
+      - "161:161/udp"
+
+    
