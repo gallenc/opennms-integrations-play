@@ -1,0 +1,46 @@
+<datacollection-group xmlns="http://xmlns.opennms.org/xsd/config/datacollection" name="CHUBB-TVBS-CAMERA-MIB">
+   <resourceType name="logicEntry" label="logicEntry" resourceLabel="${logicStatus} (${index})">
+      <persistenceSelectorStrategy class="org.opennms.netmgt.collection.support.PersistAllSelectorStrategy"/>
+      <storageStrategy class="org.opennms.netmgt.collection.support.IndexStorageStrategy"/>
+   </resourceType>
+   <group name="cameraStatus" ifType="ignore">
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.1.1" instance="0" alias="panPos" type="integer"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.1.2" instance="0" alias="tiltPos" type="integer"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.1.3" instance="0" alias="zoomPos" type="integer"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.1.4" instance="0" alias="focusPos" type="integer"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.1.5" instance="0" alias="focusMode" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.1.6" instance="0" alias="irisMode" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.1.7" instance="0" alias="carriagewayText" type="octetstring"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.1.8" instance="0" alias="compassDirection" type="string"/>
+   </group>
+   <group name="cameraHealth" ifType="ignore">
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.1" instance="0" alias="comms" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.2" instance="0" alias="panMotorFault" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.3" instance="0" alias="tiltMotorFault" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.4" instance="0" alias="zoomMotorFault" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.5" instance="0" alias="apertureMotorFault" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.6" instance="0" alias="focusMotorFault" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.7" instance="0" alias="wiperMotorFault" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.8" instance="0" alias="heaterFault" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.9" instance="0" alias="fluidLevelFault" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.10" instance="0" alias="videoSignalFault" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.11" instance="0" alias="housingTamper" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.12" instance="0" alias="washerMotorFault" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.13" instance="0" alias="configPlugFault" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.2.14" instance="0" alias="tvbuCamerCommsFault" type="string"/>
+   </group>
+   <group name="logicTable" ifType="all">
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.3.1.1" instance="logicEntry" alias="logicID" type="integer"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.3.1.2" instance="logicEntry" alias="logicStatus" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.1.3.1.3" instance="logicEntry" alias="logicDescription" type="octetstring"/>
+   </group>
+   <group name="tvbsNotifications" ifType="ignore">
+      <mibObj oid=".1.3.6.1.4.1.52330.6.2.1" instance="0" alias="healthChangeReason" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.2.2" instance="0" alias="tamperState" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.2.3" instance="0" alias="logicInput" type="integer32"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.2.4" instance="0" alias="logicInputState" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.2.5" instance="0" alias="faultState" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.2.6" instance="0" alias="commsStateReason" type="string"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.6.2.7" instance="0" alias="cameraIdentifier" type="octetstring"/>
+   </group>
+</datacollection-group>
