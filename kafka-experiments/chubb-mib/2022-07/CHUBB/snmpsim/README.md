@@ -1,5 +1,7 @@
 # Chubb mib definitions and simulation
 
+needs changed
+
 ## introduction
 
 This simulator use the static snmpsim simulator to simulate a chubb camera mib
@@ -30,8 +32,8 @@ docker-compose up -d
 docker-compose exec snmpsim bash
 ```
 
-once in the image first use the pysnmp library to compile the mib files to the pysnmp .py format (CHUBB-ROOT.py  CHUBB-TVBS-CAMERA-MIB.py).
-These are needed for the next step in generating the simulator
+once in the image first use the pysnmp library to compole the mib files to the pysnmp .py format (CHUBB-ROOT.py  CHUBB-TVBS-CAMERA-MIB.py).
+These are needed for the next step in genrerating he simulator
 
 ```
 mibdump.py --debug=all --destination-directory=/usr/local/snmpsim/pysnmp_mibs/      /usr/local/snmpsim/mibs/CHUBB-TVBS-CAMERA.mib
@@ -45,5 +47,5 @@ mib2dev.py --output-file=/usr/local/snmpsim/data/chubb.snmprec --pysnmp-mib-dir=
 ```
 this will generate a chubb.snmprec file in the snmpsim directory
 
-The simulation can be accessed using community string 'chubb' which corresponds to the file name
+The simulation can be accessed using community string 'chubb' which corresponds to hte file name
    
