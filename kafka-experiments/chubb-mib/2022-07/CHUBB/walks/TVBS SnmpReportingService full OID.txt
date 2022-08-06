@@ -1,0 +1,7 @@
+.iso.org.dod.internet.mgmt.mib-2.1.1.0 = STRING: "TVBS System"
+.iso.org.dod.internet.mgmt.mib-2.1.2.0 = OID: .iso.org.dod.internet.private.enterprises.chubb.tvbsSystem
+.iso.org.dod.internet.mgmt.mib-2.1.3.0 = Timeticks: (14688) 0:02:26.88
+.iso.org.dod.internet.mgmt.mib-2.1.4.0 = STRING: "Highways England - 03001235000"
+.iso.org.dod.internet.mgmt.mib-2.1.5.0 = STRING: "NERCC"
+.iso.org.dod.internet.mgmt.mib-2.1.6.0 = STRING: "NERCC"
+.iso.org.dod.internet.mgmt.mib-2.1.6.0 = No more variables left in this MIB View (It is past the end of the MIB tree)

@@ -2,7 +2,7 @@
 
 ## introduction
 
-This simulator use the static sipsim simulator to simulate a chubb camera mib
+This simulator use the static snmpsim simulator to simulate a chubb camera mib
 
 the version of the sipsim simulator is 0.4 and is packaged as a docker image
 

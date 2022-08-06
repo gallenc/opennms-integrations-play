@@ -1,0 +1,7 @@
+SNMPv2-SMI::mib-2.1.1.0 = STRING: "TVBS System"
+SNMPv2-SMI::mib-2.1.2.0 = OID: CHUBB-TVBS-MIB::tvbsSystem
+SNMPv2-SMI::mib-2.1.3.0 = Timeticks: (17586) 0:02:55.86
+SNMPv2-SMI::mib-2.1.4.0 = STRING: "Highways England - 03001235000"
+SNMPv2-SMI::mib-2.1.5.0 = STRING: "NERCC"
+SNMPv2-SMI::mib-2.1.6.0 = STRING: "NERCC"
+SNMPv2-SMI::mib-2.1.6.0 = No more variables left in this MIB View (It is past the end of the MIB tree)
