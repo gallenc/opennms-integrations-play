@@ -14,10 +14,10 @@ services:
     environment:
       EXTRA_FLAGS: "--v3-user=testing --v3-auth-key=testing123"
     volumes:
-      # - ./container-fs/sipsim/snmpwalks:/usr/local/snmpsim/data
-      - ./container-fs/sipsim/data/chubb.snmprec:/usr/local/snmpsim/data/chubb.snmprec
-      - ./container-fs/sipsim/mibs:/usr/local/snmpsim/mibs
-      - ./container-fs/sipsim/pysnmp_mibs:/usr/local/snmpsim/pysnmp_mibs
+      #- ./container-fs/snmpsim/data/foreignformats/chubb.snmpwalk:/usr/local/snmpsim/data/foreignformats/chubb.snmpwalk
+      - ./container-fs/snmpsim/data/chubb.snmprec:/usr/local/snmpsim/data/chubb.snmprec
+      #- ./container-fs/snmpsim/mibs:/usr/local/snmpsim/mibs
+      #- ./container-fs/snmpsim/pysnmp_mibs:/usr/local/snmpsim/pysnmp_mibs
     ports:
       - "161:161/udp"
 
