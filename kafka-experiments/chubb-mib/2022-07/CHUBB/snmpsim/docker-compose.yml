@@ -14,7 +14,10 @@ services:
     environment:
       EXTRA_FLAGS: "--v3-user=testing --v3-auth-key=testing123"
     volumes:
-      #- ./container-fs/snmpsim/data/foreignformats/chubb.snmpwalk:/usr/local/snmpsim/data/foreignformats/chubb.snmpwalk
+      #- ./container-fs/snmpsim/data/foreignformats/chubb1.snmpwalk:/usr/local/snmpsim/data/foreignformats/chubb1.snmpwalk
+      #- ./container-fs/snmpsim/data/foreignformats/chubb2.snmpwalk:/usr/local/snmpsim/data/foreignformats/chubb2.snmpwalk
+      - ./container-fs/snmpsim/data/foreignformats/chubb1.snmpwalk:/usr/local/snmpsim/data/chubb1.snmpwalk
+      - ./container-fs/snmpsim/data/foreignformats/chubb2.snmpwalk:/usr/local/snmpsim/data/chubb2.snmpwalk
       - ./container-fs/snmpsim/data/chubb.snmprec:/usr/local/snmpsim/data/chubb.snmprec
       - ./container-fs/snmpsim/mibs:/usr/local/snmpsim/mibs
       #- ./container-fs/snmpsim/pysnmp_mibs:/usr/local/snmpsim/pysnmp_mibs
