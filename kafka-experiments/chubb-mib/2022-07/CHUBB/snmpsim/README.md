@@ -9,6 +9,7 @@ This simulator use the static snmpsim simulator to simulate a chubb camera mib
 the version of the sipsim simulator is 0.4 and is packaged as a docker image
 
 see https://github.com/tandrup/docker-snmpsim
+
 see https://hub.docker.com/r/tandrup/snmpsim/tags
 
 This online documentation points to a later version than the 0.4 image but is still useful (the names of the commands have changed)
@@ -27,18 +28,20 @@ In future when we can actually generate a simulation using an SNMP walk of the c
 ## to create a new simulation file from the mibs
 
 launch the docker image using docker compose and then open a shell 
+
 ```
 docker-compose up -d
+
 docker-compose exec snmpsim bash
 ```
 
-once in the image first use the pysnmp library to compole the mib files to the pysnmp .py format (CHUBB-ROOT.py  CHUBB-TVBS-CAMERA-MIB.py).
-These are needed for the next step in genrerating he simulator
+once in the image first use the pysnmp library to compose the mib files to the pysnmp.py format (CHUBB-ROOT.py  CHUBB-TVBS-CAMERA-MIB.py).
+These are needed for the next step in generating the simulator
 
 ```
 mibdump.py --debug=all --destination-directory=/usr/local/snmpsim/pysnmp_mibs/      /usr/local/snmpsim/mibs/CHUBB-TVBS-CAMERA.mib
 
-ls ls /usr/local/snmpsim/pysnmp_mibs/
+ls /usr/local/snmpsim/pysnmp_mibs/
 CHUBB-ROOT.py  CHUBB-TVBS-CAMERA-MIB.py
 ```
 Now create the simulation data using snmpsim
