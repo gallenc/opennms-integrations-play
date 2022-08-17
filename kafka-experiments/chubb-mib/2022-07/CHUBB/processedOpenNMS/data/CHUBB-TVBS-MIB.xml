@@ -1,0 +1,13 @@
+<datacollection-group xmlns="http://xmlns.opennms.org/xsd/config/datacollection" name="CHUBB-TVBS-MIB">
+   <group name="tvbsNotifications" ifType="ignore">
+      <mibObj oid=".1.3.6.1.4.1.52330.5.2.1" instance="0" alias="faultCode" type="integer32"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.5.2.2" instance="0" alias="faultDescription1" type="octetstring"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.5.2.3" instance="0" alias="faultDescription2" type="octetstring"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.5.2.4" instance="0" alias="faultId1" type="octetstring"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.5.2.5" instance="0" alias="faultStatus" type="integer32"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.5.2.6" instance="0" alias="faultWorkgroup" type="integer32"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.5.2.7" instance="0" alias="faultLocation" type="octetstring"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.5.2.8" instance="0" alias="faultUsername" type="octetstring"/>
+      <mibObj oid=".1.3.6.1.4.1.52330.5.2.9" instance="0" alias="faultAutoClear" type="integer32"/>
+   </group>
+</datacollection-group>
