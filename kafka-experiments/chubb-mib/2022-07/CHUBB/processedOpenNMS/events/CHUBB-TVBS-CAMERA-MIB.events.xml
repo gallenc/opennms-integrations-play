@@ -23,8 +23,8 @@
              <vbvalue>1</vbvalue>
          </varbind>
       </mask>
-      <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeRaise</uei>
-      <event-label>CHUBB-TVBS-CAMERA-MIB defined trap event: healthChangeRaise</event-label>
+      <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange</uei>
+      <event-label>CHUBB-TVBS-CAMERA-MIB defined trap event: healthChange</event-label>
       <descr>
 &lt;p>This notification is sent when one or more of the health
          information changes. Show the fault item and its state. &lt;/p>&lt;table>
@@ -109,7 +109,7 @@
          </maskelement>
          <varbind>
              <vbnumber>3</vbnumber>
-             <vbvalue>1</vbvalue>
+             <vbvalue>0</vbvalue>
          </varbind>
       </mask>
       <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear</uei>
@@ -177,7 +177,7 @@
       </varbindsdecode>
       <alarm-data reduction-key="%uei%:%dpname%:%nodeid%:%parm[#2]%"
                   alarm-type="2"
-                  clear-key="uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeRaise:%dpname%:%nodeid%:%parm[#2]%"
+                  clear-key="uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange:%dpname%:%nodeid%:%parm[#2]%"
                   auto-clean="false"/>
    </event>
 
@@ -372,7 +372,7 @@
          </maskelement>
          <varbind>
              <vbnumber>3</vbnumber>
-             <vbvalue>1</vbvalue>
+             <vbvalue>0</vbvalue>
          </varbind>
       </mask>
       <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChangeCleared</uei>

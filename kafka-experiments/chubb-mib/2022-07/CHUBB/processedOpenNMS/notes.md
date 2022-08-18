@@ -17,7 +17,7 @@ varbind 3: faultState oid .1.3.6.1.4.1.52330.6.2.5.0
 
 values:  INTEGER {clear(0), triggered(1) }
 
-### netsnmp test traps
+### netsnmp healthChange notification test traps
 
 #### panMotor raise
 snmptrap -v 2c -c public localhost:10162 ""  .1.3.6.1.4.1.52330.6.2.0.1        .1.3.6.1.4.1.52330.6.2.1.0  s xxxx   .1.3.6.1.4.1.52330.6.2.1.0 i 0  .1.3.6.1.4.1.52330.6.2.5.0 i 1
