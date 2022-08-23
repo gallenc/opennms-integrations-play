@@ -1,5 +1,6 @@
 
 ## CHUBB SNMP Traps
+This page contains exam[ple traps for the CHUBB-TVBS-CAMERA-MIB
 
 ## Health Change notification
 
