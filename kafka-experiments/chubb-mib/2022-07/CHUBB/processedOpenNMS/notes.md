@@ -159,10 +159,6 @@ snmptrap -v 2c -c public localhost:10162 ""  .1.3.6.1.4.1.52330.6.2.0.3       .1
 ssnmptrap -v 2c -c public localhost:10162 ""  .1.3.6.1.4.1.52330.6.2.0.3       .1.3.6.1.4.1.52330.6.2.7.0  s xxxx   .1.3.6.1.4.1.52330.6.2.3.0  i 0  .1.3.6.1.4.1.52330.6.2.4.0 i 1
 
 
-
-
-
-
 ## Comms State Change notification
 
 ### Values
