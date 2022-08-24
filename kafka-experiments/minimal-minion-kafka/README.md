@@ -11,7 +11,7 @@ https://hub.docker.com/u/opennms
 Install docker / docker compose of your development machine.
 On a PC you can use docker-desktop
 
-the .env file sets the version of opennms to use - currently 29.0.3
+the .env file sets the version of opennms to use - currently 30.0.2
 (see https://docs.docker.com/compose/environment-variables/)
 
 
@@ -48,7 +48,7 @@ admin@opennms()> feature:install opennms-kafka-producer
 
 check feature installed
 admin@opennms()> feature:list | grep opennms-kafka-producer
-opennms-kafka-producer                      | 29.0.3           | x        | Started     | opennms-29.0.3                   | OpenNMS :: Kafka :: Producer
+opennms-kafka-producer                      | 30.0.2           | x        | Started     | opennms-30.0.2                   | OpenNMS :: Kafka :: Producer
 ```
 However we can provide this configration permanently to OpenNMS by adding the following files to the configuration in the meridian opennms etc directory
 
