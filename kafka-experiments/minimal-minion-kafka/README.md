@@ -48,7 +48,7 @@ admin@opennms()> feature:install opennms-kafka-producer
 
 check feature installed
 admin@opennms()> feature:list | grep opennms-kafka-producer
-opennms-kafka-producer                      | 30.0.2           | x        | Started     | opennms-30.0.2                   | OpenNMS :: Kafka :: Producer
+opennms-kafka-producer                      | 29.0.6            | x        | Started     | opennms-29.0.6                    | OpenNMS :: Kafka :: Producer
 ```
 However we can provide this configration permanently to OpenNMS by adding the following files to the configuration in the meridian opennms etc directory
 
