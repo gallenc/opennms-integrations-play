@@ -11,7 +11,7 @@ https://hub.docker.com/u/opennms
 Install docker / docker compose of your development machine.
 On a PC you can use docker-desktop
 
-the .env file sets the version of opennms to use - currently 30.0.2
+the .env file sets the version of OpenNMS to use - currently 29.0.6
 (see https://docs.docker.com/compose/environment-variables/)
 
 
@@ -26,6 +26,7 @@ eventually you should see the OpenNMS UI at http://localhost:8980
 you should also see the kafka ui at http://localhost:8080/
 
 # To activate and test alarms forwarder.
+
 Based on https://docs.opennms.com/horizon/29/operation/kafka-producer/kafka-producer.html
 (see also https://rmoff.net/2018/08/02/kafka-listeners-explained/)
 
@@ -46,19 +47,26 @@ admin@opennms()> config:property-set bootstrap.servers broker:29092
 admin@opennms()> config:update
 admin@opennms()> feature:install opennms-kafka-producer
 
-check feature installed
+check feature is installed
 admin@opennms()> feature:list | grep opennms-kafka-producer
 opennms-kafka-producer                      | 29.0.6            | x        | Started     | opennms-29.0.6                    | OpenNMS :: Kafka :: Producer
 ```
-However we can provide this configration permanently to OpenNMS by adding the following files to the configuration in the meridian opennms etc directory
+However we can provide this configuration permanently to OpenNMS by adding the following files to the configuration in the meridian opennms etc directory. (Note - for some reason this should but  doesn't work - you need to configure the image manually)
 
 create the file org.opennms.features.kafka.producer.client.cfg and add contents
+
+```
 bootstrap.servers = broker:29092
+```
 
 This file is put in the docker-compose project
-container-fs\horizon\opt\opennms-overlay\etc\org.opennms.features.kafka.producer.client.cfg before the line opennms-karaf-health
+```
+container-fs\horizon\opt\opennms-overlay\etc\org.opennms.features.kafka.producer.client.cfg 
+```
 
 Also added opennms-kafka-producer feature into org.apache.karaf.features.cfg before the line opennms-karaf-health
+
+```
 ...
   opennms-search, \
   opennms-kafka-producer, \
@@ -66,7 +74,9 @@ Also added opennms-kafka-producer feature into org.apache.karaf.features.cfg bef
 
 ```
 
-to test alarm list use the following karaf cli commands. (note if no alarms in system, these lines will be empty).
+to test alarm list within the karaf cli, use the following karaf cli commands. 
+(note if no alarms in system, these lines will be empty).
+
 ```
 admin@opennms()> opennms:kafka-sync-alarms
 Performing synchronization of alarms from the database with those in the ktable.
