@@ -35,9 +35,22 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 5 # The number of partitions > the number of Minions per Location, default is 1
     ports:
       - "29092:29092/tcp"
       - "9092:9092/tcp"
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    hostname: kafka-ui
+    environment:
+      TZ: ${TIMEZONE:-America/New_York}
+      KAFKA_CLUSTERS_0_NAME: onms-stack-play
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: broker:29092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    ports:
+      - "8080:8080/tcp"
 
   database:
     image: ${DOCKER_REGISTRY:-docker.io}/postgres:${POSTGRES_VERSION:-13}
@@ -57,8 +70,9 @@ services:
       timeout: 30s
       retries: 3
 
+  #Mac M1 needs to use elasticsearch for arm64 (7.10.2 is the earliest version made for arm64, might need apend -arm64 in the version)
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION:-7.6.2}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION:-7.10.2}
     container_name: es01
     hostname: es01
     environment:
@@ -147,7 +161,7 @@ services:
       - "1514:1514/udp"
 
   grafana:
-    image: ${DOCKER_REGISTRY:-docker.io}/grafana/grafana:${GRAFANA_VERSION:-6.7.2}
+    image: ${DOCKER_REGISTRY:-docker.io}/grafana/grafana:${GRAFANA_VERSION:-8.5.10}
     container_name: grafana
     hostname: grafana
     depends_on: 
@@ -155,14 +169,14 @@ services:
     environment:
       TZ: ${TIMEZONE:-America/New_York}
       GF_SECURITY_ADMIN_PASSWORD: mypass
-      GF_INSTALL_PLUGINS: https://github.com/OpenNMS/opennms-helm/archive/v5.0.2.zip;grafana-piechart-panel;neocat-cal-heatmap-panel
+      GF_INSTALL_PLUGINS: https://github.com/OpenNMS/opennms-helm/releases/download/v8.0.0/opennms-helm-app-8.0.0.zip;opennms-helm-app,grafana-piechart-panel,neocat-cal-heatmap-panel
     volumes:
       - data-grafana:/var/lib/grafana
     ports:
       - "3000:3000/tcp"
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:${KIBANA_VERSION:-7.6.2}
+    image: docker.elastic.co/kibana/kibana:${KIBANA_VERSION:-7.10.2}
     container_name: kibana
     hostname: kibana
     depends_on: 
