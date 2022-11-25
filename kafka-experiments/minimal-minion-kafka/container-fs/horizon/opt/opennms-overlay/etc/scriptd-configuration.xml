@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!-- scriptd-config.xml revision 8.0 -->
+<scriptd-configuration transactional="false" >
+    <engine language="beanshell" className="bsh.util.BeanShellBSFEngine" extensions="bsh" />
+    <start-script language="beanshell">
+
+      log = bsf.lookupBean("log");
+      log.debug("running start script");
+
+      import java.util.ArrayList;
+      import java.util.List;
+
+      source("/opt/opennms/etc/situationHandler.bsh");
+      
+      situationHandle = situationHandler();
+
+      log.debug("end of start script");
+
+    </start-script>
+
+    <stop-script language="beanshell">
+
+      log = bsf.lookupBean("log");
+      log.debug("running beanshell stop script");
+
+      log.debug("end of stop script");
+
+    </stop-script>
+
+    <event-script language="beanshell">
+
+        log = bsf.lookupBean("log");
+        log.debug("running on event script");
+        
+        ievent = bsf.lookupBean("event");
+        node = bsf.lookupBean("node");
+        
+        situationHandle.handleEvent(ievent, node);
+
+        log.debug("end of on event script");
+
+    </event-script>
+
+
+</scriptd-configuration>
+

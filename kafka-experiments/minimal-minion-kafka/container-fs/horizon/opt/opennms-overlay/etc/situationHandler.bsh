@@ -1,0 +1,99 @@
+import org.opennms.netmgt.events.api.model.IEvent;
+import org.opennms.netmgt.events.api.model.IParm;
+import org.opennms.netmgt.model.OnmsNode;
+import org.opennms.netmgt.model.events.EventBuilder;
+import org.opennms.netmgt.xml.event.AlarmData;
+import org.opennms.netmgt.xml.event.Event;
+import org.opennms.netmgt.xml.event.Logmsg;
+
+import org.opennms.core.spring.BeanUtils;
+import org.opennms.netmgt.dao.api.AlarmDao;
+import org.opennms.netmgt.model.OnmsAlarm;
+import org.springframework.beans.factory.access.BeanFactoryReference;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
+
+import java.util.function.Supplier;
+import org.opennms.netmgt.dao.api.SessionUtils;
+
+situationHandler() {
+
+	final String SITUATION_ADD_ALARM_UEI="uei.opennms.org/situation/addalarm";
+	
+	BeanFactoryReference m_bf = BeanUtils.getBeanFactory("daoContext");
+	AlarmDao m_alarmDao = BeanUtils.getBean(m_bf,"alarmDao", AlarmDao.class);
+	SessionUtils m_sessionUtils = BeanUtils.getBean(m_bf, "sessionUtils", SessionUtils.class);
+
+	public void handleEvent(IEvent ievent, OnmsNode node) {
+
+		
+		if (SITUATION_ADD_ALARM_UEI.equals(ievent.getUei())) try {
+		
+			log.debug("situationhandler event called ,  event=="+ievent);
+		
+		    IParm attachedalarmIdIparm = ievent.getParm("attachedalarmId");
+		    IParm situationIdIparm = ievent.getParm("situationId");
+		    IParm situationDescrIparm = ievent.getParm("situationDescr");
+		    IParm situationNodeIdIparm = ievent.getParm("situationNodeId");
+		    
+		    Integer attachedalarmId = null;
+		    if(attachedalarmIdIparm!=null) try {
+		    	attachedalarmId = Integer.valueOf(attachedalarmIdIparm.getValue().getContent());
+		    } catch (Exception ex) {  }
+		    
+		    Integer situationId = null;
+		    if(situationIdIparm!=null) try {
+		    	situationId = Integer.valueOf(situationIdIparm.getValue().getContent());
+		    } catch (Exception ex) {  }
+		    
+		    String situationDescr = (situationDescrIparm==null) ? null: situationDescrIparm.getValue().getContent();
+		    
+		    Integer situationNodeId = null;
+		    if(situationNodeIdIparm!=null) try {
+		    	situationNodeId = Integer.valueOf(situationNodeIdIparm.getValue().getContent());
+		    } catch (Exception ex) {  }
+
+			log.debug("situationhandler attachedalarmId="+attachedalarmId+ " situationId="+situationId+" situationDescr="+situationDescr+" situationNodeId="+situationNodeId );
+
+			m_sessionUtils.withTransaction(new Supplier(){
+
+				public Object get() {
+					try {
+//						OnmsAlarm onmsAlarm = m_alarmDao.findByReductionKey(reductionKey);
+//						if (onmsAlarm!=null) {
+//							/* not using generics because not supported in beanshell */
+//							Map alarmDetails = onmsAlarm.getDetails();
+//							Iterator alarmDetailsIterator = details.keySet().iterator();
+//							while(alarmDetailsIterator.hasNext()) {
+//								String detailKey = (String) alarmDetailsIterator.next();
+//								String detailValue=(String) details.get(detailKey);
+//								log.debug("updateAlarmDetails updating alarm alarmId="+onmsAlarm.getId()
+//								+ " with reductionKey="+reductionKey + " with new detail: detailKey="+detailKey+" detailValue="+detailValue);
+//								alarmDetails.put(detailKey, detailValue);
+//							}
+//							onmsAlarm.setDetails(alarmDetails);
+//							m_alarmDao.update(onmsAlarm);
+//							m_alarmDao.flush();
+//							log.debug("updateAlarmDetails updated alarm alarmId="+onmsAlarm.getId()
+//							+ " with reductionKey="+reductionKey + " alarm.toString()="+onmsAlarm.toString());
+//						} else {
+//							log.debug("updateAlarmDetails cannot find alarm with reductionKey="+reductionKey );
+//						}
+					} catch (Exception e) {
+						log.error("handleEvent error when running in transaction ",e );
+					}
+					return null;
+				}
+
+			});
+
+		} catch (Throwable t) {
+			log.debug("problem handling event", t);
+		}
+
+	}
+	
+	/* returns this beanshell declaration so that its methods can be invoked */
+    return this;
+}

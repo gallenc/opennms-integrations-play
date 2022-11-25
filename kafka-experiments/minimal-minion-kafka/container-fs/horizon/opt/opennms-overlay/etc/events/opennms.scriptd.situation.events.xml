@@ -1,0 +1,34 @@
+<events xmlns="http://xmlns.opennms.org/xsd/eventconf">
+
+<!-- ******************************************************** -->
+<!--  add alarm to situation                                  -->
+<!-- ******************************************************** -->
+
+  <event>
+      <uei>uei.opennms.org/situation/addalarm</uei>
+      <event-label>OpenNMS-defined internal event: add alarm to situation</event-label>
+      <descr>&lt;p>This event is generated to add an alarm to a situation. The situation is created if it does not exist&lt;/p></descr>
+      <logmsg dest="donotpersist">
+           alarm  %parm[attachedalarmId]% to be added to a situation.
+           situation %parm[situationId]% situation id (if exists)
+           situationNodeId %parm[situationNodeId]% situationNodeId (to add to new situation if attached to a node)
+           situation description %parm[situationDescr]% to be added to a new situation
+        </logmsg>
+      <severity>Normal</severity>
+   </event>
+   
+   <!-- ************************************************************ -->
+   <!--  for information only - defined in opennms.alarm.events.xml  -->
+   <!-- ************************************************************ -->
+<!--    <event> -->
+<!--       <uei>uei.opennms.org/alarms/situation</uei> -->
+<!--       <event-label>Alarm: Situation</event-label> -->
+<!--       <descr>%parm[situationDescr]%</descr> -->
+<!--       <logmsg dest="logndisplay">%parm[situationLogMsg]%</logmsg> -->
+<!--       <severity>Normal</severity> -->
+<!--       <alarm-data reduction-key="%uei%:%parm[situationId]%" alarm-type="3" auto-clean="true" /> -->
+<!--    </event> -->
+
+
+
+</events>

@@ -10,6 +10,8 @@ docker-compose logs -f horizon
 
 ssh -p 8101 admin@localhost
 
+ssh -o UserKnownHostsFile=/dev/null -p 8101 admin@localhost
+
 admin@opennms()> kar:list
 KAR Name
 -----------------------------------
@@ -26,7 +28,7 @@ jackson                                     | 2.11.1           |          | Unin
 
 
 
-problem:
+problem - if the plugin api version is wrong
 admin@opennms()> feature:install opennms-plugins-trace-route-plugin
 Error executing command: Unable to resolve root: missing requirement [root] osgi.identity; osgi.identity=opennms-plugins-trace-route-plugin; type=karaf.feature; version="[1.0.0.SNAPSHOT,1.0.0.SNAPSHOT]"; filter:="(&(osgi.identity=opennms-plugins-trace-route-plugin)(type=karaf.feature)(version>=1.0.0.SNAPSHOT)(version<=1.0.0.SNAPSHOT))" [caused by: Unable to resolve opennms-plugins-trace-route-plugin/1.0.0.SNAPSHOT: missing requirement [opennms-plugins-trace-route-plugin/1.0.0.SNAPSHOT] osgi.identity; osgi.identity=org.opennms.plugin.experimental.trace-route-plugin-plugin; type=osgi.bundle; version="[1.0.0.SNAPSHOT,1.0.0.SNAPSHOT]"; resolution:=mandatory [caused by: Unable to resolve org.opennms.plugin.experimental.trace-route-plugin-plugin/1.0.0.SNAPSHOT: missing requirement [org.opennms.plugin.experimental.trace-route-plugin-plugin/1.0.0.SNAPSHOT] osgi.wiring.package; filter:="(&(osgi.wiring.package=org.opennms.integration.api.v1.alarms)(version>=1.2.0)(!(version>=2.0.0)))"]]
 admin@opennms()> feature:list | grep integration.api
