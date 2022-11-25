@@ -37,22 +37,29 @@ situationHandler() {
 		    IParm situationDescrIparm = ievent.getParm("situationDescr");
 		    IParm situationNodeIdIparm = ievent.getParm("situationNodeId");
 		    
-		    Integer attachedalarmId = null;
+		    // Integer attachedalarmId = null; does not all ow reassignment in try block in bsh
+		    attachedalarmId = null;
 		    if(attachedalarmIdIparm!=null) try {
-		    	attachedalarmId = Integer.valueOf(attachedalarmIdIparm.getValue().getContent());
-		    } catch (Exception ex) {  }
+		    	attachedalarmId = Integer.parseInt(attachedalarmIdIparm.getValue().getContent());
+		    } catch (Exception ex) {
+		    	log.debug("cannot parse attachedalarmIdIparm",ex);
+		    }
 		    
-		    Integer situationId = null;
+		    situationId = null;
 		    if(situationIdIparm!=null) try {
-		    	situationId = Integer.valueOf(situationIdIparm.getValue().getContent());
-		    } catch (Exception ex) {  }
+		    	situationId = Integer.parseInt(situationIdIparm.getValue().getContent());
+		    } catch (Exception ex) { 
+		    	log.debug("cannot parse situationIdIparm",ex);
+		    }
 		    
 		    String situationDescr = (situationDescrIparm==null) ? null: situationDescrIparm.getValue().getContent();
 		    
-		    Integer situationNodeId = null;
+		    situationNodeId = null;
 		    if(situationNodeIdIparm!=null) try {
-		    	situationNodeId = Integer.valueOf(situationNodeIdIparm.getValue().getContent());
-		    } catch (Exception ex) {  }
+		    	situationNodeId = Integer.parseInt(situationNodeIdIparm.getValue().getContent());
+		    } catch (Exception ex) { 
+		    	log.debug("cannot parse situationNodeIdIparm",ex);
+		    }
 
 			log.debug("situationhandler attachedalarmId="+attachedalarmId+ " situationId="+situationId+" situationDescr="+situationDescr+" situationNodeId="+situationNodeId );
 
