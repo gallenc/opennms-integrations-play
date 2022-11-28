@@ -1,0 +1,162 @@
+{
+    "info": {
+        "name": "RESTer",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "OpenNMS_events",
+            "item": [
+                {
+                    "request": {
+                        "url": "http://localhost:8980/opennms/rest/events",
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            }
+                        ]
+                    },
+                    "id": "rester-5",
+                    "name": "get"
+                }
+            ]
+        },
+        {
+            "name": "OpenNMS_events_Plugin",
+            "item": [
+                {
+                    "request": {
+                        "url": "http://[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n         <host>host</host>\n       <uei>uei.opennms.org/trace-route-pluginPlugin/sendEventFailed</uei>\n     \n       <severity>clear</severity>\n       <source>SPMInterface</source>\n       <descr>Hello first problem</descr>\n       <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n       <!--      <descr>this:descrYYY</descr> -->\n       <logmsg>spm interface update.111</logmsg>\n       <parms>\n            <parm>\n             <parmName>this:parmNameXXX</parmName>\n             <value>this:value</value>\n            </parm>\n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-6",
+                    "name": "Cleared"
+                },
+                {
+                    "request": {
+                        "url": "http://[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    \n    <uei>uei.opennms.org/trace-route-pluginPlugin/sendEventSuccessful</uei>\n\n       <host>host</host>\n       <severity>CRITICAL</severity>\n       <source>SPMInterface</source>\n       <descr>Hello first problem</descr>\n       <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n       <!--      <descr>this:descrYYY</descr> -->\n       <logmsg>spm interface update.111</logmsg>\n       <parms>\n            <parm>\n             <parmName>this:parmNameXXX</parmName>\n             <value>this:value</value>\n            </parm>\n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-4",
+                    "name": "CRITICAL"
+                }
+            ]
+        },
+        {
+            "name": "OpenNMS_Requisitions",
+            "item": [
+                {
+                    "request": {
+                        "url": "localhost:8980/opennms/rest/requisitions",
+                        "method": "GET",
+                        "header": []
+                    },
+                    "id": "rester-1",
+                    "name": "Get Requisitons"
+                },
+                {
+                    "request": {
+                        "url": "localhost:8980/opennms/rest/requisitions",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<model-import date-stamp=\"2022-03-03T16:51:00.968Z\" foreign-source=\"lab-routers\" last-import=\"2022-03-03T16:51:01.031Z\">\n    <node foreign-id=\"R1\" node-label=\"R1\">\n        <interface ip-addr=\"10.0.0.251\" status=\"1\" snmp-primary=\"P\"/>\n        <asset name=\"username\" value=\"admin\"/>\n        <asset name=\"password\" value=\"COM617Team12\"/>\n        <asset name=\"enable\" value=\"COM617Team12\"/>\n        <asset name=\"connection\" value=\"SSH\"/>\n        <asset name=\"autoenable\" value=\"A\"/>\n        <asset name=\"longitude\" value=\"-1.4003801\"/>\n        <asset name=\"latitude\" value=\"50.9083205\"/>\n    </node>\n    <node foreign-id=\"R2\" node-label=\"R2\">\n        <interface ip-addr=\"10.0.0.252\" status=\"1\" snmp-primary=\"P\"/>\n        <asset name=\"username\" value=\"admin\"/>\n        <asset name=\"password\" value=\"COM617Team12\"/>\n        <asset name=\"enable\" value=\"COM617Team12\"/>\n        <asset name=\"connection\" value=\"SSH\"/>\n        <asset name=\"autoenable\" value=\"A\"/>\n        <asset name=\"longitude\" value=\"-1.4003801\"/>\n        <asset name=\"latitude\" value=\"50.9083205\"/>\n    </node>\n    <node foreign-id=\"R3\" node-label=\"R3\">\n        <interface ip-addr=\"10.0.0.253\" status=\"1\" snmp-primary=\"P\"/>\n        <asset name=\"username\" value=\"admin\"/>\n        <asset name=\"password\" value=\"COM617Team12\"/>\n        <asset name=\"enable\" value=\"COM617Team12\"/>\n        <asset name=\"connection\" value=\"SSH\"/>\n        <asset name=\"autoenable\" value=\"A\"/>\n        <asset name=\"longitude\" value=\"-1.4003801\"/>\n        <asset name=\"latitude\" value=\"50.9083205\"/>\n    </node>\n    <node foreign-id=\"R4\" node-label=\"R4\">\n        <interface ip-addr=\"10.0.0.254\" status=\"1\" snmp-primary=\"P\"/>\n        <asset name=\"username\" value=\"admin\"/>\n        <asset name=\"password\" value=\"COM617Team12\"/>\n        <asset name=\"enable\" value=\"COM617Team12\"/>\n        <asset name=\"connection\" value=\"SSH\"/>\n        <asset name=\"autoenable\" value=\"A\"/>\n        <asset name=\"longitude\" value=\"-1.4003801\"/>\n        <asset name=\"latitude\" value=\"50.9083205\"/>\n    </node>\n    <node foreign-id=\"SW-1\" node-label=\"SW-1\">\n        <interface ip-addr=\"10.0.0.11\" status=\"1\" snmp-primary=\"N\"/>\n        <asset name=\"longitude\" value=\"-1.4003801\"/>\n        <asset name=\"latitude\" value=\"50.9083205\"/>\n        </node>\n    <node foreign-id=\"SW-2\" node-label=\"SW-2\">\n        <interface ip-addr=\"10.0.0.12\" status=\"1\" snmp-primary=\"N\"/>\n        <asset name=\"longitude\" value=\"-1.4003801\"/>\n        <asset name=\"latitude\" value=\"50.9083205\"/>\n    </node>\n    </model-import>"
+                        }
+                    },
+                    "id": "rester-2",
+                    "name": "Post Requisition"
+                },
+                {
+                    "request": {
+                        "url": "http://localhost:8980/opennms/rest/requisitions/lab-routers/import",
+                        "method": "PUT",
+                        "header": []
+                    },
+                    "id": "rester-3",
+                    "name": "Put"
+                }
+            ]
+        },
+        {
+            "name": "OpenNMS_situations",
+            "item": [
+                {
+                    "request": {
+                        "url": "http://[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    <host>host</host>\n    <uei>uei.opennms.org/situation/addalarm</uei>\n    <severity>normal</severity>\n    <source>drools</source>\n    <!--<descr>Hello first problem</descr> -->\n    <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n    <!--      <descr>this:descrYYY</descr> -->\n    <!--<logmsg>spm interface update.111</logmsg> -->\n    <parms>\n        <parm>\n            <parmName>situationNodeId</parmName>\n            <value>1</value>\n        </parm>\n        <parm>\n            <parmName>attachedalarmId</parmName>\n            <value>2</value>\n        </parm>\n        <parm>\n            <parmName>situationId</parmName>\n            <value>3</value>\n        </parm>\n        <parm>\n            <parmName>situationDescr</parmName>\n            <value>this situation</value>\n        </parm>\n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-8",
+                    "name": "alarmTosituation"
+                },
+                {
+                    "request": {
+                        "url": "http://[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    <host>host</host>\n    <uei>uei.opennms.org/situation/addalarm</uei>\n    <severity>normal</severity>\n    <source>drools</source>\n    <!--<descr>Hello first problem</descr> -->\n    <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n    <!--      <descr>this:descrYYY</descr> -->\n    <!--<logmsg>spm interface update.111</logmsg> -->\n    <parms>\n        <parm>\n            <parmName>situationNodeId</parmName>\n            <value>1</value>\n        </parm>\n        <parm>\n            <parmName>attachedalarmId</parmName>\n            <value>2</value>\n        </parm>\n        <parm>\n            <parmName>situationId</parmName>\n            <value>3</value>\n        </parm>\n        <parm>\n            <parmName>situationDescr</parmName>\n            <value>this situation</value>\n        </parm>\n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-7",
+                    "name": "attachAlarm"
+                }
+            ]
+        }
+    ]
+}
