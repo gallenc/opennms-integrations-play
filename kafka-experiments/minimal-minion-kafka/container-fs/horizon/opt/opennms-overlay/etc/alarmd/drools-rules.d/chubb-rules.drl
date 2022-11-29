@@ -34,6 +34,14 @@ import org.opennms.netmgt.model.OnmsAlarm;
 import org.opennms.netmgt.model.OnmsSeverity;
 import org.opennms.netmgt.model.TroubleTicketState;
 
+import org.opennms.netmgt.model.events.EventBuilder;
+import org.opennms.netmgt.xml.event.AlarmData;
+import org.opennms.netmgt.alarmd.drools.AlarmService;
+import org.opennms.netmgt.model.OnmsEventParameter;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 global org.opennms.netmgt.alarmd.drools.AlarmService alarmService;
 
 declare org.opennms.netmgt.model.OnmsAlarm
@@ -44,11 +52,80 @@ end
 
 rule "when an alarm changes"
   when
+    $sessionClock : SessionClock()
     $alarm : OnmsAlarm(alarmType == OnmsAlarm.PROBLEM_TYPE,
                        lastEvent != null,
                        lastEvent.eventUei in ( "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/tamperDetected", "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChange" )
                        )
+    //$d1: ArrayList() from collect (DeptData(deptId == $e.EmpDept1))
+    $situations : LinkedList() from collect ( OnmsAlarm( $eventParameters : eventParameters,
+                   isSituation() == true, 
+                   nodeId == $alarm.nodeId,
+                   findEventParameter("situationGroup", "group1", $eventParameters)
+    //               exists (OnmsEventParameter( name=="situationGroup", value == "group1" ) from $eventParameters)
+   //                exists (OnmsEventParameter( ) from $eventParameters)
+                  ) )
+                  
+   // $groups : LinkedList() from collect (  OnmsEventParameter( name=="situationGroup", value == "group1" ) from $situations )
+
+   // $situation : OnmsAlarm( isSituation() == true, $relatedAlarmIds : relatedAlarmIds )
+   // $relatedAlarms : LinkedList() from collect( OnmsAlarm($relatedAlarmIds contains id) )
   then
+  
+  
     Date now = new Date(drools.getWorkingMemory().getSessionClock().getCurrentTime());
-    alarmService.warn("new alarm rule", $alarm);
+    
+    alarmService.warn("new alarm rule {}", $alarm);
+    
+    alarmService.warn("new alarm rule situations size {}", $situations.size() );
+    for (Object onmsAlarmObject: $situations){
+        OnmsAlarm situation = (OnmsAlarm) onmsAlarmObject;
+        alarmService.warn("  new alarm rule situation {}", situation);
+    }
+    
+    Integer nodeId=1;
+    String reductionKey="xxx";
+    String alarmReductionKey = $alarm.getReductionKey();
+    List alarmReductionKeys= new ArrayList();
+    alarmReductionKeys.add(alarmReductionKey);
+    
+   // sendUdateSituationEvent(alarmService, nodeId, reductionKey, alarmReductionKeys);
+    
 end
+
+/* searchs eventParameters list and returns value or null if not found. returns null if inputs are null */
+
+function boolean findEventParameter(String name, String value, List eventParameters) {
+    if(eventParameters==null || value==null || name == null) return false;
+    for (Object paramObj : eventParameters) {
+        OnmsEventParameter param = (OnmsEventParameter) paramObj;
+        if (name.equals(param.getName()) &&  value.equals( param.getValue()) ) {
+         return true;
+        }
+    }
+    return false;
+}
+
+
+function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId, String reductionKey, List alarmReductionKeys) {
+        EventBuilder builder = new EventBuilder("uei.opennms.internal/updatesituation", "drools");
+        AlarmData data = new AlarmData();
+        data.setAlarmType(1);
+        data.setReductionKey(reductionKey);
+        builder.setAlarmData(data);
+        builder.setSeverity(OnmsSeverity.MAJOR.getLabel());
+        builder.setNodeid(nodeId);
+        builder.setLogDest("logndisplay");
+        builder.setLogMessage("updating situation");
+        for (Object alarmObj : alarmReductionKeys) {
+             String alarm = (String) alarmObj;
+            // TOOD revisit when event_parameters table supports multiple params with the same name (NMS-10214)
+            // For now, suffix the parameter name with the value.
+            builder.addParam("related-reductionKey" + alarm, alarm);
+        }
+        alarmService.warn("alarm service sending updatesituation event: {}", builder.getEvent());
+        alarmService.sendEvent(builder.getEvent());
+}
+        
+
+        
