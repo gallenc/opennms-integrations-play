@@ -49,6 +49,19 @@ declare org.opennms.netmgt.model.OnmsAlarm
     @timestamp(lastUpdateTime)
 end
 
+rule "insert uei group map"   
+    when
+        eval( 1==1 )
+    then
+        
+        
+        
+        
+        
+        
+        System.out.println( "Rule 01 Works" );
+end
+
 
 rule "when an alarm changes"
   when
@@ -93,12 +106,17 @@ rule "when an alarm changes"
     
 end
 
-/* searchs eventParameters list and returns value or null if not found. returns null if inputs are null */
+/* searchs eventParameters list and returns true if name key with value is found. returns false if inputs are null */
 
 function boolean findEventParameter(String name, String value, List eventParameters) {
+    // service doesnt work
+    // alarmService.warn("new alarm rule find event param name {} value {} eventParameters  {}", name, value, eventParameters );
+    
+    System.out.println("new alarm rule find event param name "+name+" value "+value+" eventParameters "+ eventParameters );
     if(eventParameters==null || value==null || name == null) return false;
     for (Object paramObj : eventParameters) {
         OnmsEventParameter param = (OnmsEventParameter) paramObj;
+        System.out.println("new alarm rule testecentparm name "+param.getName()+" value "+param.getValue() );
         if (name.equals(param.getName()) &&  value.equals( param.getValue()) ) {
          return true;
         }
