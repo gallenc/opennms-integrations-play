@@ -1,6 +1,29 @@
 
 ## CHUBB SNMP Traps
-This page contains exam[ple traps for the CHUBB-TVBS-CAMERA-MIB
+This page contains example traps for the CHUBB-TVBS-CAMERA-MIB
+
+you can run these traps inside a container which is visible to OpenNMS a netsnmp container is laready set up in docker-compose.yml
+
+
+```
+ # first snmp container
+  cameranetsnmp1:
+    image: polinux/snmpd
+    container_name: cameranetsnmp1
+    hostname: cameranetsnmp1
+    ports:
+      - "11161:161/udp"
+```
+access the container using
+
+```
+ docker-compose exec cameranetsnmp1 bash
+ 
+ then send traps using prefix
+ 
+ snmptrap -v 2c -c public horizon:1162
+ 
+```
 
 ## Health Change notification
 

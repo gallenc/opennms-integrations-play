@@ -118,3 +118,11 @@ services:
       - "8201:8201/tcp"
       - "1162:1162/udp"
       - "1514:1514/udp"
+      
+ # first snmp container
+  cameranetsnmp1:
+    image: polinux/snmpd
+    container_name: cameranetsnmp1
+    hostname: cameranetsnmp1
+    ports:
+      - "11161:161/udp"
