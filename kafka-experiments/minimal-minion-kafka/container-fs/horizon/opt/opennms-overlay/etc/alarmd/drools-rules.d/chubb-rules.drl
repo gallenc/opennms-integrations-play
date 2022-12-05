@@ -41,6 +41,10 @@ import org.opennms.netmgt.model.OnmsEventParameter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 global org.opennms.netmgt.alarmd.drools.AlarmService alarmService;
 
@@ -49,77 +53,109 @@ declare org.opennms.netmgt.model.OnmsAlarm
     @timestamp(lastUpdateTime)
 end
 
+declare GroupMap
+  euiGroupMap : HashMap
+end
+
 rule "insert uei group map"   
     when
         eval( 1==1 )
     then
-        HashMap<String, String> groupMap = new HashMap<String,String>();
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/panMotor","group5");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/panMotor-clear","group5");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/tiltMotor","group5");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/tiltMotor-clear","group5");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/zoomMotor","group5");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/zoomMotor-clear","group5");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/apertureMotor","group5");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/apertureMotor-clear","group5");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/focusMotor","group5");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/focusMotor-clear","group5");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/wiperMotor","group6");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/wiperMotor-clear","group6");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/heater","group6");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/heater-clear","group6");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/fluidLevel","group6");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/fluidLevel-clear","group6");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/videoSignal","group4");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/videoSignal-clear","group4");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/housingTamper","group6");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/housingTamper-clear","group6");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/washerMotorFault","group6");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/washerMotorFault-clear","group6");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/configPlugFault","group2");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/configPlugFault-clear","group2");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/tvbuCameraCommsFault","group3");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/tvbuCameraCommsFault-clear","group3");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear","group-undefined");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/tamperDetectedCleared","group-undefined");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChange","group-undefined");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChangeCleared","group-undefined");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/commsStateChange","group-undefined");
-        groupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/commsStateChangeClear","group-undefined");
+    
+        GroupMap groupMap = new GroupMap();
+        
+        HashMap<String, String> euiGroupMap = new HashMap<String,String>();
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/panMotor","group5");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/panMotor-clear","group5");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/tiltMotor","group5");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/tiltMotor-clear","group5");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/zoomMotor","group5");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/zoomMotor-clear","group5");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/apertureMotor","group5");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/apertureMotor-clear","group5");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/focusMotor","group5");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/focusMotor-clear","group5");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/wiperMotor","group6");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/wiperMotor-clear","group6");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/heater","group6");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/heater-clear","group6");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/fluidLevel","group6");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/fluidLevel-clear","group6");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/videoSignal","group4");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/videoSignal-clear","group4");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/housingTamper","group6");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/housingTamper-clear","group6");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/washerMotorFault","group6");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/washerMotorFault-clear","group6");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/configPlugFault","group2");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/configPlugFault-clear","group2");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/tvbuCameraCommsFault","group3");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/tvbuCameraCommsFault-clear","group3");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear","group-undefined");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/tamperDetectedCleared","group-undefined");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChange","group-undefined");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChangeCleared","group-undefined");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/commsStateChange","group-undefined");
+        euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/commsStateChangeClear","group-undefined");
+        
+        groupMap.setEuiGroupMap(euiGroupMap);
+        
+        insert ( groupMap );
      
-     Set<String> groupList = new HashSet(groupMap.values());
+
+//     Set<String> groupList = new HashSet(groupMap.values());
      
-     Map<String,List<String>> groupUeis = new Hashtable();
+//     Map<String,List<String>> groupUeis = new Hashtable();
      
-     for(String group: groupList){
-    	 List<String> ueisInGroup = new ArrayList();
-    	 for (String uei: groupMap.keySet()) {
-    		 String localgroup = groupMap.get(uei);
-    		 if (localgroup.equals(group)){
-    			 ueisInGroup.add(uei);
-    		 }
-    	 }
-    	 groupUeis.put(group, ueisInGroup);
-     }
+//     for(String group: groupList){
+//  	 List<String> ueisInGroup = new ArrayList();
+//    	 for (String uei: groupMap.keySet()) {
+//    		 String localgroup = groupMap.get(uei);
+//    		 if (localgroup.equals(group)){
+//    			 ueisInGroup.add(uei);
+//    		 }
+//    	 }
+//    	 groupUeis.put(group, ueisInGroup);
+//     }
      
-     insert ( groupUeis );
+//     insert ( groupUeis );
+
 
         alarmService.warn( "inserted group map" );
 end
 
 
-rule "when an alarm changes"
+rule "group mapping situation"
   when
     $sessionClock : SessionClock()
+    $groupMap : GroupMap() 
     $alarm : OnmsAlarm(alarmType == OnmsAlarm.PROBLEM_TYPE,
                        lastEvent != null,
-                       lastEvent.eventUei in ( "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/tamperDetected", "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChange" )
-                       )
+                       //Set(size >= 1) from collect( Entry( key == lastEvent.eventUei ) from $groupMap.euiGroupMap.entrySet )
+                       //Entry( key == lastEvent.eventUei) from $groupMap.euiGroupMap.entrySet() 
+                       
+                       $groupMap.euiGroupMap.keySet() contains lastEvent.eventUei
+                       
+                       //lastEvent.eventUei in ( "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/tamperDetected", "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChange" )
+                      )
+                      
+                      // Set(size >= 1) from collect( Entry( key == lastEvent.eventUei ) from $groupMap.euiGroupMap.entrySet() )
+
+    $ueiGroups : LinkedList() from collect( Entry( key == $alarm.lastEvent.eventUei ) from $groupMap.euiGroupMap.entrySet() )
+   
+    //String (Entry) $ueiGroups.get(0).getValue();
+
+    //  c : Customer()
+    //items : List( size == c.items.size ) 
+    //from collect( Item( price > 10 ) from c.items )
+
     //$d1: ArrayList() from collect (DeptData(deptId == $e.EmpDept1))
     $situations : LinkedList() from collect ( OnmsAlarm( $eventParameters : eventParameters,
                    isSituation() == true, 
                    nodeId == $alarm.nodeId,
-                   findEventParameter("situationGroup", "group1", $eventParameters)
+                   ! ($ueiGroups == null),
+                   ! $ueiGroups.isEmpty(),
+                   findEventParameter("situationGroup", $ueiGroups , $eventParameters)
     //               exists (OnmsEventParameter( name=="situationGroup", value == "group1" ) from $eventParameters)
    //                exists (OnmsEventParameter( ) from $eventParameters)
                   ) )
@@ -133,35 +169,71 @@ rule "when an alarm changes"
   
     Date now = new Date(drools.getWorkingMemory().getSessionClock().getCurrentTime());
     
-    alarmService.warn("new alarm rule {}", $alarm);
+    alarmService.warn("group mapping situation rule: alarm {}", $alarm);
     
-    alarmService.warn("new alarm rule situations size {}", $situations.size() );
-    for (Object onmsAlarmObject: $situations){
-        OnmsAlarm situation = (OnmsAlarm) onmsAlarmObject;
-        alarmService.warn("  new alarm rule situation {}", situation);
+    alarmService.warn("group mapping situation rule: ueiGroups size {}", $ueiGroups.size() );
+    for (Object entry: $ueiGroups){
+        Entry e = (Entry) entry;
+        alarmService.warn("   group mapping situation rule: ueiGroups entry {}", entry);
     }
     
-    Integer nodeId=1;
-    String reductionKey="xxx";
+    alarmService.warn("new alarm rule existing situations size {}", $situations.size() );
+    for (Object onmsAlarmObject: $situations){
+        OnmsAlarm situation = (OnmsAlarm) onmsAlarmObject;
+        alarmService.warn("  group mapping situation rule: existing situation {}", situation);
+    }
+    
+    // get the group which this alarm's uei is in
+    String ueiGroup = "groupNotSet";
+    if( $ueiGroups != null || ! $ueiGroups.isEmpty()){
+       // get parameter value for group
+       Entry e = (Entry) $ueiGroups.get(0);
+       ueiGroup = (String) e.getValue();
+    }
+
+    // get any existing alarm reduction keys from matching situation
+    // assumes only one matching situation from rule
+    Set<String> alarmReductionKeys= new HashSet<String>();
+    
+    if (! $situations.isEmpty()) {
+       OnmsAlarm matchedSituation = (OnmsAlarm) $situations.get(0);
+       if(matchedSituation !=null){
+           Set<OnmsAlarm> relatedAlarms = matchedSituation.getRelatedAlarms();
+           if (relatedAlarms!=null) {
+              alarmService.warn("  group mapping situation rule: updating relatedAlarms {}", relatedAlarms);
+              for(OnmsAlarm related : relatedAlarms){
+                  alarmReductionKeys.add(related.getReductionKey());
+              }
+           }
+       }
+    }
+    
+    // add reduction key from new alarm
     String alarmReductionKey = $alarm.getReductionKey();
-    List alarmReductionKeys= new ArrayList();
     alarmReductionKeys.add(alarmReductionKey);
     
-   // sendUdateSituationEvent(alarmService, nodeId, reductionKey, alarmReductionKeys);
+    Integer nodeId=$alarm.getNodeId();
+
+    sendUdateSituationEvent(alarmService, nodeId, ueiGroup, alarmReductionKeys);
     
 end
 
 /* searchs eventParameters list and returns true if name key with value is found. returns false if inputs are null */
-
-function boolean findEventParameter(String name, String value, List eventParameters) {
-    // service doesnt work
+function boolean findEventParameter(String name, List ueiGroupsList, List eventParameters) {
+    // service doesnt work in functions
     // alarmService.warn("new alarm rule find event param name {} value {} eventParameters  {}", name, value, eventParameters );
     
-    System.out.println("new alarm rule find event param name "+name+" value "+value+" eventParameters "+ eventParameters );
-    if(eventParameters==null || value==null || name == null) return false;
+    if( name == null || eventParameters==null || ueiGroupsList==null || ueiGroupsList.isEmpty()) return false;
+        
+    // get parameter value for group
+    Entry e = (Entry) ueiGroupsList.get(0);
+    String value = (String) e.getValue();
+    
+    System.out.println("group mapping situation rule: findEventParameter name "+name+" value "+value+" eventParameters "+ eventParameters );
+
     for (Object paramObj : eventParameters) {
         OnmsEventParameter param = (OnmsEventParameter) paramObj;
-        System.out.println("new alarm rule testecentparm name "+param.getName()+" value "+param.getValue() );
+        System.out.println("new alarm rule findEventParameter name "+param.getName()+" value "+param.getValue() );
         if (name.equals(param.getName()) &&  value.equals( param.getValue()) ) {
          return true;
         }
@@ -170,23 +242,27 @@ function boolean findEventParameter(String name, String value, List eventParamet
 }
 
 
-function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId, String reductionKey, List alarmReductionKeys) {
-        EventBuilder builder = new EventBuilder("uei.opennms.internal/updatesituation", "drools");
+function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId, String ueiGroup, Set alarmReductionKeys) {
+        EventBuilder builder = new EventBuilder("uei.opennms.org/alarms/drools/situation", "drools");
         AlarmData data = new AlarmData();
-        data.setAlarmType(1);
-        data.setReductionKey(reductionKey);
-        builder.setAlarmData(data);
-        builder.setSeverity(OnmsSeverity.MAJOR.getLabel());
+        //data.setAlarmType(1);
+        // data.setReductionKey(reductionKey);
+        //builder.setAlarmData(data);
+        //builder.setSeverity(OnmsSeverity.MAJOR.getLabel());
         builder.setNodeid(nodeId);
         builder.setLogDest("logndisplay");
         builder.setLogMessage("updating situation");
-        for (Object alarmObj : alarmReductionKeys) {
-             String alarm = (String) alarmObj;
+        for (Object reduxObj : alarmReductionKeys) {
+             String redux = (String) reduxObj;
             // TOOD revisit when event_parameters table supports multiple params with the same name (NMS-10214)
             // For now, suffix the parameter name with the value.
-            builder.addParam("related-reductionKey" + alarm, alarm);
+            builder.addParam("related-reductionKey" + redux, redux);
         }
-        alarmService.warn("alarm service sending updatesituation event: {}", builder.getEvent());
+        builder.addParam("situationDescr","drools situation ueiGroup: "+ueiGroup);
+        builder.addParam("situationLogMsg","drools situation");
+        
+        builder.addParam("situationGroup", ueiGroup);
+        alarmService.warn("alarm service sending update situation event: {}", builder.getEvent());
         alarmService.sendEvent(builder.getEvent());
 }
         
