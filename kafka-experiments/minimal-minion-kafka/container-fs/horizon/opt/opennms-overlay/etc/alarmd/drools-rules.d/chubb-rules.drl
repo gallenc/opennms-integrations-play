@@ -210,11 +210,13 @@ rule "group mapping situation"
     
     // add reduction key from new alarm
     String alarmReductionKey = $alarm.getReductionKey();
-    alarmReductionKeys.add(alarmReductionKey);
-    
-    Integer nodeId=$alarm.getNodeId();
-
-    sendUdateSituationEvent(alarmService, nodeId, ueiGroup, alarmReductionKeys);
+       
+    // dont send event if already present
+    if(! alarmReductionKeys.contains(alarmReductionKey)) {
+       alarmReductionKeys.add(alarmReductionKey);
+       Integer nodeId=$alarm.getNodeId();
+       sendUdateSituationEvent(alarmService, nodeId, ueiGroup, alarmReductionKeys);
+    }
     
 end
 
