@@ -102,25 +102,6 @@ rule "insert uei group map"
         
         insert ( groupMap );
      
-
-//     Set<String> groupList = new HashSet(groupMap.values());
-     
-//     Map<String,List<String>> groupUeis = new Hashtable();
-     
-//     for(String group: groupList){
-//  	 List<String> ueisInGroup = new ArrayList();
-//    	 for (String uei: groupMap.keySet()) {
-//    		 String localgroup = groupMap.get(uei);
-//    		 if (localgroup.equals(group)){
-//    			 ueisInGroup.add(uei);
-//    		 }
-//    	 }
-//    	 groupUeis.put(group, ueisInGroup);
-//     }
-     
-//     insert ( groupUeis );
-
-
         alarmService.warn( "inserted group map" );
 end
 
@@ -129,47 +110,35 @@ rule "group mapping situation"
   when
     $sessionClock : SessionClock()
     $groupMap : GroupMap() 
+    
+    // get alarms which match the uei's in groupMap
     $alarm : OnmsAlarm(alarmType == OnmsAlarm.PROBLEM_TYPE,
                        lastEvent != null,
-                       //Set(size >= 1) from collect( Entry( key == lastEvent.eventUei ) from $groupMap.euiGroupMap.entrySet )
-                       //Entry( key == lastEvent.eventUei) from $groupMap.euiGroupMap.entrySet() 
-                       
+                       // match alarm if last event uei is in list of groups
                        $groupMap.euiGroupMap.keySet() contains lastEvent.eventUei
-                       
-                       //lastEvent.eventUei in ( "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/tamperDetected", "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChange" )
                       )
-                      
-                      // Set(size >= 1) from collect( Entry( key == lastEvent.eventUei ) from $groupMap.euiGroupMap.entrySet() )
 
+    // get groupMap entries where uei matches the alarm's uei
+    // the map entry tells us which group the alarm is in. (each uei should only be in one group)
     $ueiGroups : LinkedList() from collect( Entry( key == $alarm.lastEvent.eventUei ) from $groupMap.euiGroupMap.entrySet() )
    
-    //String (Entry) $ueiGroups.get(0).getValue();
-
-    //  c : Customer()
-    //items : List( size == c.items.size ) 
-    //from collect( Item( price > 10 ) from c.items )
-
-    //$d1: ArrayList() from collect (DeptData(deptId == $e.EmpDept1))
+    // get any situations where node id and situationGroup matches the group for this alarm 
+    // there can be only one of each situation group per node
     $situations : LinkedList() from collect ( OnmsAlarm( $eventParameters : eventParameters,
                    isSituation() == true, 
                    nodeId == $alarm.nodeId,
                    ! ($ueiGroups == null),
                    ! $ueiGroups.isEmpty(),
                    findEventParameter("situationGroup", $ueiGroups , $eventParameters)
-    //               exists (OnmsEventParameter( name=="situationGroup", value == "group1" ) from $eventParameters)
-   //                exists (OnmsEventParameter( ) from $eventParameters)
                   ) )
-                  
-   // $groups : LinkedList() from collect (  OnmsEventParameter( name=="situationGroup", value == "group1" ) from $situations )
 
-   // $situation : OnmsAlarm( isSituation() == true, $relatedAlarmIds : relatedAlarmIds )
-   // $relatedAlarms : LinkedList() from collect( OnmsAlarm($relatedAlarmIds contains id) )
   then
   
   
     Date now = new Date(drools.getWorkingMemory().getSessionClock().getCurrentTime());
     
-    alarmService.warn("group mapping situation rule: alarm {}", $alarm);
+    // debugging messages - note change to alarmService.debug in production
+    alarmService.warn("group mapping situation rule: matched alarm {}", $alarm);
     
     alarmService.warn("group mapping situation rule: ueiGroups size {}", $ueiGroups.size() );
     for (Object entry: $ueiGroups){
@@ -177,7 +146,7 @@ rule "group mapping situation"
         alarmService.warn("   group mapping situation rule: ueiGroups entry {}", entry);
     }
     
-    alarmService.warn("new alarm rule existing situations size {}", $situations.size() );
+    alarmService.warn("group mapping situation rule: existing situations size {}", $situations.size() );
     for (Object onmsAlarmObject: $situations){
         OnmsAlarm situation = (OnmsAlarm) onmsAlarmObject;
         alarmService.warn("  group mapping situation rule: existing situation {}", situation);
@@ -191,7 +160,8 @@ rule "group mapping situation"
        ueiGroup = (String) e.getValue();
     }
 
-    // get any existing alarm reduction keys from matching situation
+    // get any existing alarm reduction keys from any current matching situation
+    // this allows us to re-inject the other matching alarms in the update event
     // assumes only one matching situation from rule
     Set<String> alarmReductionKeys= new HashSet<String>();
     
@@ -200,8 +170,8 @@ rule "group mapping situation"
        if(matchedSituation !=null){
            Set<OnmsAlarm> relatedAlarms = matchedSituation.getRelatedAlarms();
            if (relatedAlarms!=null) {
-              alarmService.warn("  group mapping situation rule: updating relatedAlarms {}", relatedAlarms);
               for(OnmsAlarm related : relatedAlarms){
+                  alarmService.warn("  group mapping situation rule: adding reduction key from related alarm {}", related);
                   alarmReductionKeys.add(related.getReductionKey());
               }
            }
@@ -211,7 +181,8 @@ rule "group mapping situation"
     // add reduction key from new alarm
     String alarmReductionKey = $alarm.getReductionKey();
        
-    // dont send event if already present
+    // dont send event if this alarm is already present in a situation (circular updates)
+    // send event to update or create situation if this alarm is not in a situation
     if(! alarmReductionKeys.contains(alarmReductionKey)) {
        alarmReductionKeys.add(alarmReductionKey);
        Integer nodeId=$alarm.getNodeId();
@@ -227,14 +198,16 @@ function boolean findEventParameter(String name, List ueiGroupsList, List eventP
     
     if( name == null || eventParameters==null || ueiGroupsList==null || ueiGroupsList.isEmpty()) return false;
         
-    // get parameter value for group
+    // get first named parameter value for group (there should only be one)
     Entry e = (Entry) ueiGroupsList.get(0);
     String value = (String) e.getValue();
     
+    // TODO remove - cannot use alarmService to log inside when clause
     System.out.println("group mapping situation rule: findEventParameter name "+name+" value "+value+" eventParameters "+ eventParameters );
 
     for (Object paramObj : eventParameters) {
         OnmsEventParameter param = (OnmsEventParameter) paramObj;
+        // TODO remove - cannot use alarmService to log inside when clause
         System.out.println("new alarm rule findEventParameter name "+param.getName()+" value "+param.getValue() );
         if (name.equals(param.getName()) &&  value.equals( param.getValue()) ) {
          return true;
@@ -243,7 +216,9 @@ function boolean findEventParameter(String name, List ueiGroupsList, List eventP
     return false;
 }
 
-
+// creates and sends a situation update event 
+// see code in isRelatedReductionKeyWithContent(Parm param) in AlarmPersisterImpl to see how alarms are tagged as situations
+// if any param with name beginning 'related-reductionKey' exists this is used to match the related alarm reduction keys and mark this alarm as a situation.
 function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId, String ueiGroup, Set alarmReductionKeys) {
         EventBuilder builder = new EventBuilder("uei.opennms.org/alarms/drools/situation", "drools");
         AlarmData data = new AlarmData();
