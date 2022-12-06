@@ -1,0 +1,300 @@
+{
+    "info": {
+        "name": "RESTer",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "chubb_alarms",
+            "item": [
+                {
+                    "request": {
+                        "url": "[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Basic YWRtaW46YWRtaW4="
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    \n    <uei>uei.opennms.org/createsituation</uei>\n      <nodeid>3</nodeid>\n      <!--<host>host</host>\n       <severity>CRITICAL</severity>\n       <source>SPMInterface</source>\n       <descr>Hello first problem</descr> -->\n       <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n       <!--      <descr>this:descrYYY</descr> -->\n       <!--<logmsg>spm interface update.111</logmsg> -->\n       <logmsg>updated situation</logmsg>\n       <parms>\n            <parm>\n             <parmName>related-reductionKey-1</parmName>\n             <value>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChange::3</value>\n            </parm>\n             <parm>\n             <parmName>related-reductionKey-2</parmName>\n             <value>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/tamperDetected::3</value>\n            </parm>\n            <parm>\n             <parmName>related-reductionKey-3</parmName>\n             <value>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/panMotor::3</value>\n            </parm>\n            <parm>\n             <parmName>situationGroup</parmName>\n             <value>group1</value>\n            </parm>\n            \n            \n  \n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-34",
+                    "name": "createSituation-node3"
+                },
+                {
+                    "request": {
+                        "url": "[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Basic YWRtaW46YWRtaW4="
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChangeCleared</uei>\n    <nodeid>1</nodeid>\n    <!--<host>host</host><severity>CRITICAL</severity><source>SPMInterface</source><descr>Hello first problem</descr> -->\n    <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n    <!--      <descr>this:descrYYY</descr> -->\n    <!--<logmsg>spm interface update.111</logmsg> -->\n    <parms>\n        <parm>\n            <parmName>cameraIdentifier</parmName>\n            <value>000,000</value>\n        </parm>\n        <parm>\n            <parmName>logicInput</parmName>\n            <value>1</value>\n        </parm>\n        <parm>\n            <parmName>logicInputState</parmName>\n            <value>1</value>\n        </parm>\n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-39",
+                    "name": "logicInputChange-clear-node1"
+                },
+                {
+                    "request": {
+                        "url": "[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Basic YWRtaW46YWRtaW4="
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChangeCleared</uei>\n    <nodeid>3</nodeid>\n    <!--<host>host</host><severity>CRITICAL</severity><source>SPMInterface</source><descr>Hello first problem</descr> -->\n    <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n    <!--      <descr>this:descrYYY</descr> -->\n    <!--<logmsg>spm interface update.111</logmsg> -->\n    <parms>\n        <parm>\n            <parmName>cameraIdentifier</parmName>\n            <value>000,000</value>\n        </parm>\n        <parm>\n            <parmName>logicInput</parmName>\n            <value>1</value>\n        </parm>\n        <parm>\n            <parmName>logicInputState</parmName>\n            <value>0</value>\n        </parm>\n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-35",
+                    "name": "logicInputChange-clear-node3"
+                },
+                {
+                    "request": {
+                        "url": "[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Basic YWRtaW46YWRtaW4="
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChange</uei>\n    <nodeid>1</nodeid>\n    <!--<host>host</host><severity>CRITICAL</severity><source>SPMInterface</source><descr>Hello first problem</descr> -->\n    <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n    <!--      <descr>this:descrYYY</descr> -->\n    <!--<logmsg>spm interface update.111</logmsg> -->\n    <parms>\n        <parm>\n            <parmName>cameraIdentifier</parmName>\n            <value>000,000</value>\n        </parm>\n        <parm>\n            <parmName>logicInput</parmName>\n            <value>1</value>\n        </parm>\n        <parm>\n            <parmName>logicInputState</parmName>\n            <value>1</value>\n        </parm>\n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-38",
+                    "name": "logicInputChange-raise-node1"
+                },
+                {
+                    "request": {
+                        "url": "[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Basic YWRtaW46YWRtaW4="
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/logicInputChange</uei>\n    <nodeid>3</nodeid>\n    <!--<host>host</host><severity>CRITICAL</severity><source>SPMInterface</source><descr>Hello first problem</descr> -->\n    <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n    <!--      <descr>this:descrYYY</descr> -->\n    <!--<logmsg>spm interface update.111</logmsg> -->\n    <parms>\n        <parm>\n            <parmName>cameraIdentifier</parmName>\n            <value>000,000</value>\n        </parm>\n        <parm>\n            <parmName>logicInput</parmName>\n            <value>1</value>\n        </parm>\n        <parm>\n            <parmName>logicInputState</parmName>\n            <value>1</value>\n        </parm>\n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-36",
+                    "name": "logicInputChange-raise-node3"
+                },
+                {
+                    "request": {
+                        "url": "[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Basic YWRtaW46YWRtaW4="
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    \n    <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/panMotor-clear</uei>\n      <nodeid>3</nodeid>\n      <!--<host>host</host>\n       <severity>CRITICAL</severity>\n       <source>SPMInterface</source>\n       <descr>Hello first problem</descr> -->\n       <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n       <!--      <descr>this:descrYYY</descr> -->\n       <!--<logmsg>spm interface update.111</logmsg> -->\n       <parms>\n            <parm>\n             <parmName>cameraIdentifier</parmName>\n             <value>000,000</value>\n            </parm>\n            <parm>\n             <parmName>healthChangeReason</parmName>\n             <value>0</value>\n            </parm>\n            <parm>\n             <parmName>faultState</parmName>\n             <value>0</value>\n            </parm>\n  \n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-40",
+                    "name": "panMotor-clear-node3"
+                },
+                {
+                    "request": {
+                        "url": "[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Basic YWRtaW46YWRtaW4="
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    \n    <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/panMotor</uei>\n      <nodeid>3</nodeid>\n      <!--<host>host</host>\n       <severity>CRITICAL</severity>\n       <source>SPMInterface</source>\n       <descr>Hello first problem</descr> -->\n       <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n       <!--      <descr>this:descrYYY</descr> -->\n       <!--<logmsg>spm interface update.111</logmsg> -->\n       <parms>\n            <parm>\n             <parmName>cameraIdentifier</parmName>\n             <value>000,000</value>\n            </parm>\n            <parm>\n             <parmName>healthChangeReason</parmName>\n             <value>0</value>\n            </parm>\n            <parm>\n             <parmName>faultState</parmName>\n             <value>1</value>\n            </parm>\n  \n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-41",
+                    "name": "panMotor-raise-node3"
+                },
+                {
+                    "request": {
+                        "url": "[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Basic YWRtaW46YWRtaW4="
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    \n    <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/tamperDetectedCleared</uei>\n      <nodeid>1</nodeid>\n      <!--<host>host</host>\n       <severity>CRITICAL</severity>\n       <source>SPMInterface</source>\n       <descr>Hello first problem</descr> -->\n       <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n       <!--      <descr>this:descrYYY</descr> -->\n       <!--<logmsg>spm interface update.111</logmsg> -->\n       <parms>\n            <parm>\n             <parmName>cameraIdentifier</parmName>\n             <value>000,000</value>\n            </parm>\n             <parm>\n             <parmName>tamperState</parmName>\n             <value>0</value>\n            </parm>\n  \n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-31",
+                    "name": "TamperDetected-clear-node1"
+                },
+                {
+                    "request": {
+                        "url": "[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Basic YWRtaW46YWRtaW4="
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    \n    <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/tamperDetectedCleared</uei>\n      <nodeid>3</nodeid>\n      <!--<host>host</host>\n       <severity>CRITICAL</severity>\n       <source>SPMInterface</source>\n       <descr>Hello first problem</descr> -->\n       <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n       <!--      <descr>this:descrYYY</descr> -->\n       <!--<logmsg>spm interface update.111</logmsg> -->\n       <parms>\n            <parm>\n             <parmName>cameraIdentifier</parmName>\n             <value>000,001</value>\n            </parm>\n             <parm>\n             <parmName>tamperState</parmName>\n             <value>0</value>\n            </parm>\n  \n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-33",
+                    "name": "TamperDetected-clear-node3"
+                },
+                {
+                    "request": {
+                        "url": "[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Basic YWRtaW46YWRtaW4="
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    \n    <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/tamperDetected</uei>\n      <nodeid>1</nodeid>\n      <!--<host>host</host>\n       <severity>CRITICAL</severity>\n       <source>SPMInterface</source>\n       <descr>Hello first problem</descr> -->\n       <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n       <!--      <descr>this:descrYYY</descr> -->\n       <!--<logmsg>spm interface update.111</logmsg> -->\n       <parms>\n            <parm>\n             <parmName>cameraIdentifier</parmName>\n             <value>000,000</value>\n            </parm>\n             <parm>\n             <parmName>tamperState</parmName>\n             <value>1</value>\n            </parm>\n  \n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-29",
+                    "name": "TamperDetected-raise-node1"
+                },
+                {
+                    "request": {
+                        "url": "[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Basic YWRtaW46YWRtaW4="
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    \n    <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/tamperDetected</uei>\n      <nodeid>3</nodeid>\n      <!--<host>host</host>\n       <severity>CRITICAL</severity>\n       <source>SPMInterface</source>\n       <descr>Hello first problem</descr> -->\n       <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n       <!--      <descr>this:descrYYY</descr> -->\n       <!--<logmsg>spm interface update.111</logmsg> -->\n       <parms>\n            <parm>\n             <parmName>cameraIdentifier</parmName>\n             <value>000,000</value>\n            </parm>\n             <parm>\n             <parmName>tamperState</parmName>\n             <value>1</value>\n            </parm>\n  \n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-30",
+                    "name": "TamperDetected-raise-node3"
+                },
+                {
+                    "request": {
+                        "url": "[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Basic YWRtaW46YWRtaW4="
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    \n    <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/tiltMotor-clear</uei>\n      <nodeid>3</nodeid>\n      <!--<host>host</host>\n       <severity>CRITICAL</severity>\n       <source>SPMInterface</source>\n       <descr>Hello first problem</descr> -->\n       <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n       <!--      <descr>this:descrYYY</descr> -->\n       <!--<logmsg>spm interface update.111</logmsg> -->\n       <parms>\n            <parm>\n             <parmName>cameraIdentifier</parmName>\n             <value>000,000</value>\n            </parm>\n            <parm>\n             <parmName>healthChangeReason</parmName>\n             <value>1</value>\n            </parm>\n            <parm>\n             <parmName>faultState</parmName>\n             <value>0</value>\n            </parm>\n  \n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-43",
+                    "name": "tiltMotor-clear-node3"
+                },
+                {
+                    "request": {
+                        "url": "[::1]:8980/opennms/rest/events",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Basic YWRtaW46YWRtaW4="
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<event>\n    \n    <uei>uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/tiltMotor</uei>\n      <nodeid>3</nodeid>\n      <!--<host>host</host>\n       <severity>CRITICAL</severity>\n       <source>SPMInterface</source>\n       <descr>Hello first problem</descr> -->\n       <!-- <time>2020-04-08T04:47:37.331-04:00</time> -->\n       <!--      <descr>this:descrYYY</descr> -->\n       <!--<logmsg>spm interface update.111</logmsg> -->\n       <parms>\n            <parm>\n             <parmName>cameraIdentifier</parmName>\n             <value>000,000</value>\n            </parm>\n            <parm>\n             <parmName>healthChangeReason</parmName>\n             <value>1</value>\n            </parm>\n            <parm>\n             <parmName>faultState</parmName>\n             <value>1</value>\n            </parm>\n  \n    </parms>\n</event>"
+                        }
+                    },
+                    "id": "rester-42",
+                    "name": "tiltMotor-raise-node3"
+                }
+            ]
+        }
+   
+    ]
+}
