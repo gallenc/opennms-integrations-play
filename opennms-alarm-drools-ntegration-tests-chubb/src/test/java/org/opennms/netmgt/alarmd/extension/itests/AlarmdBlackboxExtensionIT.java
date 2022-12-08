@@ -26,7 +26,7 @@
  *     http://www.opennms.com/
  *******************************************************************************/
 
-package org.opennms.netmgt.alarmd.itests;
+package org.opennms.netmgt.alarmd.extension.itests;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anyOf;
@@ -40,6 +40,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.opennms.core.test.alarms.AlarmMatchers.acknowledged;
 import static org.opennms.core.test.alarms.AlarmMatchers.hasSeverity;
 
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -47,6 +48,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.opennms.core.test.alarms.driver.ScenarioResults;
 import org.opennms.core.test.alarms.driver.State;
+import org.opennms.core.test.alarms.driver.extension.ScenarioExt;
 import org.opennms.core.test.alarms.driver.Scenario;
 import org.opennms.core.test.db.TemporaryDatabase;
 import org.opennms.netmgt.events.api.EventConstants;
@@ -64,7 +66,7 @@ import org.opennms.netmgt.model.OnmsSeverity;
  *
  * @author jwhite
  */
-public class AlarmdBlackboxIT {
+public class AlarmdBlackboxExtensionIT {
 	
 	@Before
 	public void setproperties() {
@@ -81,7 +83,7 @@ public class AlarmdBlackboxIT {
      */
     @Test
     public void canTriggerAndClearAlarm() {
-        Scenario scenario = Scenario.builder()
+        Scenario scenario = ScenarioExt.builder()
                 .withLegacyAlarmBehavior()
                 .withNodeDownEvent(1, 1)
                 .withNodeUpEvent(2, 1)
@@ -140,7 +142,7 @@ public class AlarmdBlackboxIT {
         // Alarms may not immediately clear/unclear due to the way to rules are structured
         // so we add some delay between the steps to make sure that they do
         long step = TimeUnit.MINUTES.toMillis(2);
-        Scenario scenario = Scenario.builder()
+        Scenario scenario = ScenarioExt.builder()
                 .withLegacyAlarmBehavior()
                 .withTickLength(1, TimeUnit.MINUTES)
                 .withNodeDownEvent(step, 1)
@@ -196,7 +198,7 @@ public class AlarmdBlackboxIT {
      */
     @Test
     public void canTriggerAcknowledgeAndClearAlarm() {
-        Scenario scenario = Scenario.builder()
+        Scenario scenario = ScenarioExt.builder()
                 .withLegacyAlarmBehavior()
                 .withNodeDownEvent(1, 1)
                 .withAcknowledgmentForNodeDownAlarm(2, 1)
@@ -253,7 +255,7 @@ public class AlarmdBlackboxIT {
      */
     @Test
     public void canTriggerAndAcknowledgeAlarm() {
-        Scenario scenario = Scenario.builder()
+        Scenario scenario = ScenarioExt.builder()
                 .withNodeDownEvent(1, 1)
                 .withAcknowledgmentForNodeDownAlarm(2, 1)
                 .build();
@@ -298,7 +300,7 @@ public class AlarmdBlackboxIT {
      */
     @Test
     public void canCreateSituation() {
-        Scenario scenario = Scenario.builder()
+        Scenario scenario = ScenarioExt.builder()
                 .withLegacyAlarmBehavior()
                 // Create some node down alarms
                 .withNodeDownEvent(1, 1)
@@ -337,7 +339,7 @@ public class AlarmdBlackboxIT {
      */
     @Test
     public void canDeEscalateSituation() {
-        Scenario scenario = Scenario.builder()
+        Scenario scenario = ScenarioExt.builder()
                 .withLegacyAlarmBehavior()
                 // Create some node down alarms
                 .withNodeDownEvent(1, 1)
@@ -375,7 +377,7 @@ public class AlarmdBlackboxIT {
      */
     @Test
     public void situationAcknowledgmentAcknowledgesAllAlarms() {
-        Scenario scenario = Scenario.builder()
+        Scenario scenario = ScenarioExt.builder()
                 .withLegacyAlarmBehavior()
                 // Create some node down alarms
                 .withNodeDownEvent(1, 1)
@@ -412,7 +414,7 @@ public class AlarmdBlackboxIT {
      */
     @Test
     public void situationUnAcknowledgmentUnAcknowledgesAllAlarms() {
-        Scenario scenario = Scenario.builder()
+        Scenario scenario = ScenarioExt.builder()
                 .withLegacyAlarmBehavior()
                 // Create some node down alarms
                 .withNodeDownEvent(1, 1)
@@ -449,7 +451,7 @@ public class AlarmdBlackboxIT {
     @Test
     public void alarmsAckSituation() {
         // A situation is deemed "acked" if all the related alarms are acked
-        Scenario scenario = Scenario.builder()
+        Scenario scenario = ScenarioExt.builder()
                 .withLegacyAlarmBehavior()
                 // Create some node down alarms
                 .withNodeDownEvent(1, 1)
@@ -486,7 +488,7 @@ public class AlarmdBlackboxIT {
         // If a new unacked alarm gets added to an acked situation, or an existing related alarm is unacknowledged,
         // then the situation itself should be unacked
         // (but all other related alarms which were acked should remain acked)
-        Scenario scenario = Scenario.builder()
+        Scenario scenario = ScenarioExt.builder()
                 .withLegacyAlarmBehavior()
                 // Create some node down alarms
                 .withNodeDownEvent(1, 1)
@@ -529,7 +531,7 @@ public class AlarmdBlackboxIT {
         // existing related alarm is unacknowledged,
         // then the situation itself should be unacked (but all other related
         // alarms which were acked should remain acked)
-        Scenario scenario = Scenario.builder().withLegacyAlarmBehavior()
+        Scenario scenario = ScenarioExt.builder().withLegacyAlarmBehavior()
                 // Create some node down alarms
                 .withNodeDownEvent(1, 1).withNodeDownEvent(2, 2).withNodeDownEvent(3, 3)
                 // Create a situation that contains the node down alarms
