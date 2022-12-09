@@ -100,7 +100,7 @@ public class ScenarioExt extends Scenario {
 
         private long tickLengthMillis = 1;
 
-        public ScenarioBuilder withTickLength(long duration, TimeUnit unit) {
+        public ScenarioBuilderExt withTickLength(long duration, TimeUnit unit) {
             if (duration < 1) {
                 throw new IllegalArgumentException("Duration must be strictly positive!");
             }
@@ -108,7 +108,7 @@ public class ScenarioExt extends Scenario {
             return this;
         }
 
-        public ScenarioBuilder withNodeDownEvent(long time, int nodeId) {
+        public ScenarioBuilderExt withNodeDownEvent(long time, int nodeId) {
             EventBuilder builder = new EventBuilder(EventConstants.NODE_DOWN_EVENT_UEI, "test");
             builder.setTime(new Date(time));
             builder.setNodeid(nodeId);
@@ -125,7 +125,7 @@ public class ScenarioExt extends Scenario {
             return this;
         }
 
-        public ScenarioBuilder withNodeUpEvent(long time, int nodeId) {
+        public ScenarioBuilderExt withNodeUpEvent(long time, int nodeId) {
             EventBuilder builder = new EventBuilder(EventConstants.NODE_UP_EVENT_UEI, "test");
             builder.setTime(new Date(time));
             builder.setNodeid(nodeId);
@@ -144,7 +144,7 @@ public class ScenarioExt extends Scenario {
         }
 
         // Create an event with lower severity
-        public ScenarioBuilder withInterfaceDownEvent(long time, int nodeId) {
+        public ScenarioBuilderExt withInterfaceDownEvent(long time, int nodeId) {
             EventBuilder builder = new EventBuilder(EventConstants.INTERFACE_DOWN_EVENT_UEI, "test");
             builder.setTime(new Date(time));
             builder.setNodeid(nodeId);
@@ -161,18 +161,34 @@ public class ScenarioExt extends Scenario {
             return this;
         }
         
-        public ScenarioBuilder withUeiEvent(long time, int nodeId, String uei,String severity, String source, Map<String,String> params) {
+        /**
+         * additional method to inject an event
+         * @param time
+         * @param nodeId
+         * @param uei
+         * @param severity
+         * @param source
+         * @param params
+         * @return
+         */
+        public ScenarioBuilderExt withUeiEvent(long time, int nodeId, String uei, String clearUei ,String severity, String source, Map<String,String> params) {
             EventBuilder builder = new EventBuilder(uei, source);
             builder.setTime(new Date(time));
             builder.setNodeid(nodeId);
             builder.setSeverity(severity);
 
             AlarmData data = new AlarmData();
-            data.setAlarmType(1);
             data.setReductionKey(String.format("%s:%d", uei, nodeId));
+            if(clearUei==null) {
+                data.setAlarmType(1);
+            } else {
+                data.setAlarmType(2);
+                data.setClearKey(String.format("%s:%d", clearUei, nodeId));
+            }
+
             builder.setAlarmData(data);
             
-            for (Entry<String,String> e: params.entrySet()) {
+            if (params!=null) for (Entry<String,String> e: params.entrySet()) {
                builder.addParam(e.getKey(), e.getValue());
            }
 
@@ -182,27 +198,27 @@ public class ScenarioExt extends Scenario {
             return this;
         }
 
-        public ScenarioBuilder withAcknowledgmentForNodeDownAlarm(long time, int nodeId) {
+        public ScenarioBuilderExt withAcknowledgmentForNodeDownAlarm(long time, int nodeId) {
             actions.add(new AcknowledgeAlarmAction("test", new Date(time), String.format("%s:%d", EventConstants.NODE_DOWN_EVENT_UEI, nodeId)));
             return this;
         }
 
-        public ScenarioBuilder withUnAcknowledgmentForNodeDownAlarm(long time, int nodeId) {
+        public ScenarioBuilderExt withUnAcknowledgmentForNodeDownAlarm(long time, int nodeId) {
             actions.add(new UnAcknowledgeAlarmAction("test", new Date(time), String.format("%s:%d", EventConstants.NODE_DOWN_EVENT_UEI, nodeId)));
             return this;
         }
 
-        public ScenarioBuilder withAcknowledgmentForSituation(long time, String situtationId) {
+        public ScenarioBuilderExt withAcknowledgmentForSituation(long time, String situtationId) {
             actions.add(new AcknowledgeAlarmAction("test", new Date(time), String.format("%s:%s", EventConstants.SITUATION_EVENT_UEI, situtationId)));
             return this;
         }
 
-        public ScenarioBuilder withUnAcknowledgmentForSituation(long time, String situtationId) {
+        public ScenarioBuilderExt withUnAcknowledgmentForSituation(long time, String situtationId) {
             actions.add(new UnAcknowledgeAlarmAction("test", new Date(time), String.format("%s:%s", EventConstants.SITUATION_EVENT_UEI, situtationId)));
             return this;
         }
 
-        public ScenarioBuilder withSituationForNodeDownAlarms(long time, String situtationId, int... nodesIds) {
+        public ScenarioBuilderExt withSituationForNodeDownAlarms(long time, String situtationId, int... nodesIds) {
             EventBuilder builder = new EventBuilder(EventConstants.SITUATION_EVENT_UEI, "test");
             builder.setTime(new Date(time));
             builder.setSeverity(OnmsSeverity.NORMAL.getLabel());
@@ -221,7 +237,7 @@ public class ScenarioExt extends Scenario {
         }
 
         // create a situation using reduction keys
-        public ScenarioBuilder withSituationForAlarmReductionKeys(long time, String situtationId, String... alarms) {
+        public ScenarioBuilderExt withSituationForAlarmReductionKeys(long time, String situtationId, String... alarms) {
             EventBuilder builder = new EventBuilder(EventConstants.SITUATION_EVENT_UEI, "test");
             builder.setTime(new Date(time));
             builder.setSeverity(OnmsSeverity.NORMAL.getLabel());
@@ -238,18 +254,18 @@ public class ScenarioExt extends Scenario {
             return this;
         }
         
-        public ScenarioBuilder withLegacyAlarmBehavior() {
+        public ScenarioBuilderExt withLegacyAlarmBehavior() {
             legacyAlarmBehavior = true;
             return this;
         }
 
-        public ScenarioBuilder awaitUntil(Runnable runnable) {
+        public ScenarioBuilderExt awaitUntil(Runnable runnable) {
             this.awaitUntilRunnable = Objects.requireNonNull(runnable);
             return this;
         }
 
         public Scenario build() {
-            return new Scenario(this);
+            return new ScenarioExt(this);
         }
 
     }
