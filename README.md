@@ -10,14 +10,16 @@ This is an overlay project containing example CHUBB camera alarm creation and fo
 ### chubb mib 
 [chubb-mib](../main/kafka-experiments/chubb-mib) 
 
-Creation of chubb alarm objects from chub mib files
+Creation of chubb alarm objects from chubb mib files
 
 ### integration-example-1
-[integration-example-1](../main/kafka-experiments/integration-example-1) 
+
+[integration-example-1](../main/kafka-experiments/integration-example1) 
 
 Simple kafka alarm client and a web ui which receives alarms from OpenNMS over kafka alarm forwarding bus
 
 ### minimal-minion-kafka  (with drools)
+
 [minimal-minion-kafka](../main/kafka-experiments/minimal-minion-kafka) 
 
 Example OpeNNMS configuration using chubb event definitions ande chubb-rules.drl file to create alarms
