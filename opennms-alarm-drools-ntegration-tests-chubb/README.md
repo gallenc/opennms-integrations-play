@@ -1,20 +1,29 @@
 # Drools Alarm Tester
 
-This project shows how to extend the internal OpenNMS AlarmD integration tests to allow external testing of customer specific drools rules.
-The project is externl to the opennms build and allows rules to be tested outside of the OpenNMS build cycle.
+This project shows how to extend the internal OpenNMS Alarmd integration tests to allow external testing of customer specific drools rules.
+The project is external to the opennms build and allows rules to be tested outside of the OpenNMS build cycle.
 
 ## OpenNMS code extensions
 
 The external integration tests are based on an extended version of the alarm rules integration tests in 
-[AlarmdBlackboxIT.java](https://github.com/OpenNMS/opennms/blob/develop/opennms-alarms/integration-tests/src/test/java/org/opennms/netmgt/alarmd/itests/AlarmdBlackboxIT.java)
+[AlarmdBlackboxIT.java](https://github.com/OpenNMS/opennms/blob/develop/opennms-alarms/integration-tests/src/test/java/org/opennms/netmgt/alarmd/itests/AlarmdBlackboxIT.java )
+which allows test scenarios to be constructed using a fluent builder like so:
+```
+Scenario scenario = Scenario.builder()
+                .withLegacyAlarmBehavior()
+                .withNodeDownEvent(1, 1)
+                .withNodeUpEvent(2, 1)
+                .build();
+        ScenarioResults results = scenario.play();
+```
 
-These tests rely on the SenarioBuilder class declared within [Scenario.java)](https://github.com/OpenNMS/opennms/blob/develop/core/test-api/alarms/src/main/java/org/opennms/core/test/alarms/driver/Scenario.java)
+These tests rely on the SenarioBuilder class declared within [Scenario.java](https://github.com/OpenNMS/opennms/blob/develop/core/test-api/alarms/src/main/java/org/opennms/core/test/alarms/driver/Scenario.java)
 
 In our tests we have extended the SenarioBuilder  builder in 
-[ScenarioExt.java](../opennms-alarm-itests-chubb/csrc/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java)
+[ScenarioExt.java](../opennms-alarm-itests-chubb/src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java)
 
-This extension adds 3 methods which can directly create events with specific ueis. 
-(These additional methods may be added to future opennms tests through a pull request)
+This extension adds 3 additional methods which can directly create events with specific ueis. 
+(These additional methods may be added to future opennms ScenarioBuilder through a pull request)
 ```
    public static class ScenarioBuilderExt  extends ScenarioBuilder{
    ...
@@ -34,14 +43,14 @@ The
 class re-implements the  
 [AlarmdBlackboxIT.java](https://github.com/OpenNMS/opennms/blob/develop/opennms-alarms/integration-tests/src/test/java/org/opennms/netmgt/alarmd/itests/AlarmdBlackboxIT.java)
 class using 
-[ScenarioExt.java](../opennms-alarm-itests-chubb/csrc/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
+[ScenarioExt.java](../opennms-alarm-itests-chubb/src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
 instead of 
 [Scenario.java)](https://github.com/OpenNMS/opennms/blob/develop/core/test-api/alarms/src/main/java/org/opennms/core/test/alarms/driver/Scenario.java)
 
 A simple test using the new methods in 
-[ScenarioExt.java](../opennms-alarm-itests-chubb/csrc/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
+[ScenarioExt.java](../opennms-alarm-itests-chubb/src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
 is provided in 
-[SimpleExtensionIT.java](../opennms-alarm-itests-chubb/csrc/src/test/java/org/opennms/netmgt/alarmd/extension/itests/SimpleExtensionIT.java) 
+[SimpleExtensionIT.java](../opennms-alarm-itests-chubb/src/src/test/java/org/opennms/netmgt/alarmd/extension/itests/SimpleExtensionIT.java) 
 
 
 ## Example CHUBB Rules Test
@@ -51,7 +60,9 @@ provides a set of tests for the rules in
 The actual rules are described elsewhere
 
 The rules need matching event definitions which are provided in 
-
+[eventconfig.xml](../opennms-alarm-drools-ntegration-tests-chubb/src/test/resources/opennms-base-assembly-overload/src/main/filtered/etc/eventconfig.xml
+and
+[events](../opennms-alarm-drools-ntegration-tests-chubb/src/test/resources/opennms-base-assembly-overload/src/main/filtered/etc/events
 
 
 
@@ -122,8 +133,6 @@ once you have compiled opennms you can compile and run the tests using
 ```
 mvn clean install
 ```
-
-
 
 ### Dependencies
 
