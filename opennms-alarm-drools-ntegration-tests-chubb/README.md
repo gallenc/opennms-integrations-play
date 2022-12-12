@@ -46,7 +46,7 @@ class re-implements the
 class using 
 [ScenarioExt.java](../opennms-alarm-drools-ntegration-tests-chubb/src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
 instead of 
-[Scenario.java)](https://github.com/OpenNMS/opennms/blob/develop/core/test-api/alarms/src/main/java/org/opennms/core/test/alarms/driver/Scenario.java)
+[Scenario.java](https://github.com/OpenNMS/opennms/blob/develop/core/test-api/alarms/src/main/java/org/opennms/core/test/alarms/driver/Scenario.java)
 
 A simple test using the new methods in 
 [ScenarioExt.java](../opennms-alarm-drools-ntegration-tests-chubb/src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
@@ -112,7 +112,7 @@ should have its parent pom section
 		<version>30.0.0-1</version>
 	</parent>
 ```
- set to match the vesion in the parent pom of the required OpenNMS build. 
+ set to match the version in the parent pom of the required OpenNMS build. 
 In this case matching 
  [OpenNMS 30.0.0 parent pom.xml](https://github.com/OpenNMS/opennms/blob/opennms-30.0.0-1/pom.xml)
 (An OpenNMS maven bom might be possible - but I haven investigated)
