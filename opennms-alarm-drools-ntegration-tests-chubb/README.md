@@ -75,10 +75,12 @@ So to build and run this test suit, you first need to have checked out and built
 See [how to compile opennms](https://opennms.discourse.group/t/how-to-compile-opennms/486)
 and 
 [Build from source](https://docs.opennms.com/horizon/30/development/build-from-source.html)
-This will build the jars needed for this test and place the in your local .m2 repository
+
+This will build the jars needed for this test and place them in your local .m2 repository
 
 The underlying integration test suit on which this test suit extends has a hard coded expectation of the location of certain required files.
-In this project these files are checked out and located where they can be found by the test classes.
+In this project these files are checked out and located where they can be found by the test classes at the root of the project.
+These folders should not be checked in to github (.gitignore applied)
 
 The build first downloads the liquibase files to create the database and places these in the 
 ```
