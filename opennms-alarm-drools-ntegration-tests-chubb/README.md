@@ -61,9 +61,9 @@ provides a set of tests for the rules in
 The actual rules are described elsewhere
 
 The rules need matching event definitions which are provided in 
-[eventconfig.xml](../opennms-alarm-drools-ntegration-tests-chubb/src/test/resources/opennms-base-assembly-overload/src/main/filtered/etc/eventconfig.xml
+[eventconfig.xml](../opennms-alarm-drools-ntegration-tests-chubb/src/test/resources/opennms-base-assembly-overload/src/main/filtered/etc/eventconfig.xml)
 and
-[events](../opennms-alarm-drools-ntegration-tests-chubb/src/test/resources/opennms-base-assembly-overload/src/main/filtered/etc/events
+[events](../opennms-alarm-drools-ntegration-tests-chubb/src/test/resources/opennms-base-assembly-overload/src/main/filtered/etc/events)
 
 
 
