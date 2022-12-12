@@ -50,7 +50,7 @@ instead of
 A simple test using the new methods in 
 [ScenarioExt.java](../opennms-alarm-drools-ntegration-tests-chubb/src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
 is provided in 
-[SimpleExtensionIT.java](../opennms-alarm-itests-chubb/src/src/test/java/org/opennms/netmgt/alarmd/extension/itests/SimpleExtensionIT.java) 
+[SimpleExtensionIT.java](../opennms-alarm-itests-chubb/src/test/java/org/opennms/netmgt/alarmd/extension/itests/SimpleExtensionIT.java) 
 
 
 ## Example CHUBB Rules Test
