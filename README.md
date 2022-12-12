@@ -4,7 +4,7 @@ Most of this work is experimental and/ or incomplete but it may provide a starti
 
 ## Kafka Experiments and experimental drools rules
 This is an overlay project containing example CHUBB camera alarm creation and forwarding through kafka bus and also drools examples
-[kafka-experiments](../master/myPracticeCourseWork/opennms-integrations-play/kafka-experiments/kafka-experiments)
+[kafka-experiments](../main/kafka-experiments/kafka-experiments)
 
 ### chubb mib 
 Creation of chubb alarm objects from chub mib files
