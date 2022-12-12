@@ -1,11 +1,11 @@
 # opennms-integrations-play
 Miscellaneous work to show integrations to / from OpenNMS.
-Most of this work is experimental and/ or incomplete but it may provide a starting point for real production examples.
+Most of this work is experimental and / or incomplete but it may provide a starting point for real production examples.
 
 ## Kafka Experiments and experimental drools rules
 [kafka-experiments](../main/kafka-experiments)
 
-This is an overlay project containing example CHUBB camera alarm creation and forwarding through kafka bus and also drools examples
+This is an parent project containing example CHUBB camera alarm creation and forwarding through kafka bus and also drools examples
 
 ### chubb mib 
 [chubb-mib](../main/kafka-experiments/chubb-mib) 
@@ -22,7 +22,13 @@ Simple kafka alarm client and a web ui which receives alarms from OpenNMS over k
 
 [minimal-minion-kafka](../main/kafka-experiments/minimal-minion-kafka) 
 
-Example OpeNNMS configuration using chubb event definitions ande chubb-rules.drl file to create alarms
+Example OpeNMS docker-compose configuration using chubb event definitions ande chubb-rules.drl file to create alarms
+
+## opennms-alarm-drools-ntegration-tests-chubb
+[opennms-alarm-drools-ntegration-tests-chubb](../main/opennms-alarm-drools-ntegration-tests-chubb) 
+
+Integration test project for unit testing OpenNMS Alarmd rules. 
+Example used Chubb project.
 
 ## pris-docker-compose
 [pris-docker-compose](../main/pris-docker-compose) 
@@ -34,20 +40,20 @@ is an example project for using pris with an excel spreadsheet to provision Open
 
 Is a simple example of using iptables to map ports to differnt ip addresses so that OpenNMS can poll snmp agents on differnt ports.
 
-## multi-opennms-newts-docker (Incomplete)
-[multi-opennms-newts-docker](../main/multi-opennms-newts-docker)
-
-Is a simple project with several opennms pointing at single casandra
-
-## onmsIntegrationExample1 
+## onmsIntegrationExample1 (T-TOC traffic ReST api)
 [onmsIntegrationExample1](../main/onmsIntegrationExample1)
 
 Example integrating openNMS to simple ReST api for TTOC solution - not used in project
 
-## scriptdtest
+## scriptdtest (experimental)
 [scriptdtest](../main/scriptdtest)
 
 Example project integrating scriptd
+
+## multi-opennms-newts-docker (Incomplete)
+[multi-opennms-newts-docker](../main/multi-opennms-newts-docker)
+
+Is a simple project with several opennms pointing at single cassandra
 
 ## events to rester (Incomplete)
 [eventstorester](../main/eventstorester)
