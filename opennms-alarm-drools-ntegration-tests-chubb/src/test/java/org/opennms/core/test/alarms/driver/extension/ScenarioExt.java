@@ -166,12 +166,13 @@ public class ScenarioExt extends Scenario {
          * @param time
          * @param nodeId
          * @param uei
+         * @param clearUei
          * @param severity
          * @param source
          * @param params
          * @return
          */
-        public ScenarioBuilderExt withUeiEvent(long time, int nodeId, String uei, String clearUei ,String severity, String source, Map<String,String> params) {
+        public ScenarioBuilderExt withClearAlarmUeiEvent(long time, int nodeId, String uei, String clearUei ,String severity, String source, Map<String,String> params) {
             EventBuilder builder = new EventBuilder(uei, source);
             builder.setTime(new Date(time));
             builder.setNodeid(nodeId);
@@ -197,6 +198,76 @@ public class ScenarioExt extends Scenario {
             actions.add(new SendEventAction(builder.getEvent()));
             return this;
         }
+
+        
+        /**
+         * additional method to inject an type 2 event
+         * @param time
+         * @param nodeId
+         * @param uei
+         * @param clearUei
+         * @param severity
+         * @param source
+         * @param params
+         * @return
+         */
+        public ScenarioBuilderExt withRaiseAlarmUeiEvent(long time, int nodeId, String uei,String severity, String source, Map<String,String> params) {
+            EventBuilder builder = new EventBuilder(uei, source);
+            builder.setTime(new Date(time));
+            builder.setNodeid(nodeId);
+            builder.setSeverity(severity);
+
+            AlarmData data = new AlarmData();
+            data.setReductionKey(String.format("%s:%d", uei, nodeId));
+ 
+                data.setAlarmType(1);
+
+            builder.setAlarmData(data);
+            
+            if (params!=null) for (Entry<String,String> e: params.entrySet()) {
+               builder.addParam(e.getKey(), e.getValue());
+           }
+
+            builder.setLogDest("logndisplay");
+            builder.setLogMessage("testing");
+            actions.add(new SendEventAction(builder.getEvent()));
+            return this;
+        }
+        
+        /**
+         * additional method to inject an type 3 event
+         * @param time
+         * @param nodeId
+         * @param uei
+         * @param clearUei
+         * @param severity
+         * @param source
+         * @param params
+         * @return
+         */
+        public ScenarioBuilderExt withUnclearableAlarmUeiEvent(long time, int nodeId, String uei,String severity, String source, Map<String,String> params) {
+            EventBuilder builder = new EventBuilder(uei, source);
+            builder.setTime(new Date(time));
+            builder.setNodeid(nodeId);
+            builder.setSeverity(severity);
+
+            AlarmData data = new AlarmData();
+            data.setReductionKey(String.format("%s:%d", uei, nodeId));
+ 
+                data.setAlarmType(3);
+
+            builder.setAlarmData(data);
+            
+            if (params!=null) for (Entry<String,String> e: params.entrySet()) {
+               builder.addParam(e.getKey(), e.getValue());
+           }
+
+            builder.setLogDest("logndisplay");
+            builder.setLogMessage("testing");
+            actions.add(new SendEventAction(builder.getEvent()));
+            return this;
+        }
+
 
         public ScenarioBuilderExt withAcknowledgmentForNodeDownAlarm(long time, int nodeId) {
             actions.add(new AcknowledgeAlarmAction("test", new Date(time), String.format("%s:%d", EventConstants.NODE_DOWN_EVENT_UEI, nodeId)));

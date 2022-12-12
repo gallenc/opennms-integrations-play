@@ -89,9 +89,10 @@ public class SimpleExtensionIT {
                 .withLegacyAlarmBehavior()
                 .withTickLength(1, TimeUnit.MINUTES)
                 // long time, int nodeId, String uei,String clearUei, String severity, String source, Map<String,String> params
-                .withUeiEvent(step*1, 1, EventConstants.NODE_DOWN_EVENT_UEI, null, OnmsSeverity.MAJOR.getLabel() , "test", null)
-                .withUeiEvent(step*2, 1, EventConstants.NODE_UP_EVENT_UEI, EventConstants.NODE_DOWN_EVENT_UEI, OnmsSeverity.NORMAL.getLabel() , "test", null)
-                .withUeiEvent(step*3, 1, EventConstants.NODE_UP_EVENT_UEI, EventConstants.NODE_DOWN_EVENT_UEI,OnmsSeverity.NORMAL.getLabel() , "test", null)
+                .withRaiseAlarmUeiEvent(step*1, 1, EventConstants.NODE_DOWN_EVENT_UEI, OnmsSeverity.MAJOR.getLabel() , "test", null)
+                // long time, int nodeId, String uei,String clearUei, String severity, String source, Map<String,String> params
+                .withClearAlarmUeiEvent(step*2, 1, EventConstants.NODE_UP_EVENT_UEI, EventConstants.NODE_DOWN_EVENT_UEI, OnmsSeverity.NORMAL.getLabel() , "test", null)
+                .withClearAlarmUeiEvent(step*3, 1, EventConstants.NODE_UP_EVENT_UEI, EventConstants.NODE_DOWN_EVENT_UEI,OnmsSeverity.NORMAL.getLabel() , "test", null)
                 .build();
         ScenarioResults results = scenario.play();
 
