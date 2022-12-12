@@ -37,9 +37,9 @@ This extension adds 3 additional methods which can directly create events with s
    // injects a type 3 event
    public ScenarioBuilderExt withUnclearableAlarmUeiEvent(long time, int nodeId, String uei,String severity, String source, Map<String,String> params) {
 
-```
+```/opennms-alarm-drools-ntegration-tests-chubb/src/test/java/org/opennms/netmgt/alarmd/extension/itests/SimpleExtensionIT.java
 The 
-[AlarmdBlackboxExtensionIT.java](../opennms-alarm-itests-chubb/src/test/java/org/opennms/netmgt/alarmd/extension/itests/AlarmdBlackboxExtensionIT.java)
+[AlarmdBlackboxExtensionIT.java](../opennms-alarm-itests-chubb/opennms-alarm-drools-ntegration-tests-chubb/src/test/java/org/opennms/netmgt/alarmd/extension/itests/SimpleExtensionIT.java)
 class re-implements the  
 [AlarmdBlackboxIT.java](https://github.com/OpenNMS/opennms/blob/develop/opennms-alarms/integration-tests/src/test/java/org/opennms/netmgt/alarmd/itests/AlarmdBlackboxIT.java)
 class using 
@@ -50,7 +50,7 @@ instead of
 A simple test using the new methods in 
 [ScenarioExt.java](../opennms-alarm-drools-ntegration-tests-chubb/src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
 is provided in 
-[SimpleExtensionIT.java](../opennms-alarm-itests-chubb/src/test/java/org/opennms/netmgt/alarmd/extension/itests/SimpleExtensionIT.java) 
+[SimpleExtensionIT.java](../opennms-alarm-drools-ntegration-tests-chubb/src/test/java/org/opennms/netmgt/alarmd/extension/itests/SimpleExtensionIT.java) 
 
 
 ## Example CHUBB Rules Test
