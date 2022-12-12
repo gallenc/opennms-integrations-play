@@ -43,7 +43,7 @@ The
 class re-implements the  
 [AlarmdBlackboxIT.java](https://github.com/OpenNMS/opennms/blob/develop/opennms-alarms/integration-tests/src/test/java/org/opennms/netmgt/alarmd/itests/AlarmdBlackboxIT.java)
 class using 
-[ScenarioExt.java](../opennms-alarm-itests-chubb/src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
+[ScenarioExt.java](../src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
 instead of 
 [Scenario.java)](https://github.com/OpenNMS/opennms/blob/develop/core/test-api/alarms/src/main/java/org/opennms/core/test/alarms/driver/Scenario.java)
 
