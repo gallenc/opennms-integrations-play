@@ -20,7 +20,7 @@ Scenario scenario = Scenario.builder()
 These tests rely on the SenarioBuilder class declared within [Scenario.java](https://github.com/OpenNMS/opennms/blob/develop/core/test-api/alarms/src/main/java/org/opennms/core/test/alarms/driver/Scenario.java)
 
 In our tests we have extended the SenarioBuilder  builder in 
-[ScenarioExt.java](../opennms-alarm-itests-chubb/src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java)
+[ScenarioExt.java](../opennms-alarm-drools-ntegration-tests-chubb/src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java)
 
 This extension adds 3 additional methods which can directly create events with specific ueis. 
 (These additional methods may be added to future opennms ScenarioBuilder through a pull request)
@@ -43,12 +43,12 @@ The
 class re-implements the  
 [AlarmdBlackboxIT.java](https://github.com/OpenNMS/opennms/blob/develop/opennms-alarms/integration-tests/src/test/java/org/opennms/netmgt/alarmd/itests/AlarmdBlackboxIT.java)
 class using 
-[ScenarioExt.java](../src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
+[ScenarioExt.java](../opennms-alarm-drools-ntegration-tests-chubb/src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
 instead of 
 [Scenario.java)](https://github.com/OpenNMS/opennms/blob/develop/core/test-api/alarms/src/main/java/org/opennms/core/test/alarms/driver/Scenario.java)
 
 A simple test using the new methods in 
-[ScenarioExt.java](../opennms-alarm-itests-chubb/src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
+[ScenarioExt.java](../opennms-alarm-drools-ntegration-tests-chubb/src/test/java/org/opennms/core/test/alarms/driver/extension/ScenarioExt.java) 
 is provided in 
 [SimpleExtensionIT.java](../opennms-alarm-itests-chubb/src/src/test/java/org/opennms/netmgt/alarmd/extension/itests/SimpleExtensionIT.java) 
 
