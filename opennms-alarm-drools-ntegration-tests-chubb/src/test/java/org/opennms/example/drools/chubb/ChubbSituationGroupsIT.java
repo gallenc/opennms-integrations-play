@@ -69,6 +69,11 @@ import org.opennms.netmgt.model.OnmsSeverity;
  */
 public class ChubbSituationGroupsIT {
 	
+	// 3 nodes are predefined in smoke tests
+	public static Integer NODE_1 = 1;
+	public static Integer NODE_2 = 2;
+	public static Integer NODE_3 = 3;
+	
 	@Before
 	public void setproperties() {
 		System.out.println("setting properties");
@@ -77,75 +82,160 @@ public class ChubbSituationGroupsIT {
 
 	}
 	
+	/**
+	 * Testing groups - see chubb-rules
+	 *  euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/panMotor","group5");
+	 *  euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/panMotor-clear","group5");
+	 *  euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/tiltMotor","group5");
+	 *  euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/tiltMotor-clear","group5");
+        
+	 *  euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/wiperMotor","group6");
+	 *  euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/wiperMotor-clear","group6");
+	 *  euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/heater","group6");
+	 *  euiGroupMap.put("uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/heater-clear","group6");
+	 */
+	@Test
+	public void chubbGroupSituationsTest() {
+		 
+        System.out.println("**** Chubb Situations Test Start ****");
+        
+	        // Alarms may not immediately clear/unclear due to the way to rules are structured
+	        // so we add some delay between the steps to make sure that they do
+	        long step = TimeUnit.MINUTES.toMillis(2);
+	        Scenario scenario = ScenarioExt.builder()
+	                .withLegacyAlarmBehavior()
+	                .withTickLength(1, TimeUnit.MINUTES)
+	                // long time, int nodeId, String uei,String clearUei, String severity, String source, Map<String,String> params
+	                .withRaiseAlarmUeiEvent(step*1, NODE_1, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/panMotor", OnmsSeverity.WARNING.getLabel() , "test", null)
+	                .withRaiseAlarmUeiEvent(step*2, NODE_1, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/panMotor", OnmsSeverity.WARNING.getLabel() , "test", null)
+	                .withRaiseAlarmUeiEvent(step*3, NODE_1, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/tiltMotor", OnmsSeverity.WARNING.getLabel() , "test", null)
+	                .withRaiseAlarmUeiEvent(step*4, NODE_2, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/wiperMotor", OnmsSeverity.WARNING.getLabel() , "test", null)
+	                .withRaiseAlarmUeiEvent(step*5, NODE_2, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/heater", OnmsSeverity.WARNING.getLabel() , "test", null)
+	                // long time, int nodeId, String uei,String clearUei, String severity, String source, Map<String,String> params
+	                .withClearAlarmUeiEvent(step*6, NODE_1, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/panMotor-clear", "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/tiltMotor", OnmsSeverity.CLEARED.getLabel() , "test", null)
+	                .withClearAlarmUeiEvent(step*7, NODE_1, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/tiltMotor-clear", "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/tiltMotor-clear", OnmsSeverity.CLEARED.getLabel() ,"test", null)
+	                .build();
+	        ScenarioResults results = scenario.play();
+
+
+	        // Verify the set of alarms at various points in time
+
+	        long t=0*step; 
+	        assertThat(results.getAlarms(t), hasSize(0));
+
+	        List<OnmsAlarm> alarmList = results.getAlarms(0);
+	        
+	        t=0*step; 
+	        alarmList = results.getAlarms(t);
+	        System.out.println(" alarms at time "+t+"  " +printAlarms(alarmList));
+	        
+	        t=1*step; 
+	        alarmList = results.getAlarms(t);
+	        System.out.println(" alarms at time "+t+"  " +printAlarms(alarmList));
+	        
+	        t=2*step; 
+	        alarmList = results.getAlarms(t);
+	        System.out.println(" alarms at time "+t+"  " +printAlarms(alarmList));
+
+	        t=3*step; 
+	        alarmList = results.getAlarms(t);
+	        System.out.println(" alarms at time "+t+"  " +printAlarms(alarmList));
+	        
+	        t=4*step; 
+	        alarmList = results.getAlarms(t);
+	        System.out.println(" alarms at time "+t+"  " +printAlarms(alarmList));
+	        
+	        t=5*step; 
+	        alarmList = results.getAlarms(t);
+	        System.out.println(" alarms at time "+t+"  " +printAlarms(alarmList));
+	        
+	        t=6*step; 
+	        alarmList = results.getAlarms(t);
+	        System.out.println(" alarms at time "+t+"  " +printAlarms(alarmList));
+	        
+	        t=7*step; 
+	        alarmList = results.getAlarms(t);
+	        System.out.println(" alarms at time "+t+"  " +printAlarms(alarmList));
+	        
+	        //Integer alarmId = results.getAlarms(step*1).get(0).getId();
+	        
+
+	        
+	        //assertThat(results.getProblemAlarm(step*1), hasSeverity(OnmsSeverity.MAJOR));
+	        
+	        // t=2, a (cleared) problem and a resolution
+	        //assertThat(results.getAlarms(step*3), hasSize(2));
+	        //assertThat(results.getAlarmAt(step*3, alarmId), hasSeverity(OnmsSeverity.CLEARED));
+
+	    }
+	
+	public String printAlarms(List<OnmsAlarm> alarmList){
+		String msg="alarmList size: "+alarmList.size();
+		for(OnmsAlarm alarm :alarmList) {
+			msg=msg+"\n  "+(alarm.isSituation()? "situation: ":"alarm: ") +alarm ;
+		}
+		return msg;
+		
+	}
+	
     /**
      * Verifies the basic life-cycle of a trigger, followed by a clear.
      *
      * Indirectly verifies the cosmicClear and cleanUp automations.
      */
-    @Test
-    public void canTriggerAndClearAlarm() {
-        Scenario scenario = ScenarioExt.builder()
-                .withLegacyAlarmBehavior()
-                .withNodeDownEvent(1, 1)
-                .withNodeUpEvent(2, 1)
-                .build();
-        ScenarioResults results = scenario.play();
+//    @Test
+//    public void canTriggerAndClearAlarm() {
+//        Scenario scenario = ScenarioExt.builder()
+//                .withLegacyAlarmBehavior()
+//                .withNodeDownEvent(1, 1)
+//                .withNodeUpEvent(2, 1)
+//                .build();
+//        ScenarioResults results = scenario.play();
+//
+//        // Verify the set of alarms at various points in time
+//
+//        // t=0, no alarms
+//        assertThat(results.getAlarms(0), hasSize(0));
+//        // t=1, a single problem alarm
+//        assertThat(results.getAlarms(1), hasSize(1));
+//        assertThat(results.getProblemAlarm(1), hasSeverity(OnmsSeverity.MAJOR));
+//        // t=2, a (cleared) problem and a resolution
+//        assertThat(results.getAlarms(2), hasSize(2));
+//        assertThat(results.getProblemAlarm(2), hasSeverity(OnmsSeverity.CLEARED));
+//        assertThat(results.getResolutionAlarm(2), hasSeverity(OnmsSeverity.NORMAL));
+//        // t=∞
+//        assertThat(results.getAlarmsAtLastKnownTime(), hasSize(0));
+//
+//        // Now verify the state changes for the particular alarms
+//
+//        // the problem
+//        List<State> problemStates = results.getStateChangesForAlarmWithId(results.getProblemAlarm(1).getId());
+//        assertThat(problemStates, hasSize(3)); // warning, cleared, deleted
+//        // state 0 at t=1
+//        assertThat(problemStates.get(0).getTime(), equalTo(1L));
+//        assertThat(problemStates.get(0).getAlarm(), hasSeverity(OnmsSeverity.MAJOR));
+//        // state 1 at t=2
+//        assertThat(problemStates.get(1).getTime(), equalTo(2L));
+//        assertThat(problemStates.get(1).getAlarm(), hasSeverity(OnmsSeverity.CLEARED));
+//        assertThat(problemStates.get(1).getAlarm().getCounter(), equalTo(1));
+//        // state 2 at t in [5m2ms, 10m]
+//        assertThat(problemStates.get(2).getTime(), greaterThanOrEqualTo(2L + TimeUnit.MINUTES.toMillis(5)));
+//        assertThat(problemStates.get(2).getTime(), lessThan(TimeUnit.MINUTES.toMillis(10)));
+//        assertThat(problemStates.get(2).getAlarm(), nullValue()); // DELETED
+//
+//        // the resolution
+//        List<State> resolutionStates = results.getStateChangesForAlarmWithId(results.getResolutionAlarm(2).getId());
+//        assertThat(resolutionStates, hasSize(2)); // cleared, deleted
+//        // state 0 at t=2
+//        assertThat(resolutionStates.get(0).getTime(), equalTo(2L));
+//        assertThat(resolutionStates.get(0).getAlarm(), hasSeverity(OnmsSeverity.NORMAL));
+//        // state 1 at t in [5m2ms, 10m]
+//        assertThat(resolutionStates.get(1).getTime(), greaterThanOrEqualTo(2L + TimeUnit.MINUTES.toMillis(5)));
+//        assertThat(resolutionStates.get(1).getTime(), lessThan(TimeUnit.MINUTES.toMillis(10)));
+//        assertThat(resolutionStates.get(1).getAlarm(), nullValue()); // DELETED
+//    }
 
-        // Verify the set of alarms at various points in time
 
-        // t=0, no alarms
-        assertThat(results.getAlarms(0), hasSize(0));
-        // t=1, a single problem alarm
-        assertThat(results.getAlarms(1), hasSize(1));
-        assertThat(results.getProblemAlarm(1), hasSeverity(OnmsSeverity.MAJOR));
-        // t=2, a (cleared) problem and a resolution
-        assertThat(results.getAlarms(2), hasSize(2));
-        assertThat(results.getProblemAlarm(2), hasSeverity(OnmsSeverity.CLEARED));
-        assertThat(results.getResolutionAlarm(2), hasSeverity(OnmsSeverity.NORMAL));
-        // t=∞
-        assertThat(results.getAlarmsAtLastKnownTime(), hasSize(0));
-
-        // Now verify the state changes for the particular alarms
-
-        // the problem
-        List<State> problemStates = results.getStateChangesForAlarmWithId(results.getProblemAlarm(1).getId());
-        assertThat(problemStates, hasSize(3)); // warning, cleared, deleted
-        // state 0 at t=1
-        assertThat(problemStates.get(0).getTime(), equalTo(1L));
-        assertThat(problemStates.get(0).getAlarm(), hasSeverity(OnmsSeverity.MAJOR));
-        // state 1 at t=2
-        assertThat(problemStates.get(1).getTime(), equalTo(2L));
-        assertThat(problemStates.get(1).getAlarm(), hasSeverity(OnmsSeverity.CLEARED));
-        assertThat(problemStates.get(1).getAlarm().getCounter(), equalTo(1));
-        // state 2 at t in [5m2ms, 10m]
-        assertThat(problemStates.get(2).getTime(), greaterThanOrEqualTo(2L + TimeUnit.MINUTES.toMillis(5)));
-        assertThat(problemStates.get(2).getTime(), lessThan(TimeUnit.MINUTES.toMillis(10)));
-        assertThat(problemStates.get(2).getAlarm(), nullValue()); // DELETED
-
-        // the resolution
-        List<State> resolutionStates = results.getStateChangesForAlarmWithId(results.getResolutionAlarm(2).getId());
-        assertThat(resolutionStates, hasSize(2)); // cleared, deleted
-        // state 0 at t=2
-        assertThat(resolutionStates.get(0).getTime(), equalTo(2L));
-        assertThat(resolutionStates.get(0).getAlarm(), hasSeverity(OnmsSeverity.NORMAL));
-        // state 1 at t in [5m2ms, 10m]
-        assertThat(resolutionStates.get(1).getTime(), greaterThanOrEqualTo(2L + TimeUnit.MINUTES.toMillis(5)));
-        assertThat(resolutionStates.get(1).getTime(), lessThan(TimeUnit.MINUTES.toMillis(10)));
-        assertThat(resolutionStates.get(1).getAlarm(), nullValue()); // DELETED
-    }
-
-
-    /**
-     * 
-     */
-    @Test
-    public void cancreatesituation() {
-        // Alarms may not immediately clear/unclear due to the way to rules are structured
-        // so we add some delay between the steps to make sure that they do
- 
-          System.out.println("r********** TEST end**********************");
-
-    }
 
 
 }

@@ -53,6 +53,7 @@ A simple test using the new methods in
 is provided in 
 [SimpleExtensionIT.java](../opennms-alarm-drools-ntegration-tests-chubb/src/test/java/org/opennms/netmgt/alarmd/extension/itests/SimpleExtensionIT.java) 
 
+Note that the test classes called by Scenario pre-create three OpenNMS nodes for the tests (id's 1,2,3)
 
 ## Example CHUBB Rules Test
 [ChubbSituationGroupsIT.java](../opennms-alarm-drools-ntegration-tests-chubb/src/test/java/org/opennms/example/drools/chubb/ChubbSituationGroupsIT.java)
@@ -96,6 +97,9 @@ directory at the base of the maven project.
 
 Finally local configurations and drools files used in this test are copied from the project 
 [opennms-base-assembly-overload](../opennms-alarm-drools-ntegration-tests-chubb/src/test/resources/opennms-base-assembly-overload)
+
+The integration tests in OpenNMS recognise the opennms-base-assembly folder only if it has a pom.xml file in it. 
+A dummy pom.xml file is included in the opennms-base-assembly-overload folder.
 
 ```
 resources/opennms-base-assembly-overload
@@ -144,3 +148,10 @@ You can install a drools editor in eclipse from the eclipse update site
 * Horizon 2023 is based off Meridian 27
 * version of drools - 7.37.0.Final
 * eclipse drools ide update site https://download.jboss.org/drools/release/7.37.0.Final/org.drools.updatesite/
+
+
+# TODO
+* create a pull request adding additional methods into Scenario.java class
+* request that the OpenNMS maven non snapshot build files create jars in maven central
+* request that the OpenNMS integration tests use checked out assemblies rather than relative files in the build.
+
