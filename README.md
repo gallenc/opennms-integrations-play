@@ -2,7 +2,8 @@
 Miscellaneous work to show integrations to / from OpenNMS.
 
 ## Kafka Experiments and experimental drools rules
-This is an overlay project containing example alarm creation and forwarding through kafka bus and also drools examples
+This is an overlay project containing example CHUBB camera alarm creation and forwarding through kafka bus and also drools examples
+[kafka-experiments(../opennms-integrations-play/kafka-experiments/kafka-experiments)
 
 ### chubb mib 
 Creation of chubb alarm objects from chub mib files
@@ -34,9 +35,11 @@ Incomplete
 
 ## onmsIntegrationExample1
 example integrating openNMS to simple ReST api for TTOC solution - not used in project
+[onmsIntegrationExample1](../opennms-integrations-play/onmsIntegrationExample1)
 
 # scriptdtest
 example project integrating scriptd
+[scriptdtest](../opennms-integrations-play/scriptdtest)
 
 
 ## events to rester
