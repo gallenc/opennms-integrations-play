@@ -42,6 +42,7 @@ import static org.opennms.core.test.alarms.AlarmMatchers.hasSeverity;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
@@ -53,7 +54,10 @@ import org.opennms.core.test.alarms.driver.Scenario;
 import org.opennms.core.test.db.TemporaryDatabase;
 import org.opennms.netmgt.events.api.EventConstants;
 import org.opennms.netmgt.model.OnmsAlarm;
+import org.opennms.netmgt.model.OnmsEventParameter;
 import org.opennms.netmgt.model.OnmsSeverity;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * This test suite allows us to:
@@ -107,17 +111,28 @@ public class ChubbSituationGroupsIT {
 	                .withTickLength(1, TimeUnit.MINUTES)
 	                // long time, int nodeId, String uei,String clearUei, String severity, String source, Map<String,String> params
 	                .withRaiseAlarmUeiEvent(step*1, NODE_1, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/panMotor", OnmsSeverity.WARNING.getLabel() , "test", null)
-	                .withRaiseAlarmUeiEvent(step*2, NODE_1, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/panMotor", OnmsSeverity.WARNING.getLabel() , "test", null)
+	                .withRaiseAlarmUeiEvent(step*2, NODE_1, "uei.opennms.org/alarms/drools/situation", OnmsSeverity.WARNING.getLabel() , "test", 
+	                   		ImmutableMap.of("situationGroup","group5",
+	                				"related-reductionKeyuei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/panMotor:1","uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/panMotor:1")
+	                		)
+
 	                .withRaiseAlarmUeiEvent(step*3, NODE_1, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/tiltMotor", OnmsSeverity.WARNING.getLabel() , "test", null)
-	                .withRaiseAlarmUeiEvent(step*4, NODE_2, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/wiperMotor", OnmsSeverity.WARNING.getLabel() , "test", null)
-	                .withRaiseAlarmUeiEvent(step*5, NODE_2, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/heater", OnmsSeverity.WARNING.getLabel() , "test", null)
+	                .withRaiseAlarmUeiEvent(step*4, NODE_1, "uei.opennms.org/alarms/drools/situation", OnmsSeverity.WARNING.getLabel() , "test", 
+	                		ImmutableMap.of("situationGroup","group5",
+	                				"related-reductionKeyuei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/panMotor:1","uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/panMotor:1",
+            				        "related-reductionKeyuei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/tiltMotor:1","uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/tiltMotor:1")
+	                		)
+	                
 	                // long time, int nodeId, String uei,String clearUei, String severity, String source, Map<String,String> params
-	                .withClearAlarmUeiEvent(step*6, NODE_1, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/panMotor-clear", "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/tiltMotor", OnmsSeverity.CLEARED.getLabel() , "test", null)
-	                .withClearAlarmUeiEvent(step*7, NODE_1, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/tiltMotor-clear", "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/tiltMotor-clear", OnmsSeverity.CLEARED.getLabel() ,"test", null)
+	                .withClearAlarmUeiEvent(step*5, NODE_1, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/panMotor-clear", "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChange/tiltMotor", OnmsSeverity.CLEARED.getLabel() , "test", null)
+	                .withClearAlarmUeiEvent(step*6, NODE_1, "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/tiltMotor-clear", "uei.opennms.org/traps/CHUBB-TVBS-CAMERA-MIB/healthChangeClear/tiltMotor-clear", OnmsSeverity.CLEARED.getLabel() ,"test", null)
+	                
+	                // added to show alarm list clear from node 1
+	                .withNodeDownEvent(step*7, NODE_2)
+	                .withNodeUpEvent(step*8, NODE_2)
 	                .build();
 	        ScenarioResults results = scenario.play();
-
-
+	        
 	        // Verify the set of alarms at various points in time
 
 	        long t=0*step; 
@@ -157,6 +172,15 @@ public class ChubbSituationGroupsIT {
 	        alarmList = results.getAlarms(t);
 	        System.out.println(" alarms at time "+t+"  " +printAlarms(alarmList));
 	        
+	        t=8*step; 
+	        alarmList = results.getAlarms(t);
+	        System.out.println(" alarms at time "+t+"  " +printAlarms(alarmList));
+	        
+	        alarmList = results.getAlarmsAtLastKnownTime();
+	        System.out.println(" alarms getAlarmsAtLastKnownTime " +printAlarms(alarmList));
+	        
+	        
+	        
 	        //Integer alarmId = results.getAlarms(step*1).get(0).getId();
 	        
 
@@ -167,12 +191,18 @@ public class ChubbSituationGroupsIT {
 	        //assertThat(results.getAlarms(step*3), hasSize(2));
 	        //assertThat(results.getAlarmAt(step*3, alarmId), hasSeverity(OnmsSeverity.CLEARED));
 
-	    }
+	}
 	
 	public String printAlarms(List<OnmsAlarm> alarmList){
 		String msg="alarmList size: "+alarmList.size();
 		for(OnmsAlarm alarm :alarmList) {
-			msg=msg+"\n  "+(alarm.isSituation()? "situation: ":"alarm: ") +alarm ;
+			msg=msg+"\n  "+(alarm.isSituation()? "situation: ":"alarm: ") +alarm;
+			// cant do because alarm no longer in transaction
+//			msg=msg+"  event params: ";	
+//			for (OnmsEventParameter p :alarm.getEventParameters()) {
+//				msg=msg+"{name="+p.getName()+" value="+p.getValue()+"} ";
+//			}
+			
 		}
 		return msg;
 		
