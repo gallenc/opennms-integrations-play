@@ -370,6 +370,74 @@
       <downtime begin="0" interval="300000"/><!-- 300s -->
    </package>
 
+   <package name="web-site-monitor">
+      <filter>IPADDR != '0.0.0.0'</filter>
+      <include-range begin="1.1.1.1" end="254.254.254.254"/>
+      <include-range begin="::1" end="ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"/>
+      <rrd step="300">
+         <rra>RRA:AVERAGE:0.5:1:2016</rra>
+         <rra>RRA:AVERAGE:0.5:12:1488</rra>
+         <rra>RRA:AVERAGE:0.5:288:366</rra>
+         <rra>RRA:MAX:0.5:288:366</rra>
+         <rra>RRA:MIN:0.5:288:366</rra>
+      </rrd>
+      
+      <!-- see https://opennms.discourse.group/t/how-to-monitor-websites-using-metadata/1227 -->
+      <service name="Web-Site-Monitor" interval="300000" user-defined="true" status="on">
+         <pattern><![CDATA[^Web:.*$]]></pattern> 
+         <parameter key="retry" value="1" />
+         <parameter key="timeout" value="3000" />
+         <parameter key="port" value="${requisition:port|443}" /> 
+         <parameter key="host-name" value="${requisition:vhost}" /> 
+         <parameter key="url" value="${requisition:path|/}" /> 
+         <parameter key="response" value="${requisition:response|200}" /> 
+         <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response" />
+         <parameter key="rrd-base-name" value="http-${requisition:vhost}" /> 
+         <parameter key="ds-name" value="${service:name}" /> 
+      </service>
+      
+      <service name="WebSiteMonitorA" interval="300000" user-defined="false" status="on">
+         <parameter key="retry" value="1"/>
+         <parameter key="timeout" value="5000"/>
+         <parameter key="port" value="443"/>
+         <parameter key="url" value="/"/>
+         <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response"/>
+         <parameter key="rrd-base-name" value="web-a"/>
+         <parameter key="ds-name" value="web-a"/>
+      </service>
+      
+      <service name="WebSiteMonitorB" interval="300000" user-defined="false" status="on">
+         <parameter key="retry" value="1"/>
+         <parameter key="timeout" value="3000"/>
+         <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response"/>
+         <parameter key="rrd-base-name" value="web-b"/>
+         <parameter key="ds-name" value="web-b"/>
+         <parameter key="page-sequence">
+            <page-sequence xmlns="">
+               <page disable-ssl-verification="true" host="${ipaddr}" http-version="1.1" method="GET" path="/Login.do" port="7080" response-range="100-399" scheme="http" successMatch="(HQ Login)|(Sign in to Hyperic HQ)" xmlns=""/>
+               <page disable-ssl-verification="true" failureMatch="(?s)(The username or password provided does not match our records)|(You are not signed in)" failureMessage="HQ Login in Failed" host="${ipaddr}" http-version="1.1" method="POST" path="/j_security_check.do" port="7080" response-range="100-399" scheme="http" successMatch="HQ Dashboard" xmlns="">
+                  <parameter key="j_username" value="hqadmin" xmlns=""/>
+                  <parameter key="j_password" value="hqadmin" xmlns=""/>
+               </page>
+               <page disable-ssl-verification="true" host="${ipaddr}" http-version="1.1" method="GET" path="/Logout.do" port="7080" response-range="100-399" scheme="http" successMatch="HQ Login" xmlns=""/>
+            </page-sequence>
+         </parameter>
+      </service>
+      
+      <downtime begin="0" end="300000" interval="30000"/><!-- 30s, 0, 5m -->
+      <downtime begin="300000" end="43200000" interval="300000"/><!-- 5m, 5m, 12h -->
+      <downtime begin="43200000" end="432000000" interval="600000"/><!-- 10m, 12h, 5d -->
+      <downtime begin="432000000" interval="3600000"/><!-- 1h, 5d -->
+   </package>
+   
+   <!-- additional monitor definitions in package web-site-monitor -->
+   <!--  see https://opennms.discourse.group/t/how-to-monitor-websites-using-metadata/1227  How to Monitor Websites Using Metadata -->
+   <monitor service="Web-Site-Monitor" class-name="org.opennms.netmgt.poller.monitors.HttpsMonitor"/>
+   
+   <!-- todo  -->
+   <monitor service="WebSiteMonitorA" class-name="org.opennms.netmgt.poller.monitors.WebMonitor"/>
+   <monitor service="WebSiteMonitorB" class-name="org.opennms.netmgt.poller.monitors.PageSequenceMonitor"/>
+
    <monitor service="JMX-Cassandra" class-name="org.opennms.netmgt.poller.monitors.Jsr160Monitor"/>
    <monitor service="JMX-Cassandra-Newts" class-name="org.opennms.netmgt.poller.monitors.Jsr160Monitor"/>
    <monitor service="ICMP" class-name="org.opennms.netmgt.poller.monitors.IcmpMonitor"/>
