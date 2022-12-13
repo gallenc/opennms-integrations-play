@@ -26,7 +26,7 @@
  *     http://www.opennms.com/
  *******************************************************************************/
 
-package org.opennms.netmgt.alarmd.itests;
+package org.opennms.netmgt.alarmd.itests.manual;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anyOf;
@@ -37,7 +37,6 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Every.everyItem;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.fail;
 import static org.opennms.core.test.alarms.AlarmMatchers.acknowledged;
 import static org.opennms.core.test.alarms.AlarmMatchers.hasSeverity;
 
@@ -46,9 +45,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.opennms.core.test.alarms.driver.Scenario;
 import org.opennms.core.test.alarms.driver.ScenarioResults;
 import org.opennms.core.test.alarms.driver.State;
+import org.opennms.core.test.alarms.driver.Scenario;
 import org.opennms.core.test.db.TemporaryDatabase;
 import org.opennms.netmgt.events.api.EventConstants;
 import org.opennms.netmgt.model.OnmsSeverity;
@@ -82,7 +81,6 @@ public class AlarmdBlackboxIT {
      */
     @Test
     public void canTriggerAndClearAlarm() {
-    	fail("Not yet implemented");
         Scenario scenario = Scenario.builder()
                 .withLegacyAlarmBehavior()
                 .withNodeDownEvent(1, 1)

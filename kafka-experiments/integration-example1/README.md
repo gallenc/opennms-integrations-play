@@ -12,5 +12,5 @@ https://github.com/OpenNMS/opennms/blob/opennms-29.0.10-1/features/kafka/produce
 
 ## simple web app
 
-The simple web application uses the client to display a simple web page coresponding to the state of the alarm list in OpenNMS.
+The simple web application uses the client to display a simple web page corresponding to the state of the alarm list in OpenNMS.
 See instructions for use in the web folder .
