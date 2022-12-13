@@ -151,7 +151,8 @@ You can install a drools editor in eclipse from the eclipse update site
 
 
 # TODO
-* create a pull request adding additional methods into Scenario.java class
+* create a pull request adding additional event methods into Scenario.java class
+* update service class in drools to allow creation of situations with known alarms (this avoids using events )
 * request that the OpenNMS maven non snapshot build files create jars in maven central
 * request that the OpenNMS integration tests use checked out assemblies rather than relative files in the build.
 
