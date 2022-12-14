@@ -28,7 +28,22 @@ eventually you should see the OpenNMS UI at http://localhost:8980
 
 you should also see the kafka ui at http://localhost:8080/
 
+PS - to end the tests use
 
+```
+docker-compose down
+```
+and to also clear the database volumes
+
+```
+docker-compose down -v
+```
+
+you can reach inside hte opennms container using
+
+```
+docker-compose exec horizon bash
+```
 
 # To activate and test alarms forwarder.
 
