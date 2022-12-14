@@ -1,6 +1,8 @@
-# Setting up opennms-kafka-producer test environment with docker compose
+# Setting up opennms-kafka-producer test environment
 
-provides a running OpenNMS with a kafka broker and a minion.
+Provides a running OpenNMS with a kafka broker and a minion.
+
+(Instructions for testing the chubb-rules are found in [RulesTests.md](../RulesTests.md)  )
 
 Forked from https://github.com/opennms-forge/stack-play
 
@@ -22,8 +24,11 @@ docker-compose up -d
 ```
 
 eventually you should see the OpenNMS UI at http://localhost:8980
+(note if you are usign windows with ipv6 you may need to use http://[::1]:8980)
 
 you should also see the kafka ui at http://localhost:8080/
+
+
 
 # To activate and test alarms forwarder.
 
