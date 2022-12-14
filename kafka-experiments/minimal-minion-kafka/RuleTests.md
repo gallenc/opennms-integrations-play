@@ -50,7 +50,7 @@ log into the running container to yield a bash prompt using
 ```
 docker-compose exec cameranetsnmp1 bash
 ```
-then ping the cameranetsnmp1 from within the container find it's address in docker 
+then ping the cameranetsnmp1 from within the container in order to find it's address in docker 
 ```
 [root@cameranetsnmp1 /]# ping cameranetsnmp1
 PING cameranetsnmp1 (172.25.0.5) 56(84) bytes of data.
