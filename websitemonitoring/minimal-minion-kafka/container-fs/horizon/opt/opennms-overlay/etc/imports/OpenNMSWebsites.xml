@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model-import xmlns="http://xmlns.opennms.org/xsd/config/model-import"
-              date-stamp="2020-05-11T13:08:46.702+02:00"
-              foreign-source="OpenNMSWebsites"
-              last-import="2020-05-11T13:08:51.738+02:00">
+<model-import xmlns="http://xmlns.opennms.org/xsd/config/model-import" date-stamp="2020-05-11T13:08:46.702+02:00" foreign-source="OpenNMSWebsites"
+   last-import="2020-05-11T13:08:51.738+02:00">
    <node foreign-id="web01-srv" node-label="web01-srv">
       <interface ip-addr="141.193.213.21" status="1" snmp-primary="N">
          <monitored-service service-name="Web:opennms-com">
             <meta-data context="requisition" key="vhost" value="www.opennms.com" />
             <meta-data context="requisition" key="path" value="/" />
          </monitored-service>
+         <monitored-service service-name="ICMP" />
+         <monitored-service service-name="HTTPS" />
       </interface>
       <meta-data context="requisition" key="port" value="443" />
    </node>
@@ -18,6 +18,8 @@
             <meta-data context="requisition" key="vhost" value="opennms.discourse.group" />
             <meta-data context="requisition" key="path" value="/" />
          </monitored-service>
+         <monitored-service service-name="ICMP" />
+         <monitored-service service-name="HTTPS" />
       </interface>
       <meta-data context="requisition" key="port" value="443" />
    </node>
@@ -27,6 +29,8 @@
             <meta-data context="requisition" key="vhost" value="chat.opennms.com" />
             <meta-data context="requisition" key="path" value="/login" />
          </monitored-service>
+         <monitored-service service-name="ICMP" />
+         <monitored-service service-name="HTTPS" />
       </interface>
       <meta-data context="requisition" key="port" value="443" />
    </node>
@@ -36,6 +40,8 @@
             <meta-data context="requisition" key="vhost" value="chat.opennms.com" />
             <meta-data context="requisition" key="path" value="/login" />
          </monitored-service>
+         <monitored-service service-name="ICMP" />
+         <monitored-service service-name="HTTPS" />
       </interface>
       <meta-data context="requisition" key="port" value="443" />
    </node>
@@ -45,6 +51,8 @@
             <meta-data context="requisition" key="vhost" value="docs.opennms.com" />
             <meta-data context="requisition" key="path" value="/start-page/1.0.0/index.html" />
          </monitored-service>
+         <monitored-service service-name="ICMP" />
+         <monitored-service service-name="HTTPS" />
       </interface>
       <meta-data context="requisition" key="port" value="443" />
    </node>
