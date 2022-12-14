@@ -98,7 +98,7 @@ snmptrap -v 2c -c public horizon:1162 ""  .1.3.6.1.4.1.52330.6.2.0.1        .1.3
 
 ##  6. Try other traps to see alarms raised in other groups
 
-All of the possible traps are listed in [TrapExamplesAndNotesCHUBB-TVBS-CAMERA-MIB.md](../../kafka-experiments/chubb-mib/2022-07/CHUBB/processedOpenNMS/TrapExamplesAndNotesCHUBB-TVBS-CAMERA-MIB.md/TrapExamplesAndNotesCHUBB-TVBS-CAMERA-MIB.md)
+All of the possible traps are listed in [TrapExamplesAndNotesCHUBB-TVBS-CAMERA-MIB.md](../chubb-mib/2022-07/CHUBB/processedOpenNMS/TrapExamplesAndNotesCHUBB-TVBS-CAMERA-MIB.md)
 
 You will need to substitute the node address localhost:10162 for the opennms address in docker (horizon:1162)
 
