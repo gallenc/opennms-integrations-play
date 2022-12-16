@@ -383,8 +383,9 @@
       </rrd>
       
       <!-- see https://opennms.discourse.group/t/how-to-monitor-websites-using-metadata/1227 -->
+      <!-- note - example uses ^Web:.*$ but this does not work with rrd tool-->
       <service name="Web-Site-Monitor" interval="300000" user-defined="true" status="on">
-         <pattern><![CDATA[^Web:.*$]]></pattern> 
+         <pattern><![CDATA[^Web-.*$]]></pattern> 
          <parameter key="retry" value="1" />
          <parameter key="timeout" value="3000" />
          <parameter key="port" value="${requisition:port|443}" /> 
@@ -396,33 +397,33 @@
          <parameter key="ds-name" value="${service:name}" /> 
       </service>
       
-      <service name="WebSiteMonitorA" interval="300000" user-defined="false" status="on">
-         <parameter key="retry" value="1"/>
-         <parameter key="timeout" value="5000"/>
-         <parameter key="port" value="443"/>
-         <parameter key="url" value="/"/>
-         <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response"/>
-         <parameter key="rrd-base-name" value="web-a"/>
-         <parameter key="ds-name" value="web-a"/>
-      </service>
+<!--       <service name="WebSiteMonitorA" interval="300000" user-defined="false" status="on"> -->
+<!--          <parameter key="retry" value="1"/> -->
+<!--          <parameter key="timeout" value="5000"/> -->
+<!--          <parameter key="port" value="443"/> -->
+<!--          <parameter key="url" value="/"/> -->
+<!--          <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response"/> -->
+<!--          <parameter key="rrd-base-name" value="web-a"/> -->
+<!--          <parameter key="ds-name" value="web-a"/> -->
+<!--       </service> -->
       
-      <service name="WebSiteMonitorB" interval="300000" user-defined="false" status="on">
-         <parameter key="retry" value="1"/>
-         <parameter key="timeout" value="3000"/>
-         <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response"/>
-         <parameter key="rrd-base-name" value="web-b"/>
-         <parameter key="ds-name" value="web-b"/>
-         <parameter key="page-sequence">
-            <page-sequence xmlns="">
-               <page disable-ssl-verification="true" host="${ipaddr}" http-version="1.1" method="GET" path="/Login.do" port="7080" response-range="100-399" scheme="http" successMatch="(HQ Login)|(Sign in to Hyperic HQ)" xmlns=""/>
-               <page disable-ssl-verification="true" failureMatch="(?s)(The username or password provided does not match our records)|(You are not signed in)" failureMessage="HQ Login in Failed" host="${ipaddr}" http-version="1.1" method="POST" path="/j_security_check.do" port="7080" response-range="100-399" scheme="http" successMatch="HQ Dashboard" xmlns="">
-                  <parameter key="j_username" value="hqadmin" xmlns=""/>
-                  <parameter key="j_password" value="hqadmin" xmlns=""/>
-               </page>
-               <page disable-ssl-verification="true" host="${ipaddr}" http-version="1.1" method="GET" path="/Logout.do" port="7080" response-range="100-399" scheme="http" successMatch="HQ Login" xmlns=""/>
-            </page-sequence>
-         </parameter>
-      </service>
+<!--       <service name="WebSiteMonitorB" interval="300000" user-defined="false" status="on"> -->
+<!--          <parameter key="retry" value="1"/> -->
+<!--          <parameter key="timeout" value="3000"/> -->
+<!--          <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response"/> -->
+<!--          <parameter key="rrd-base-name" value="web-b"/> -->
+<!--          <parameter key="ds-name" value="web-b"/> -->
+<!--          <parameter key="page-sequence"> -->
+<!--             <page-sequence xmlns=""> -->
+<!--                <page disable-ssl-verification="true" host="${ipaddr}" http-version="1.1" method="GET" path="/Login.do" port="7080" response-range="100-399" scheme="http" successMatch="(HQ Login)|(Sign in to Hyperic HQ)" xmlns=""/> -->
+<!--                <page disable-ssl-verification="true" failureMatch="(?s)(The username or password provided does not match our records)|(You are not signed in)" failureMessage="HQ Login in Failed" host="${ipaddr}" http-version="1.1" method="POST" path="/j_security_check.do" port="7080" response-range="100-399" scheme="http" successMatch="HQ Dashboard" xmlns=""> -->
+<!--                   <parameter key="j_username" value="hqadmin" xmlns=""/> -->
+<!--                   <parameter key="j_password" value="hqadmin" xmlns=""/> -->
+<!--                </page> -->
+<!--                <page disable-ssl-verification="true" host="${ipaddr}" http-version="1.1" method="GET" path="/Logout.do" port="7080" response-range="100-399" scheme="http" successMatch="HQ Login" xmlns=""/> -->
+<!--             </page-sequence> -->
+<!--          </parameter> -->
+<!--       </service> -->
       
       <downtime begin="0" end="300000" interval="30000"/><!-- 30s, 0, 5m -->
       <downtime begin="300000" end="43200000" interval="300000"/><!-- 5m, 5m, 12h -->
