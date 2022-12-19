@@ -12,7 +12,7 @@
          <monitored-service service-name="HTTPS" />
       </interface>
       
-      <interface ip-addr="216.66.36.203" status="1" snmp-primary="N">
+      <interface ip-addr="64.71.144.203" status="1" snmp-primary="N">
          <monitored-service service-name="Web-opennms-discourse">
             <meta-data context="requisition" key="vhost" value="opennms.discourse.group" />
             <meta-data context="requisition" key="path" value="/" />
