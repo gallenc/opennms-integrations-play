@@ -5,16 +5,16 @@
   <!--
       The logging in OpenNMS is designed to associate a 'prefix' with each thread that runs.
       This prefix is used to indicate what 'subsystem' the thread is doing work for so that
-      logging for the subsystem can all be directed to the same log.  The way this needs to work 
+      logging for the subsystem can all be directed to the same log.  The way this needs to work
       in the code is that when a thread is doing work for subsystem (ie when it starts a method for
       this system) it sets its prefix in a ThreadLocal way.  All logs on this thread will then
-      get logged to that 'prefix' file.  After the thread is done doing the work (that is before the 
-      method returns) the prefix needs to be set back to the prefix it had before.  Failure to do that 
-      will cause all subsequent work done by this thread to log to the wrong place.  
-    
-      If log messages are appearing in the wrong log, it is a bug on the part of the developers of the 
-      subsystem that is receiving the log messages because they are not restoring the log prefix 
-      correctly when their thread is finished. 
+      get logged to that 'prefix' file.  After the thread is done doing the work (that is before the
+      method returns) the prefix needs to be set back to the prefix it had before.  Failure to do that
+      will cause all subsequent work done by this thread to log to the wrong place.
+
+      If log messages are appearing in the wrong log, it is a bug on the part of the developers of the
+      subsystem that is receiving the log messages because they are not restoring the log prefix
+      correctly when their thread is finished.
 
       If your log messages are showing up in uncategorized.log, it indicates that the subsystem making calls
       to your code is not properly setting a prefix when being called.
@@ -22,12 +22,12 @@
 
   <properties>
     <property name="prefix">uncategorized</property>
-    <property name="logdir">${install.logs.dir}</property>
+    <property name="logdir">/opt/opennms/logs</property>
   </properties>
 
   <!--
     This section specifes how log messages are directed to log files.  The below indicates
-    the log messages are sent to files of the form logs/${prefix}.log.  Each message is placed in 
+    the log messages are sent to files of the form logs/${prefix}.log.  Each message is placed in
     a log file corresponding to its MDC prefix.  This happens even if the prefix is not specified
     above.
     It is possible to add additional appenders to this section while debugging if you would
@@ -37,8 +37,8 @@
     <Routing name="RoutingAppender">
       <Routes pattern="$${ctx:prefix}">
         <Route>
-          <RollingFile name="Rolling-\${ctx:prefix}" fileName="\${logdir}/\${ctx:prefix}.log"
-                       filePattern="\${logdir}/\${ctx:prefix}.%i.log.gz">
+          <RollingFile name="Rolling-${ctx:prefix}" fileName="${logdir}/${ctx:prefix}.log"
+                       filePattern="${logdir}/${ctx:prefix}.%i.log.gz">
             <PatternLayout>
               <pattern>%d %-5p [%t] %c{1.}: %m%n</pattern>
             </PatternLayout>
@@ -51,13 +51,13 @@
           </RollingFile>
         </Route>
           <!--
-         This route in configured specifically for the instrumentation log so it can be parsed
+              This route in configured specifically for the instrumentation log so it can be parsed
               by the instrumentation log reader.  It does not compress the logs and has modified
               pattern.
-     -->
+          -->
         <Route key="instrumentation">
-          <RollingFile name="Rolling-instrumentation" fileName="\${logdir}/instrumentation.log"
-                       filePattern="\${logdir}/instrumentation.%i.log">
+          <RollingFile name="Rolling-instrumentation" fileName="${logdir}/instrumentation.log"
+                       filePattern="${logdir}/instrumentation.%i.log">
             <PatternLayout>
               <!-- the logging class is not included here since its is verbose and always the same -->
               <pattern>%d %-5p [%t] %m%n</pattern>
@@ -94,8 +94,8 @@
       <appender-ref ref="console"/>
     </logger>
 
-    <!-- 
-      Set the threshold for individual loggers that may be too chatty at the default 
+    <!--
+      Set the threshold for individual loggers that may be too chatty at the default
       level for their prefix.
     -->
     <logger name="com.google.gwt.user.server" additivity="false" level="INFO">
@@ -167,7 +167,7 @@
 
     <!-- Allow any message to pass through the root logger -->
     <root level="DEBUG">
-      <!-- 
+      <!--
         Each category/log can be set to one of TRACE, INFO, DEBUG, WARN, ERROR
 
         This section of the setting the log level based on Logging prefix. Log messages that are logged
@@ -190,7 +190,7 @@
         <KeyValuePair key="asterisk-gateway"     value="WARN" />
         <KeyValuePair key="archiver"             value="WARN" />
         <KeyValuePair key="bsmd"                 value="WARN" />
-        <KeyValuePair key="collectd"             value="WARN" />
+        <KeyValuePair key="collectd"             value="DEBUG" />
         <KeyValuePair key="correlator"           value="WARN" />
         <KeyValuePair key="discovery"            value="WARN" />
         <KeyValuePair key="eventd"               value="WARN" />
@@ -207,7 +207,7 @@
         <KeyValuePair key="oss-qosdrx"           value="WARN" />
         <KeyValuePair key="passive"              value="WARN" />
         <KeyValuePair key="perspectivepollerd"   value="WARN" />
-        <KeyValuePair key="poller"               value="WARN" />
+        <KeyValuePair key="poller"               value="DEBUG" />
         <KeyValuePair key="provisiond"           value="WARN" />
         <KeyValuePair key="queued"               value="WARN" />
         <KeyValuePair key="reportd"              value="WARN" />

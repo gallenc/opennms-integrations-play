@@ -13,5 +13,27 @@
       </interface>
 
    </node>
+   
+      <node foreign-id="1671190975555" node-label="uspto">
+      <interface descr="uspto-main" ip-addr="13.224.132.58" status="1" snmp-primary="N">
+         <monitored-service service-name="Web-uspto-main">
+            <meta-data context="requisition" key="vhost" value="www.uspto.gov" />
+            <meta-data context="requisition" key="path" value="/" />
+            <meta-data context="requisition" key="rrd-base-name" value="uspto-main" />
+         </monitored-service>
+         <monitored-service service-name="ICMP" />
+         <monitored-service service-name="HTTPS" />
+      </interface>
+      <interface descr="uspto-my" ip-addr="151.207.240.52" status="1" snmp-primary="N">
+         <monitored-service service-name="Web-uspto-main">
+            <meta-data context="requisition" key="vhost" value="my.uspto.gov" />
+            <meta-data context="requisition" key="path" value="/" />
+            <meta-data context="requisition" key="rrd-base-name" value="uspto-my" />
+         </monitored-service>
+         <monitored-service service-name="ICMP" />
+         <monitored-service service-name="HTTPS" />
+      </interface>
+
+   </node>
 
 </model-import>

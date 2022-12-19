@@ -395,17 +395,22 @@
          <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response" />
          <parameter key="rrd-base-name" value="http-${requisition:rrd-base-name}" /> 
          <parameter key="ds-name" value="${service:name}" /> 
+         <parameter key="verbose" value="${requisition:verbose|false}" /> 
       </service>
       
-<!--       <service name="WebSiteMonitorA" interval="300000" user-defined="false" status="on"> -->
-<!--          <parameter key="retry" value="1"/> -->
-<!--          <parameter key="timeout" value="5000"/> -->
-<!--          <parameter key="port" value="443"/> -->
-<!--          <parameter key="url" value="/"/> -->
-<!--          <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response"/> -->
-<!--          <parameter key="rrd-base-name" value="web-a"/> -->
-<!--          <parameter key="ds-name" value="web-a"/> -->
-<!--       </service> -->
+      <service name="WebSiteMonitorWM" interval="300000" user-defined="true" status="on">
+         <pattern><![CDATA[^WebWM-.*$]]></pattern> 
+         <parameter key="retry" value="1" />
+         <parameter key="timeout" value="3000" />
+         <parameter key="port" value="${requisition:port|443}" /> 
+         <parameter key="url" value="${requisition:path|/}" /> 
+         <parameter key="virtual-host" value="${requisition:vhost}" /> 
+         <parameter key="scheme" value="${requisition:scheme|http}" /> 
+         <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response"/>
+         <parameter key="rrd-base-name" value="http-${requisition:rrd-base-name}" /> 
+         <parameter key="response-range" value="${requisition:response|200}" />
+         <parameter key="ds-name" value="${service:name}" /> 
+      </service>
       
 <!--       <service name="WebSiteMonitorB" interval="300000" user-defined="false" status="on"> -->
 <!--          <parameter key="retry" value="1"/> -->
@@ -436,7 +441,7 @@
    <monitor service="Web-Site-Monitor" class-name="org.opennms.netmgt.poller.monitors.HttpsMonitor"/>
    
    <!-- todo  -->
-   <monitor service="WebSiteMonitorA" class-name="org.opennms.netmgt.poller.monitors.WebMonitor"/>
+   <monitor service="WebSiteMonitorWM" class-name="org.opennms.netmgt.poller.monitors.WebMonitor"/>
    <monitor service="WebSiteMonitorB" class-name="org.opennms.netmgt.poller.monitors.PageSequenceMonitor"/>
 
    <monitor service="JMX-Cassandra" class-name="org.opennms.netmgt.poller.monitors.Jsr160Monitor"/>
