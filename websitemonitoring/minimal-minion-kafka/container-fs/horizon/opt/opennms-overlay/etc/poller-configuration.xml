@@ -3,7 +3,7 @@
    <!-- based off poller configuration.xml in horizon 30.0.1 -->
    
    <node-outage status="on" pollAllIfNoCriticalServiceDefined="true">
-      <critical-service name="ICMP"/>
+<!--       <critical-service name="ICMP"/> -->
    </node-outage>
    <package name="cassandra-via-jmx">
       <filter>IPADDR != '0.0.0.0'</filter>
@@ -397,7 +397,7 @@
          <parameter key="ds-name" value="${service:name}" /> 
          <parameter key="verbose" value="${requisition:verbose|false}" /> 
       </service>
-      
+
       <service name="WebSiteMonitorWM" interval="300000" user-defined="true" status="on">
          <pattern><![CDATA[^WebWM-.*$]]></pattern> 
          <parameter key="retry" value="1" />
@@ -405,12 +405,38 @@
          <parameter key="port" value="${requisition:port|443}" /> 
          <parameter key="url" value="${requisition:path|/}" /> 
          <parameter key="virtual-host" value="${requisition:vhost}" /> 
-         <parameter key="scheme" value="${requisition:scheme|http}" /> 
+         <parameter key="scheme" value="${requisition:scheme|https}" /> 
          <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response"/>
          <parameter key="rrd-base-name" value="http-${requisition:rrd-base-name}" /> 
-         <parameter key="response-range" value="${requisition:response|200}" />
+         <!-- note response range is not csv as in HttpPoller -->
+         <parameter key="response-range" value="${requisition:response|100-399}" />
          <parameter key="ds-name" value="${service:name}" /> 
+         <parameter key="use-ssl-filter" value="${requisition:use-ssl-filter|false}" /> 
       </service>
+
+
+      <service name="Web-Post-Monitor" interval="300000" user-defined="false" status="on">
+         <pattern><![CDATA[^WebPost-.*$]]></pattern> 
+         <parameter key="retry" value="1" />
+         <parameter key="timeout" value="3000" />
+         <parameter key="port" value="${requisition:port|443}" />
+         <parameter key="scheme" value="${requisition:scheme|https}" />  
+         <parameter key="ds-name" value="${service:name}" /> 
+         <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response"/>
+         <parameter key="rrd-base-name" value="http-${requisition:rrd-base-name}" /> 
+         <parameter key="uri" value="${requisition:path|/}" /> 
+         <!-- response regex -->
+         <parameter key="banner" value="${requisition:banner}"/>
+         <parameter key="payload" value="${requisition:payload}"/>
+         <!-- header must have a value if used -->
+          <parameter key="header0" value="Host:${requisition:vhost|localhost}"/>
+          <parameter key="header1" value="Accept:application/json"/>
+          <parameter key="header2" value="Content-Type:application/json"/>
+          <parameter key="usesslfilter" value="${requisition:use-ssl-filter|false}" /> 
+
+      </service>
+
+      
       
 <!--       <service name="WebSiteMonitorB" interval="300000" user-defined="false" status="on"> -->
 <!--          <parameter key="retry" value="1"/> -->
@@ -430,18 +456,28 @@
 <!--          </parameter> -->
 <!--       </service> -->
       
-      <downtime begin="0" end="300000" interval="30000"/><!-- 30s, 0, 5m -->
-      <downtime begin="300000" end="43200000" interval="300000"/><!-- 5m, 5m, 12h -->
-      <downtime begin="43200000" end="432000000" interval="600000"/><!-- 10m, 12h, 5d -->
-      <downtime begin="432000000" interval="3600000"/><!-- 1h, 5d -->
+      <!-- Query every 5 minutes always -->
+      <!-- 5 mins -->
+      <downtime begin="0" interval="300000"/>
+      <!-- 30s, 0, 5m -->
+<!--       <downtime begin="0" end="300000" interval="30000"/> -->
+      <!-- 5m, 5m, 12h -->
+<!--       <downtime begin="300000" end="43200000" interval="300000"/> -->
+      <!-- 10m, 12h, 5d -->
+<!--       <downtime begin="43200000" end="432000000" interval="600000"/> -->
+      <!-- 1h, 5d -->
+<!--       <downtime begin="432000000" interval="3600000"/> -->
    </package>
    
    <!-- additional monitor definitions in package web-site-monitor -->
    <!--  see https://opennms.discourse.group/t/how-to-monitor-websites-using-metadata/1227  How to Monitor Websites Using Metadata -->
    <monitor service="Web-Site-Monitor" class-name="org.opennms.netmgt.poller.monitors.HttpsMonitor"/>
    
-   <!-- todo  -->
    <monitor service="WebSiteMonitorWM" class-name="org.opennms.netmgt.poller.monitors.WebMonitor"/>
+   
+   <monitor service="Web-Post-Monitor" class-name="org.opennms.netmgt.poller.monitors.HttpPostMonitor"/>
+
+   <!-- todo  -->
    <monitor service="WebSiteMonitorB" class-name="org.opennms.netmgt.poller.monitors.PageSequenceMonitor"/>
 
    <monitor service="JMX-Cassandra" class-name="org.opennms.netmgt.poller.monitors.Jsr160Monitor"/>

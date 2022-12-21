@@ -164,6 +164,13 @@
     <logger name="org.apache.kafka" additivity="false" level="INFO">
       <appender-ref ref="RoutingAppender" />
     </logger>
+    
+    <Logger name="org.apache.http" level="DEBUG">
+      <appender-ref ref="RoutingAppender" />
+    </Logger>
+    <Logger name="org.apache.http.wire" level="DEBUG">
+      <appender-ref ref="RoutingAppender" />
+    </Logger>
 
     <!-- Allow any message to pass through the root logger -->
     <root level="DEBUG">
