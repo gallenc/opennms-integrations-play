@@ -4,32 +4,20 @@ This folder contains several examples of web site monitoring using opennms metad
 The use of metadata is basedon notes in discourse https://opennms.discourse.group/t/how-to-monitor-websites-using-metadata/1227
 but some corrections have been made
 
-![image](../websitemonitoring/images/OnmsUSPTOServices.png)
+## USPTO monitoring using HttpPostMonitor
 
-![image](../websitemonitoring/images/TESSmainSearch2.png)
-
-![image](../websitemonitoring/images/usptoTradeSearch.png)
+The USPTO patent search page is available here  https://ppubs.uspto.gov/pubwebapp/static/pages/ppubsbasic.html
 
 ![image](../websitemonitoring/images/PPubsSearch.png)
 
-![image](../websitemonitoring/images/TESSmainSearch3.png)
-
-![image](../websitemonitoring/images/TESSmainSearch1.png)
-
-![image](../websitemonitoring/images/WebPostusptoq1.png)
-
-
-## USPTO monitoring using HttpPostMonitor
-
-### OpenNMS service
+### OpenNMS service definition
 
 ![image](../websitemonitoring/images/WebPostusptoq1.png)
 
 ### description
-The usa patent search page is shown here  https://ppubs.uspto.gov/pubwebapp/static/pages/ppubsbasic.html
-![image](../websitemonitoring/images/PPubSearch.png)
 
 This uses javascript to create a json based search 
+
 POST https://ppubs.uspto.gov/dirsearch-public/searches/generic
 
 Request body:
@@ -112,6 +100,8 @@ in poller-configuration.xml
          <parameter key="usesslfilter" value="${requisition:use-ssl-filter|false}" /> 
       </service>
       
+      ...
+      
      <monitor service="Web-PostMonitor" class-name="org.opennms.netmgt.poller.monitors.HttpPostMonitor"/>
        
 ```
@@ -157,8 +147,145 @@ in the WebsitesUspto  requisition WebPost-usptoq1 matches against the Web-PostMo
 
 ## USPTO monitoring using PageSequenceMonitor
 
+The USPTO Trade Mark search service is available here https://tmsearch.uspto.gov/bin/gate.exe?f=login&p_lang=english&p_d=trmk
+
+![image](../websitemonitoring/images/TESSmainSearch1.png)
+
+This offers a choice of search pages but the simplest one is the Basic Word Mark Search (New User) which selects this url
+
+https://tmsearch.uspto.gov/bin/gate.exe?f=searchss&state=4805:2kzn4v.1.1
+
+Note that the url perameter state (state=4805:2kzn4v.1.1) is the session key which is unique to the user session and must be included in all search requests.
+
+The Basic Word Mark Search page looks like this
+
+![image](../websitemonitoring/images/TESSmainSearch2.png)
+
+And a search result page looks like this
+
+![image](../websitemonitoring/images/TESSmainSearch3.png)
+
+
+
 ### OpenNMS service
+
+The opennms service page is below
 
 ![image](../websitemonitoring/images/WebPostusptoq1.png)
 
 ### description
+
+The page sequence monitor goes through the following steps to perform a search
+
+1. load the main  page and search for the state variable to use in further queries
+2. load the simple search page using the state variable from above
+3. perform a search for a known NantHealth patent and check we get the document id
+4. log out from the service using the state variable
+
+The service is defined in poller-configuration.xml
+
+```
+      
+      <service name="UsptoTradeSearch" interval="300000" user-defined="false" status="on">
+         <parameter key="retry" value="1"/>
+         <parameter key="timeout" value="3000"/>
+         <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response"/>
+         <parameter key="rrd-base-name" value="usptotrade"/>
+         <parameter key="ds-name" value="usptotrade"/>
+         <parameter key="page-sequence">
+         
+             <page-sequence xmlns="">
+             
+               <!-- go to tess landing page https://tmsearch.uspto.gov/bin/gate.exe?f=login&p_lang=english&p_d=trmk -->
+               <!-- and scrape the state reference from the <a href="/bin/gate.exe?f=searchss&state=4809:72vxz5.1.1">Basic Word Mark Search (New User)</a> tag -->
+               <!-- using regex <a\s+(?:[^>]*?\s+)?href=(["'])(.*?)state=([^&"]+) -->
+               <page disable-ssl-verification="true" host="${ipaddr}" 
+               virtual-host="tmsearch.uspto.gov"
+               http-version="1.1" method="GET" 
+               path="/bin/gate.exe" 
+               port="443" 
+               scheme="https"
+               response-range="100-399"
+               successMatch="&lt;a\s+(?:[^>]*?\s+)?href=([&quot;'])(.*?)state=([^&amp;&quot;]+)" xmlns="">
+               <parameter key="f" value="login" />
+               <parameter key="p_lang" value="english" />
+               <parameter key="p_d" value="trmk" />
+               <session-variable name="state" match-group="3" />
+               </page>
+               
+               <!-- start a search session page using the state variable extracted in last step -->
+               <!-- https://tmsearch.uspto.gov/bin/gate.exe?f=searchss&state=4809:72vxz5.1.1 -->
+               <page disable-ssl-verification="true" host="${ipaddr}" 
+               virtual-host="tmsearch.uspto.gov"
+               http-version="1.1" method="GET" 
+               path="/bin/gate.exe" 
+               port="443" 
+               scheme="https"
+               response-range="100-399"
+               successMatch="&lt;I>New User" xmlns="">
+                  <parameter key="f" value="searchss" />
+                  <parameter key="state" value="${state}" />
+               </page>
+               
+              <!-- Searching for OpenNMS trademark -->
+              <!--  GET https://tmsearch.uspto.gov/bin/showfield?f=toc&state=4807:62zhxt.1.1&p_search=searchss&p_L=50&BackReference=&p_plural=yes&p_s_PARA1=&p_tagrepl~:=PARA1$LD&p_tagrepl~:=PARA2$COMB&expr=PARA1 AND PARA2&p_s_PARA2=OpenNMS&p_op_ALL=AND&a_default=search&a_search=Submit Query&a_search=Submit Query -->
+              <!--  matches search for OpenNMS trademark against -->
+                <page disable-ssl-verification="true" host="${ipaddr}" 
+               virtual-host="tmsearch.uspto.gov"
+               http-version="1.1" method="POST" 
+               path="/bin/gate.exe" 
+               port="443" 
+               scheme="https"
+               response-range="100-399"
+               successMatch="87240338" xmlns="">
+               
+                  <parameter key="f" value="toc" />
+                  <parameter key="state" value="${state}" />
+                  <parameter key="p_search" value="search" /> 
+                  <parameter key="p_s_All=" value="" />
+                  <parameter key="p_s_All=" value="(opennms)[COMB]" />
+                  <parameter key="a_default" value="search" />
+                  <parameter key="a_search" value="Submit" />
+               </page>
+
+               
+               <!-- Finally logout from this session-->
+               <!--       <form method="POST" action="/bin/gate.exe"> -->
+               <!--     <input type="hidden" name="state" value="4808:5ti3uh.1.1"> -->
+               <!--     <input type="hidden" name="f" value="logout"> -->
+               <!--       <input type="submit" name="a_logout" value="Logout"><i>Please logout when you are done to release system resources allocated for you.</i> -->
+               <!-- </form> -->
+  
+               <page disable-ssl-verification="true" host="${ipaddr}" 
+               virtual-host="tmsearch.uspto.gov"
+               http-version="1.1" method="GET" 
+               path="/bin/gate.exe" 
+               port="443" 
+               scheme="https"
+               response-range="100-399"
+               successMatch="Thank you for using US Trademark Electronic Search System" xmlns="">
+                   <parameter key="f" value="logout" />
+                   <parameter key="state" value="${state}" />
+               </page>
+               
+            </page-sequence>
+            
+         </parameter>
+      </service>
+      
+      ...
+      
+      <monitor service="UsptoTradeSearch" class-name="org.opennms.netmgt.poller.monitors.PageSequenceMonitor"/>
+      
+```
+
+
+
+
+![image](../websitemonitoring/images/OnmsUSPTOServices.png)
+
+![image](../websitemonitoring/images/usptoTradeSearch.png)
+
+![image](../websitemonitoring/images/WebPostusptoq1.png)
+
+
