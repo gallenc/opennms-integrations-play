@@ -1,8 +1,14 @@
 ## Web Site Monitoring example
 
-This folder contains several examples of web site monitoring using opennms metadata, the WebMonitor and the pageSequenceMonitor.
-The use of metadata is basedon notes in discourse https://opennms.discourse.group/t/how-to-monitor-websites-using-metadata/1227
-but some corrections have been made
+This folder contains several examples of web site monitoring using opennms metadata, the HTTPPostMonitor and the PageSequenceMonitor.
+The use of metadata is based on notes in discourse https://opennms.discourse.group/t/how-to-monitor-websites-using-metadata/1227
+but some corrections have been made.
+
+The examples are rendered in OpenNNS as seperate monitored services attached to IP addresses on a single node. 
+The IP addresses have differnt services attached
+
+![image](../websitemonitoring/images/OnmsUSPTOServices.png)
+
 
 ## USPTO monitoring using HttpPostMonitor
 
@@ -145,7 +151,7 @@ in the WebsitesUspto  requisition WebPost-usptoq1 matches against the Web-PostMo
 ```
 
 
-## USPTO monitoring using PageSequenceMonitor
+## USPTO trade mark search monitoring using PageSequenceMonitor
 
 The USPTO Trade Mark search service is available here https://tmsearch.uspto.gov/bin/gate.exe?f=login&p_lang=english&p_d=trmk
 
@@ -166,16 +172,15 @@ And a search result page looks like this
 ![image](../websitemonitoring/images/TESSmainSearch3.png)
 
 
-
 ### OpenNMS service
 
 The opennms service page is below
 
-![image](../websitemonitoring/images/WebPostusptoq1.png)
+![image](../websitemonitoring/images/usptoTradeSearch.png)
 
 ### description
 
-The page sequence monitor goes through the following steps to perform a search
+The page sequence monitor goes through the following steps to perform a search to proves the service every 5 minutes.
 
 1. load the main  page and search for the state variable to use in further queries
 2. load the simple search page using the state variable from above
@@ -278,14 +283,4 @@ The service is defined in poller-configuration.xml
       <monitor service="UsptoTradeSearch" class-name="org.opennms.netmgt.poller.monitors.PageSequenceMonitor"/>
       
 ```
-
-
-
-
-![image](../websitemonitoring/images/OnmsUSPTOServices.png)
-
-![image](../websitemonitoring/images/usptoTradeSearch.png)
-
-![image](../websitemonitoring/images/WebPostusptoq1.png)
-
 
