@@ -1,11 +1,19 @@
 ## Web Site Monitoring example
 
-This folder contains several examples of web site monitoring using opennms metadata, the HTTPPostMonitor and the PageSequenceMonitor.
+This folder contains several examples of web site monitoring using [opennms metadata](https://docs.opennms.com/horizon/31/operation/deep-dive/meta-data.html) 
+with the 
+
+[HTTPPostMonitor](https://docs.opennms.com/horizon/30/reference/service-assurance/monitors/HttpPostMonitor.html)
+
+and the
+
+[PageSequenceMonitor](https://docs.opennms.com/horizon/30/reference/service-assurance/monitors/PageSequenceMonitor.html)
+
 The use of metadata is based on notes in discourse https://opennms.discourse.group/t/how-to-monitor-websites-using-metadata/1227
 but some corrections have been made.
 
-The examples are rendered in OpenNNS as seperate monitored services attached to IP addresses on a single node. 
-The IP addresses have differnt services attached
+The examples are rendered in OpenNMS as seperate monitored services attached to IP addresses on a single node. 
+The IP addresses have different services attached
 
 ![image](../websitemonitoring/images/OnmsUSPTOServices.png)
 
@@ -79,7 +87,7 @@ The response to this search is
 
 ```
 
-In the OpenNMS test we use the PostMonitor to send a json search string with a request for a NantHealth patent and receive back the patent refernces
+In the OpenNMS test we use the [HTTPPostMonitor](https://docs.opennms.com/horizon/30/reference/service-assurance/monitors/HttpPostMonitor.html) to POST a json search string as a body in a request request for a NantHealth patent and receive back the patent references.
 
 ### configuration
 
@@ -112,7 +120,7 @@ in poller-configuration.xml
        
 ```
 
-in the WebsitesUspto  requisition WebPost-usptoq1 matches against the Web-PostMonitor definition above
+The WebsitesUspto requisition defines a monitored service WebPost-usptoq1 which matches against the Web-PostMonitor definition above
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -138,6 +146,7 @@ in the WebsitesUspto  requisition WebPost-usptoq1 matches against the Web-PostMo
 <!--     <monitored-service service-name="HTTPS" /> -->
       </interface>
       
+      <!-- this monitors the trade mark search service defined with the PageSequenceMonitor -->
       <!-- only ipv6 reponse to ping 151.207.240.78 -->
       <interface ip-addr="151.207.240.78" status="1" snmp-primary="N">
          <monitored-service service-name="UsptoTradeSearch">
@@ -150,7 +159,6 @@ in the WebsitesUspto  requisition WebPost-usptoq1 matches against the Web-PostMo
 
 ```
 
-
 ## USPTO trade mark search monitoring using PageSequenceMonitor
 
 The USPTO Trade Mark search service is available here https://tmsearch.uspto.gov/bin/gate.exe?f=login&p_lang=english&p_d=trmk
@@ -161,7 +169,7 @@ This offers a choice of search pages but the simplest one is the Basic Word Mark
 
 https://tmsearch.uspto.gov/bin/gate.exe?f=searchss&state=4805:2kzn4v.1.1
 
-Note that the url perameter state (state=4805:2kzn4v.1.1) is the session key which is unique to the user session and must be included in all search requests.
+Note that the url perameter state (state=4805:2kzn4v.1.1) is the session key which is unique to the user session and must be included in all search requests and the final logout.
 
 The Basic Word Mark Search page looks like this
 
