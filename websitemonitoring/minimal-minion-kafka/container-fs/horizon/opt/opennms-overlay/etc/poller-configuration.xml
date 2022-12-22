@@ -370,7 +370,7 @@
       <downtime begin="0" interval="300000"/><!-- 300s -->
    </package>
 
-   <package name="web-site-monitor">
+   <package name="Web-Site-Monitor">
       <filter>IPADDR != '0.0.0.0'</filter>
       <include-range begin="1.1.1.1" end="254.254.254.254"/>
       <include-range begin="::1" end="ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"/>
@@ -384,7 +384,7 @@
       
       <!-- see https://opennms.discourse.group/t/how-to-monitor-websites-using-metadata/1227 -->
       <!-- note - example uses ^Web:.*$ but this does not work with rrd tool-->
-      <service name="Web-Site-Monitor" interval="300000" user-defined="true" status="on">
+      <service name="Web-HttpsMonitor" interval="300000" user-defined="true" status="on">
          <pattern><![CDATA[^Web-.*$]]></pattern> 
          <parameter key="retry" value="1" />
          <parameter key="timeout" value="3000" />
@@ -398,7 +398,7 @@
          <parameter key="verbose" value="${requisition:verbose|false}" /> 
       </service>
 
-      <service name="WebSiteMonitorWM" interval="300000" user-defined="true" status="on">
+      <service name="Web-WebMonitor" interval="300000" user-defined="true" status="on">
          <pattern><![CDATA[^WebWM-.*$]]></pattern> 
          <parameter key="retry" value="1" />
          <parameter key="timeout" value="3000" />
@@ -415,7 +415,7 @@
       </service>
 
 
-      <service name="Web-Post-Monitor" interval="300000" user-defined="false" status="on">
+      <service name="Web-PostMonitor" interval="300000" user-defined="false" status="on">
          <pattern><![CDATA[^WebPost-.*$]]></pattern> 
          <parameter key="retry" value="1" />
          <parameter key="timeout" value="3000" />
@@ -426,14 +426,13 @@
          <parameter key="rrd-base-name" value="http-${requisition:rrd-base-name}" /> 
          <parameter key="uri" value="${requisition:path|/}" /> 
          <!-- response regex -->
-         <parameter key="banner" value="${requisition:banner}"/>
+         <parameter key="banner" value="${requisition:response-text}"/>
          <parameter key="payload" value="${requisition:payload}"/>
          <!-- header must have a value if used -->
-          <parameter key="header0" value="Host:${requisition:vhost|localhost}"/>
-          <parameter key="header1" value="Accept:application/json"/>
-          <parameter key="header2" value="Content-Type:application/json"/>
-          <parameter key="usesslfilter" value="${requisition:use-ssl-filter|false}" /> 
-
+         <parameter key="header0" value="Host:${requisition:vhost|localhost}"/>
+         <parameter key="header1" value="Accept:${requisition:Accept|application/json}"/>
+         <parameter key="header2" value="Content-Type:${requisition:Content-Type|application/json}"/>
+         <parameter key="usesslfilter" value="${requisition:use-ssl-filter|false}" /> 
       </service>
 
       
@@ -469,13 +468,13 @@
 <!--       <downtime begin="432000000" interval="3600000"/> -->
    </package>
    
-   <!-- additional monitor definitions in package web-site-monitor -->
+   <!-- additional monitor definitions in package Web-HttpsMonitor -->
    <!--  see https://opennms.discourse.group/t/how-to-monitor-websites-using-metadata/1227  How to Monitor Websites Using Metadata -->
-   <monitor service="Web-Site-Monitor" class-name="org.opennms.netmgt.poller.monitors.HttpsMonitor"/>
+   <monitor service="Web-HttpsMonitor" class-name="org.opennms.netmgt.poller.monitors.HttpsMonitor"/>
    
-   <monitor service="WebSiteMonitorWM" class-name="org.opennms.netmgt.poller.monitors.WebMonitor"/>
+   <monitor service="Web-WebMonitor" class-name="org.opennms.netmgt.poller.monitors.WebMonitor"/>
    
-   <monitor service="Web-Post-Monitor" class-name="org.opennms.netmgt.poller.monitors.HttpPostMonitor"/>
+   <monitor service="Web-PostMonitor" class-name="org.opennms.netmgt.poller.monitors.HttpPostMonitor"/>
 
    <!-- todo  -->
    <monitor service="WebSiteMonitorB" class-name="org.opennms.netmgt.poller.monitors.PageSequenceMonitor"/>

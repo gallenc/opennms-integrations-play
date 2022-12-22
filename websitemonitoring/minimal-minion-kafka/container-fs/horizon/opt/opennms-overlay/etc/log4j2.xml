@@ -165,9 +165,10 @@
       <appender-ref ref="RoutingAppender" />
     </logger>
     
-    <Logger name="org.apache.http" level="DEBUG">
-      <appender-ref ref="RoutingAppender" />
-    </Logger>
+    <!-- see https://hc.apache.org/httpcomponents-client-4.5.x/logging.html -->
+<!--     <Logger name="org.apache.http" level="DEBUG"> -->
+<!--       <appender-ref ref="RoutingAppender" /> -->
+<!--     </Logger> -->
     <Logger name="org.apache.http.wire" level="DEBUG">
       <appender-ref ref="RoutingAppender" />
     </Logger>
