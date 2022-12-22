@@ -474,9 +474,31 @@
                scheme="https"
                response-range="100-399"
                successMatch="&lt;I>New User" xmlns="">
-               <parameter key="f" value="searchss" />
-                <parameter key="state" value="${state}" />
+                  <parameter key="f" value="searchss" />
+                  <parameter key="state" value="${state}" />
                </page>
+               
+              <!-- Searching for OpenNMS trademark -->
+              <!--  GET https://tmsearch.uspto.gov/bin/showfield?f=toc&state=4807:62zhxt.1.1&p_search=searchss&p_L=50&BackReference=&p_plural=yes&p_s_PARA1=&p_tagrepl~:=PARA1$LD&p_tagrepl~:=PARA2$COMB&expr=PARA1 AND PARA2&p_s_PARA2=OpenNMS&p_op_ALL=AND&a_default=search&a_search=Submit Query&a_search=Submit Query -->
+              <!--  matches search for OpenNMS trademark against -->
+                <page disable-ssl-verification="true" host="${ipaddr}" 
+               virtual-host="tmsearch.uspto.gov"
+               http-version="1.1" method="POST" 
+               path="/bin/gate.exe" 
+               port="443" 
+               scheme="https"
+               response-range="100-399"
+               successMatch="87240338" xmlns="">
+               
+                  <parameter key="f" value="toc" />
+                  <parameter key="state" value="${state}" />
+                  <parameter key="p_search" value="search" /> 
+                  <parameter key="p_s_All=" value="" />
+                  <parameter key="p_s_All=" value="(opennms)[COMB]" />
+                  <parameter key="a_default" value="search" />
+                  <parameter key="a_search" value="Submit" />
+               </page>
+
                
                <!-- Finally logout from this session-->
                <!--       <form method="POST" action="/bin/gate.exe"> -->
@@ -493,8 +515,8 @@
                scheme="https"
                response-range="100-399"
                successMatch="Thank you for using US Trademark Electronic Search System" xmlns="">
-               <parameter key="f" value="logout" />
-               <parameter key="state" value="${state}" />
+                   <parameter key="f" value="logout" />
+                   <parameter key="state" value="${state}" />
                </page>
                
             </page-sequence>
