@@ -12,7 +12,7 @@ and the
 The use of metadata is based on notes in discourse https://opennms.discourse.group/t/how-to-monitor-websites-using-metadata/1227
 but some corrections have been made.
 
-The examples are rendered in OpenNMS as seperate monitored services attached to IP addresses on a single node. 
+The examples are rendered in OpenNMS as separate monitored services attached to IP addresses on a single node. 
 The IP addresses have different services attached
 
 ![image](../websitemonitoring/images/OnmsUSPTOServices.png)
