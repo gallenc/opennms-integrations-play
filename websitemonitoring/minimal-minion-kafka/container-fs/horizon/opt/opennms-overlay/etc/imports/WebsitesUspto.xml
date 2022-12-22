@@ -20,6 +20,12 @@
 <!--          <monitored-service service-name="ICMP" /> -->
 <!--     <monitored-service service-name="HTTPS" /> -->
       </interface>
+      
+      <!-- only ipv6 reponse to ping 151.207.240.78 -->
+      <interface ip-addr="151.207.240.78" status="1" snmp-primary="N">
+         <monitored-service service-name="UsptoTradeSearch">
+         </monitored-service>
+      </interface>
 </node>
 
 
