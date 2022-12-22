@@ -4,9 +4,93 @@ This folder contains several examples of web site monitoring using opennms metad
 The use of metadata is basedon notes in discourse https://opennms.discourse.group/t/how-to-monitor-websites-using-metadata/1227
 but some corrections have been made
 
+![image](../websitemonitoring/images/OnmsUSPTOServices.png)
+
+![image](../websitemonitoring/images/TESSmainSearch2.png)
+
+![image](../websitemonitoring/images/usptoTradeSearch.png)
+
+![image](../websitemonitoring/images/PPubsSearch.png)
+
+![image](../websitemonitoring/images/TESSmainSearch3.png)
+
+![image](../websitemonitoring/images/TESSmainSearch1.png)
+
+![image](../websitemonitoring/images/WebPostusptoq1.png)
+
+
 ## USPTO monitoring using HttpPostMonitor
 
+### OpenNMS service
+
+![image](../websitemonitoring/images/WebPostusptoq1.png)
+
+### description
+The usa patent search page is shown here  https://ppubs.uspto.gov/pubwebapp/static/pages/ppubsbasic.html
+![image](../websitemonitoring/images/PPubSearch.png)
+
+This uses javascript to create a json based search 
+POST https://ppubs.uspto.gov/dirsearch-public/searches/generic
+
+Request body:
+
+```
+{
+	"cursorMarker": "*",
+	"databaseFilters": [
+		{
+			"databaseName": "USPAT"
+		},
+		{
+			"databaseName": "US-PGPUB"
+		},
+		{
+			"databaseName": "USOCR"
+		}
+	],
+	"fields": [
+		"documentId",
+		"patentNumber",
+		"title",
+		"datePublished",
+		"inventors",
+		"pageCount"
+	],
+	"op": "OR",
+	"pageSize": 50,
+	"q": "(11521175).pn.",
+	"searchType": 0,
+	"sort": "date_publ desc"
+}
+
+```
+
+The response to this search is 
+
+```
+{
+	"cursorMarker": "AoJwgO6u8oQDPDEwMDAwMDY3MjgzOTYhVVMtVVMtMTE1MjExNzU=",
+	"numFound": 1,
+	"docs": [
+		{
+			"documentId": "US-11521175-B2",
+			"datePublished": "2022-12-06",
+			"title": "Patient sensor data exchange systems and methods",
+			"patentNumber": "11521175",
+			"inventors": "Dyell; David et al.",
+			"pageCount": 16
+		}
+	]
+}
+
+```
+
+In the OpenNMS test we use the PostMonitor to send a json search string with a request for a NantHealth patent and receive back the patent refernces
+
+### configuration
+
 in poller-configuration.xml
+
 ```
      <service name="Web-PostMonitor" interval="300000" user-defined="false" status="on">
          <pattern><![CDATA[^WebPost-.*$]]></pattern> 
@@ -32,7 +116,7 @@ in poller-configuration.xml
        
 ```
 
-in requisition
+in the WebsitesUspto  requisition WebPost-usptoq1 matches against the Web-PostMonitor definition above
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -69,3 +153,12 @@ in requisition
 </model-import>
 
 ```
+
+
+## USPTO monitoring using PageSequenceMonitor
+
+### OpenNMS service
+
+![image](../websitemonitoring/images/WebPostusptoq1.png)
+
+### description
