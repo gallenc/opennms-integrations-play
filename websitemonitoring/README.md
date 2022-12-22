@@ -1,6 +1,13 @@
-## Web Site Monitoring example
+## Web Site Monitoring example 
 
-This folder contains several examples of web site monitoring using [opennms metadata](https://docs.opennms.com/horizon/31/operation/deep-dive/meta-data.html) 
+### introduction
+
+This folder contains several examples of monitoring a popular web site from the USPTO.
+
+The monitoring examples use 
+
+[opennms metadata](https://docs.opennms.com/horizon/31/operation/deep-dive/meta-data.html) 
+
 with the 
 
 [HTTPPostMonitor](https://docs.opennms.com/horizon/30/reference/service-assurance/monitors/HttpPostMonitor.html)
@@ -291,4 +298,35 @@ The service is defined in poller-configuration.xml
       <monitor service="UsptoTradeSearch" class-name="org.opennms.netmgt.poller.monitors.PageSequenceMonitor"/>
       
 ```
+### running the examples
+
+A docker-compose file is included with all the required configurations.
+
+```
+# to start the demo run
+docker-compose up -d
+
+#  the demo will take some time to come up but you can follow progress using
+docker-compose logs -f horizon
+
+# to end the demo run ( use -v only if you want to delete the database)
+docker-compose down -v
+
+# if you want to get inside the horizon container to look at for instance the /logs/poller.log
+docker-compose exec horizon bash
+
+```
+once running you can see opennms at
+
+https://localhost:8980
+
+username admin
+password admn
+
+or if running ipv6
+
+https://[::1]:8980
+
+To start monitroing the web sites you will need to umport the node definitions by synchronising the the WebsitesUspto requisition using the requisitions page at
+http://[::1]:8980/opennms/admin/ng-requisitions/index.jsp#/requisitions
 
