@@ -327,6 +327,6 @@ or if running ipv6
 
 https://[::1]:8980
 
-To start monitroing the web sites you will need to umport the node definitions by synchronising the the WebsitesUspto requisition using the requisitions page at
+To start monitoring the USPTO web sites you will need to import the node definitions by synchronising the the WebsitesUspto requisition using the admin requisitions page at
 http://[::1]:8980/opennms/admin/ng-requisitions/index.jsp#/requisitions
 
