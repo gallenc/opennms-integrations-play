@@ -434,9 +434,18 @@
          <parameter key="header2" value="Content-Type:${requisition:Content-Type|application/json}"/>
          <parameter key="usesslfilter" value="${requisition:use-ssl-filter|false}" /> 
       </service>
+      
+      <service name="DNS-Resolution-v4" interval="300000" user-defined="false" status="on">
+         <pattern><![CDATA[^WebDNS-.*$]]></pattern> 
+         <parameter key="retry" value="2"/>
+         <parameter key="timeout" value="2000"/>
+         <parameter key="resolution-type" value="v4"/>
+         <parameter key="rrd-repository" value="/opt/opennms/share/rrd/response"/>
+         <parameter key="rrd-base-name" value="dns-${requisition:rrd-base-name}"/>
+         <parameter key="ds-name" value="${service:name}" /> 
+         <parameter key="lookup" value="${requisition:lookup}"/>
+      </service>
 
-      
-      
       <service name="UsptoTradeSearch" interval="300000" user-defined="false" status="on">
          <parameter key="retry" value="1"/>
          <parameter key="timeout" value="3000"/>
@@ -547,7 +556,10 @@
    <monitor service="Web-PostMonitor" class-name="org.opennms.netmgt.poller.monitors.HttpPostMonitor"/>
 
    <monitor service="UsptoTradeSearch" class-name="org.opennms.netmgt.poller.monitors.PageSequenceMonitor"/>
-
+   
+   <monitor service="DNS-Resolution-v4" class-name="org.opennms.netmgt.poller.monitors.DNSResolutionMonitor" />
+   
+   <!-- default services -->
    <monitor service="JMX-Cassandra" class-name="org.opennms.netmgt.poller.monitors.Jsr160Monitor"/>
    <monitor service="JMX-Cassandra-Newts" class-name="org.opennms.netmgt.poller.monitors.Jsr160Monitor"/>
    <monitor service="ICMP" class-name="org.opennms.netmgt.poller.monitors.IcmpMonitor"/>

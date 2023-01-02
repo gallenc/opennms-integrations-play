@@ -10,6 +10,13 @@
          </monitored-service>
          <monitored-service service-name="ICMP" />
          <monitored-service service-name="HTTPS" />
+         
+         <monitored-service service-name="WebDNS-google">
+            <meta-data context="requisition" key="rrd-base-name" value="google" />
+            <meta-data context="requisition" key="lookup" value="www.google.com" />
+         </monitored-service>
+         
+         
       </interface>
 
    </node>

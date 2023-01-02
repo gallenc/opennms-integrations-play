@@ -1,6 +1,6 @@
 ---
 id: "minion-01"
-location: "minion-location"
+location: "minion-usa-1"
 
 karaf:
   shell:
