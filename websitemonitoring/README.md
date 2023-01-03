@@ -7,7 +7,7 @@ This folder contains several examples of monitoring a popular web site from the 
 An introductory video is provided here [Overview of OpenNMS web monitoring](https://youtu.be/1PDJjAS2NrU)
 
 A more datailed video explains this example of monitoring a complex web site using OpenNMS. [Web Site Monitoring with OpenNMS](https://youtu.be/QcjqNDStjfw) 
-
+(Sorry  -videos are currently being created)
 
 
 The monitoring examples use 
@@ -29,8 +29,6 @@ The examples are rendered in OpenNMS as separate monitored services attached to 
 The IP addresses have different services attached
 
 ![image](../websitemonitoring/images/OnmsUSPTOServices.png)
-
-The example congfigurations in this example are all held within the docker-compose project and are injected to the OpenNMS container when the examples is run
 
 
 ## USPTO monitoring using HttpPostMonitor
@@ -308,7 +306,23 @@ The service is defined in poller-configuration.xml
 ```
 ### running the examples
 
-A docker-compose file is included with all the required configurations.
+A docker-compose project is provided with all the required configurations. 
+
+This can be run on a PC using [docker desktop](https://www.docker.com/products/docker-desktop/).
+
+The example project runs containers for OpenNMS Horizon, Kafka, Postgres and 3 OpenNMS minions. 
+(This example is based off other similar examples which you might find useful at [OpenNMS Forge stackplay](https://github.com/opennms-forge/stack-play) )
+
+The example congfigurations for this tutorial are all held within the docker-compose project and are injected to the OpenNMS container when the example is run
+
+The most important files for this demo are
+
+[-opennms-home-/etc/poller-configuration.xml](../websitemonitoring/minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/poller-configuration.xml)
+
+and 
+
+[-opennms-home-/etc/imports/WebsitesUspto.xml](../websitemonitoring/minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/imports/WebsitesUspto.xml)
+
 
 ```
 # to start the demo run
