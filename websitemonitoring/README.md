@@ -30,6 +30,8 @@ The IP addresses have different services attached
 
 ![image](../websitemonitoring/images/OnmsUSPTOServices.png)
 
+The example congfigurations in this example are all held within the docker-compose project and are injected to the OpenNMS container when the examples is run
+
 
 ## USPTO monitoring using HttpPostMonitor
 
