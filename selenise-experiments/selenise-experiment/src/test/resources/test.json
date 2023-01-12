@@ -1,0 +1,115 @@
+{
+	"id": "94bcbc16-11f9-4634-9aad-1f0450eb68c8",
+	"version": "2.0",
+	"name": "tmp",
+	"url": "https://www.bbc.co.uk",
+	"tests": [
+		{
+			"id": "16718ce9-e596-4223-87fd-32fc9be6a591",
+			"name": "bbctest",
+			"commands": [
+				{
+					"id": "b465a2e6-800c-4c50-a510-c72d8ffc0a52",
+					"comment": "",
+					"command": "open",
+					"target": "/",
+					"targets": [
+					],
+					"value": ""
+				},
+				{
+					"id": "7240cff3-0246-4a97-9305-25ea663da1b9",
+					"comment": "",
+					"command": "setWindowSize",
+					"target": "1095x790",
+					"targets": [
+					],
+					"value": ""
+				},
+				{
+					"id": "5811074e-109b-45e9-8f73-336290c977c1",
+					"comment": "",
+					"command": "mouseOver",
+					"target": "linkText=Search BBC",
+					"targets": [
+						[
+							"linkText=Search BBC",
+							"linkText"
+						],
+						[
+							"css=.ssrcss-13qfcv5-NavigationLink-SearchLink",
+							"css:finder"
+						],
+						[
+							"xpath=//header[@id='header-content']/nav/div/div/div[3]/div[2]/a",
+							"xpath:idRelative"
+						],
+						[
+							"xpath=//a[contains(@href, '/search?d=HOMEPAGE_PS')]",
+							"xpath:href"
+						],
+						[
+							"xpath=//div[2]/a",
+							"xpath:position"
+						],
+						[
+							"xpath=//a[contains(.,'Search BBC')]",
+							"xpath:innerText"
+						]
+					],
+					"value": ""
+				},
+				{
+					"id": "30337b33-2470-43f1-8abe-70a7b730639b",
+					"comment": "",
+					"command": "mouseOut",
+					"target": "linkText=Search BBC",
+					"targets": [
+						[
+							"linkText=Search BBC",
+							"linkText"
+						],
+						[
+							"css=.ssrcss-13qfcv5-NavigationLink-SearchLink",
+							"css:finder"
+						],
+						[
+							"xpath=//header[@id='header-content']/nav/div/div/div[3]/div[2]/a",
+							"xpath:idRelative"
+						],
+						[
+							"xpath=//a[contains(@href, '/search?d=HOMEPAGE_PS')]",
+							"xpath:href"
+						],
+						[
+							"xpath=//div[2]/a",
+							"xpath:position"
+						],
+						[
+							"xpath=//a[contains(.,'Search BBC')]",
+							"xpath:innerText"
+						]
+					],
+					"value": ""
+				}
+			]
+		}
+	],
+	"suites": [
+		{
+			"id": "0c1cbefc-3969-4239-923c-62786174659c",
+			"name": "Default Suite",
+			"persistSession": false,
+			"parallel": false,
+			"timeout": 300,
+			"tests": [
+				"16718ce9-e596-4223-87fd-32fc9be6a591"
+			]
+		}
+	],
+	"urls": [
+		"https://www.bbc.co.uk/"
+	],
+	"plugins": [
+	]
+}
