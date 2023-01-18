@@ -38,6 +38,7 @@ import org.opennms.netmgt.model.events.EventBuilder;
 import org.opennms.netmgt.xml.event.AlarmData;
 import org.opennms.netmgt.alarmd.drools.AlarmService;
 import org.opennms.netmgt.model.OnmsEventParameter;
+import org.opennms.netmgt.model.OnmsMetaData;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,7 +74,7 @@ declare UeiMap
   ueimap : Map
 end
 
-rule "insert uei group map"   
+rule "read and insert config file"   
     when
         eval( 1==1 )
     then
@@ -90,6 +91,42 @@ rule "insert uei group map"
         insert ( ueiMap );
      
         alarmService.warn( "inserted uei map" );
+end
+
+rule "change alarm priority"
+  when
+    $sessionClock : SessionClock()
+    $UeiMap : UeiMap() 
+    
+    // get alarms which match the uei's in groupMap
+    $alarm : OnmsAlarm(alarmType == OnmsAlarm.PROBLEM_TYPE,
+                       node != null,
+                       lastEvent != null,
+                       
+                       // metadata cant work because lazy loading and alarm is not in a transaction
+                       $UeiMap.ueimap.keySet() contains $VALUE : node.findMetaDataForContextAndKey("context", "key").orElse(new OnmsMetaData("", "", "DEFAULT")).getValue()
+                      
+                     // $UeiMap.ueimap.keySet() contains $VALUE : node.getCategories()
+                      
+                      
+                      // $maps : HashMap() from $UeiMap.ueimap.get($VALUE),
+                     // $maps : HashMap(),
+                     //  $severity :  $maps.get(lastEvent.eventUei)
+                      )
+     // see https://stackoverflow.com/questions/58257679/variables-can-not-be-used-inside-bindings                 
+     $mapping : Map() from $UeiMap.ueimap.get($VALUE)
+     
+     $newseverity: String() from $mapping.get($alarm.lastEvent.eventUei)
+    
+                      
+   then
+    Date now = new Date(drools.getWorkingMemory().getSessionClock().getCurrentTime());
+    
+  //  String newseverity = $UeiMap.ueimap.get($VALUE).get($alarm.lastEvent.eventUei);
+    
+    // debugging messages - note change to alarmService.debug in production
+    alarmService.warn("applied new severity {}: matched alarm {}",  $newseverity, $alarm);
+
 end
 
 
@@ -138,7 +175,7 @@ function List<URIMapping> readMappingFile(AlarmService alarmService) {
 		String home = System.getProperty("opennms.home");
 
 		File ruleConstantsFile = new File(home + "/etc/alarmd/rules-constants.csv");
-		alarmService.info("Reading ruleConstantsFile :" + ruleConstantsFile.getAbsolutePath()+"  File exists " + ruleConstantsFile.exists());
+		alarmService.warn("Reading ruleConstantsFile :" + ruleConstantsFile.getAbsolutePath()+"  File exists " + ruleConstantsFile.exists());
 
 		List<URIMapping> mappingList = new ArrayList<URIMapping>();
 
@@ -147,7 +184,7 @@ function List<URIMapping> readMappingFile(AlarmService alarmService) {
 			try {
 
 				FileInputStream ruleConstantsStream = new FileInputStream(ruleConstantsFile);
-				readMappingStream(alarmService, ruleConstantsStream);
+				mappingList = readMappingStream(alarmService, ruleConstantsStream);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -204,7 +241,7 @@ function void writeMappingFile(AlarmService alarmService, List ueiMappings) {
 
 		File ruleConstantsFile = new File(home + "/etc/alarmd/rules-constants.csv");
 
-		alarmService.info("writing ruleConstantsFile :" + ruleConstantsFile.getAbsolutePath());
+		alarmService.warn("writing ruleConstantsFile :" + ruleConstantsFile.getAbsolutePath());
 
 		FileWriter fileWriter = null;
 		try {
@@ -217,7 +254,7 @@ function void writeMappingFile(AlarmService alarmService, List ueiMappings) {
 				line.append(umap.getCategory()).append(",").append(umap.getUei()).append(",").append(umap.getSeverity()).append("\n");
 				String s = line.toString();
 				fileWriter.write(s);
-				alarmService.info("  mapping:"+s);
+				alarmService.warn("  mapping:"+s);
 			}
 		} catch (Exception e) {
 			alarmService.warn("cannot write file:", e);

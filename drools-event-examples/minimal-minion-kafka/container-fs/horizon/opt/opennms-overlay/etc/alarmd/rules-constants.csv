@@ -2,3 +2,4 @@ customer1,uei.opennms.org/nodes/nodeDown,normal
 customer2,uei.opennms.org/nodes/nodeDown,normal
 customer3,uei.opennms.org/nodes/nodeDown,normal
 customer4,uei.opennms.org/nodes/nodeDown,normal
+DEFAULT,uei.opennms.org/nodes/nodeDown,normal
