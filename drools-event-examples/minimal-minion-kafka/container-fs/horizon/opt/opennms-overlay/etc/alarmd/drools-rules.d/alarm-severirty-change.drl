@@ -39,6 +39,10 @@ import org.opennms.netmgt.xml.event.AlarmData;
 import org.opennms.netmgt.alarmd.drools.AlarmService;
 import org.opennms.netmgt.model.OnmsEventParameter;
 import org.opennms.netmgt.model.OnmsMetaData;
+import org.opennms.netmgt.model.OnmsCategory;
+import org.opennms.netmgt.model.OnmsNode;
+import org.opennms.netmgt.model.OnmsSeverity;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,6 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 global org.opennms.netmgt.alarmd.drools.AlarmService alarmService;
 
@@ -98,36 +103,69 @@ rule "change alarm priority"
     $sessionClock : SessionClock()
     $UeiMap : UeiMap() 
     
-    // get alarms which match the uei's in groupMap
+    // get alarms for nodes which match the categories and match the uei in UeiMap
     $alarm : OnmsAlarm(alarmType == OnmsAlarm.PROBLEM_TYPE,
+                       severity != OnmsSeverity.CLEARED,
                        node != null,
                        lastEvent != null,
-                       
-                       // metadata cant work because lazy loading and alarm is not in a transaction
-                       $UeiMap.ueimap.keySet() contains $VALUE : node.findMetaDataForContextAndKey("context", "key").orElse(new OnmsMetaData("", "", "DEFAULT")).getValue()
-                      
-                     // $UeiMap.ueimap.keySet() contains $VALUE : node.getCategories()
-                      
-                      
-                      // $maps : HashMap() from $UeiMap.ueimap.get($VALUE),
-                     // $maps : HashMap(),
-                     //  $severity :  $maps.get(lastEvent.eventUei)
+                       node.categories !=null
                       )
-     // see https://stackoverflow.com/questions/58257679/variables-can-not-be-used-inside-bindings                 
-     $mapping : Map() from $UeiMap.ueimap.get($VALUE)
-     
-     $newseverity: String() from $mapping.get($alarm.lastEvent.eventUei)
-    
+                      
+    $newseverity : String() from findSeverityForCategory($alarm.node.categories, $UeiMap.ueimap, $alarm.lastEvent.eventUei )
                       
    then
     Date now = new Date(drools.getWorkingMemory().getSessionClock().getCurrentTime());
     
-  //  String newseverity = $UeiMap.ueimap.get($VALUE).get($alarm.lastEvent.eventUei);
-    
     // debugging messages - note change to alarmService.debug in production
-    alarmService.warn("applied new severity {}: matched alarm {}",  $newseverity, $alarm);
+    alarmService.warn("applying new severity {} to  matched alarm {}",  $newseverity, $alarm);
+    
+    if(! OnmsSeverity.names().contains($newseverity)){
+       alarmService.warn("cannot apply unknown new severity: "+ $newseverity);
+    } else {
+       OnmsSeverity newOnmsSeverity =  OnmsSeverity.get($newseverity);
+       // avoid repeatedly setting the alarm severity
+       if ( $alarm.getSeverity() != newOnmsSeverity  ) {
+           alarmService.warn("updating alarm to new severity: "+ $newseverity);
+           alarmService.setSeverity($alarm, newOnmsSeverity, now);
+       }
+    }
 
 end
+
+	/**
+	 * 
+	 * @param categorylist list of opennms categories obtained from node in alarm 
+	 * @param ueimap map of uei severities loaded from file
+	 * @param uei uei of lst event in alarm for match
+	 * @return
+	 */
+function String findSeverityForCategory(Set catlist,  Map ueimp, String uei ) {
+
+        Set<OnmsCategory> categoryset = (Set<OnmsCategory>) catlist;
+        Map<String, Map<String, String>> ueimap = (Map<String, Map<String, String>>) ueimp;
+        
+		String severity = null;
+		
+		// category, uei, severity
+		// Map<String, Map<String, String>> ueimap = new HashMap();
+		
+		// if there is a default mapping for uei apply this first.
+		Map<String,String> ueiseverity =  ueimap.get("DEFAULT");
+		if(ueiseverity!=null) {
+			severity =  ueiseverity.get(uei);
+		}
+		
+		// override default mapping with category mapping if exists
+		for(OnmsCategory category: categoryset) {
+			String name = category.getName();
+			if (name!=null) {
+				ueiseverity =  ueimap.get(name);
+				if(ueiseverity!=null) severity = ueiseverity.get(uei);
+			}
+		}
+		
+		return severity;
+}
 
 
 function displayUeiFacts(AlarmService alarmService, Map dataIn) {
