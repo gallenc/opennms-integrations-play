@@ -141,6 +141,8 @@ rule "load new alarm mapping"
 
        alarmService.warn( "inserted new uei map" );
     }
+    // delete alarm so new event can create new action
+    alarmService.deleteAlarm($alarm);
 
 
 end
