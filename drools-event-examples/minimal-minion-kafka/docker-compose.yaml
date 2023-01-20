@@ -1,7 +1,10 @@
 ---
 version: '3'
 
-# fixed ip addresses so opennms config works
+# using fixed ip addresses so opennms config works
+# to see all netowrk use docker network ls
+# to see config use docker network inspect minimal-minion-kafka_frontend
+# note gateway is 172.20.0.1 
 networks:
   frontend:
     ipam:
@@ -155,7 +158,7 @@ services:
       frontend:
         ipv4_address: 172.20.0.8
         
- # secondsnmp container
+ # second snmp container
   nodenetsnmp2:
     image: polinux/snmpd
     container_name: nodenetsnmp2
@@ -165,4 +168,15 @@ services:
     networks:
       frontend:
         ipv4_address: 172.20.0.9
+        
+# third snmp container
+  nodenetsnmp3:
+    image: polinux/snmpd
+    container_name: nodenetsnmp3
+    hostname: nodenetsnmp3
+    ports:
+      - "13161:161/udp"
+    networks:
+      frontend:
+        ipv4_address: 172.20.0.10
 

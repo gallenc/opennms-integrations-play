@@ -1,0 +1,28 @@
+<events xmlns="http://xmlns.opennms.org/xsd/eventconf">
+
+<!-- <?xml version="1.0" encoding="UTF-8"?> -->
+<!-- <event> -->
+<!--     <uei>uei.opennms.org/alarms/drools/reloadmapping</uei> -->
+<!--        <host>localhost</host> -->
+<!--        <severity>NORMAL</severity> -->
+<!--        <source>droolsconfig</source> -->
+<!--        <descr>&#13; -->
+<!-- customer1,uei.opennms.org/nodes/nodeDown,CRITICAL&#13; -->
+<!-- customer2,uei.opennms.org/nodes/nodeDown,CRITICAL&#13; -->
+<!-- customer3,uei.opennms.org/nodes/nodeDown,CRITICAL&#13; -->
+<!-- DEFAULT,uei.opennms.org/nodes/nodeDown,CRITICAL&#13;</descr> -->
+<!--        <logmsg>update to drools config</logmsg> -->
+<!-- </event> -->
+
+   <event>
+      <uei>uei.opennms.org/alarms/drools/reloadmapping</uei>
+      <event-label>Alarm: Drools Configuration Update</event-label>
+      <logmsg dest="logndisplay">Alarm: Drools Configuration Update</logmsg>
+<!--       <descr>>%parm[situationLogMsg]% -->
+<!--       &lt;p>The event included the following parameters:&lt;/p> &lt;p>%parm[all]%&lt;/p> -->
+<!--       </descr> -->
+
+      <severity>Normal</severity>
+      <alarm-data reduction-key="%uei%:%dpname%:%nodeid%" alarm-type="1" auto-clean="true" />
+   </event>
+</events>

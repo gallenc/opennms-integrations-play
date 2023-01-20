@@ -38,6 +38,7 @@ import org.opennms.netmgt.model.events.EventBuilder;
 import org.opennms.netmgt.xml.event.AlarmData;
 import org.opennms.netmgt.alarmd.drools.AlarmService;
 import org.opennms.netmgt.model.OnmsEventParameter;
+import org.opennms.netmgt.model.OnmsEvent;
 import org.opennms.netmgt.model.OnmsMetaData;
 import org.opennms.netmgt.model.OnmsCategory;
 import org.opennms.netmgt.model.OnmsNode;
@@ -95,7 +96,53 @@ rule "read and insert config file"
 
         insert ( ueiMap );
      
-        alarmService.warn( "inserted uei map" );
+        alarmService.warn( "inserted uei map from file at startup" );
+end
+
+rule "load new alarm mapping"
+  no-loop
+  when
+    $sessionClock : SessionClock()
+    $UeiMap : UeiMap() 
+    
+    // get alarms for nodes which match the categories and match the uei in UeiMap
+    $alarm : OnmsAlarm(alarmType == OnmsAlarm.PROBLEM_TYPE,
+                       severity != OnmsSeverity.CLEARED,
+                       lastEvent != null,
+                       lastEvent.eventUei == "uei.opennms.org/alarms/drools/reloadmapping"
+                      )
+                      
+   then
+    Date now = new Date(drools.getWorkingMemory().getSessionClock().getCurrentTime());
+    OnmsEvent lastEvent = $alarm.getLastEvent();
+    String description =  lastEvent.getEventDescr();
+    alarmService.warn( "received uei.opennms.org/alarms/drools/reloadmapping event {}", lastEvent );
+    
+    // clear this alarm so wont fire again until new event
+    alarmService.setSeverity($alarm, OnmsSeverity.CLEARED, now);
+    
+    if(description!=null) {
+    
+       alarmService.warn( "trying to insert uei map from description: "+description);
+       // read mapping csv from description
+       String csvString = description;
+       List<URIMapping> ueimapping = readMappingCSVString(alarmService, csvString);
+       writeMappingFile( alarmService, ueimapping);
+       
+       //create and insert new mapping facts
+       Map ueimap =  mappingToFactConstant(alarmService, ueimapping);
+       displayUeiFacts(alarmService, ueimap);
+
+       UeiMap ueiMap = new UeiMap();
+       ueiMap.setUeimap(ueimap);
+
+       retract($UeiMap);
+       insert ( ueiMap );
+
+       alarmService.warn( "inserted new uei map" );
+    }
+
+
 end
 
 rule "change alarm priority"
@@ -125,7 +172,7 @@ rule "change alarm priority"
        OnmsSeverity newOnmsSeverity =  OnmsSeverity.get($newseverity);
        // avoid repeatedly setting the alarm severity
        if ( $alarm.getSeverity() != newOnmsSeverity  ) {
-           alarmService.warn("updating alarm to new severity: "+ $newseverity);
+           alarmService.warn("updating alarm {} to new severity: {}", $alarm.getId(), $newseverity);
            alarmService.setSeverity($alarm, newOnmsSeverity, now);
        }
     }
@@ -261,8 +308,7 @@ function List<URIMapping> readMappingStream(AlarmService alarmService, InputStre
 			}
 
 		} catch (Exception e) {
-			alarmService.warn(e.getMessage());
-			e.printStackTrace();
+			alarmService.warn("cannot read inputstream ",e );
 		} finally {
 			if (scanner != null)
 				scanner.close();

@@ -1,5 +1,4 @@
-customer1,uei.opennms.org/nodes/nodeDown,NORMAL
-customer2,uei.opennms.org/nodes/nodeDown,MAJOR
-customer3,uei.opennms.org/nodes/nodeDown,CRITICAL
-customer4,uei.opennms.org/nodes/nodeDown,NORMAL
-DEFAULT,uei.opennms.org/nodes/nodeDown,NORMAL
+customer1,uei.opennms.org/nodes/nodeDown,MAJOR
+customer2,uei.opennms.org/nodes/nodeDown,CRITICAL
+customer3,uei.opennms.org/nodes/nodeDown,NORMAL
+DEFAULT,uei.opennms.org/nodes/nodeDown,WARN
