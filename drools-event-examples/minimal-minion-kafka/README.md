@@ -1,5 +1,6 @@
 # Using Drools rules to change severity of alarms
 
+
 ## introduction
 In this example we look at how the in built drools rete engine can be use o change the severity of reported alarms depending on the criteria of the node reporting the alarm.
 
@@ -54,6 +55,8 @@ An example requisition with categories is here
 
 [-opennms-home-/etc/imports/testnetwork1.xml](../minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/imports/testnetwork1.xml)
 
+note that nodenetsnmp3 does not have a category so only DEFAULT mappings (if any) will be applied
+
 ```
 <model-import xmlns="http://xmlns.opennms.org/xsd/config/model-import" date-stamp="2023-01-20T06:19:53.674-05:00" foreign-source="testnetwork1" last-import="2023-01-20T06:23:50.388-05:00">
    <node foreign-id="nodenetsnmp2" node-label="nodenetsnmp2">
@@ -79,11 +82,11 @@ An example requisition with categories is here
 1. we provide a new event to externally create or modify the rules-constants.csv file
 
 Rather than just modifying a file in the etc directory, we provide an event which will overwrite the rules-constants.csv with a csv list contained in its &lt;descr> field. 
-This event allows an opennms user to modify the alarm severities depending on customer using a ReST call rather than modifying a file in OpenNMS.
+This event allows an OpenNMS user to modify the alarm severities depending on customer using a ReST call rather than modifying a file in OpenNMS.
 
 This event carries a comma separated list of node category,alarm uei, new severity.
 
-The event can be injected directly to opennms using the ReST API (see https://docs.opennms.com/horizon/31/development/rest/events.html)
+The event can be injected directly to OpenNMS using the ReST API (see https://docs.opennms.com/horizon/31/development/rest/events.html)
 
 ```
 http://localhost:8980/opennms/rest/events
@@ -294,4 +297,19 @@ If you restart the test containers using,
 docker-compose up -d
 ```
 
- the alarms should clear normally. 
+the alarms should clear normally. 
+
+## Important Disclaimer
+
+This example is a proof of concept using standard OpenNNMS drools features in Horizon 31. 
+
+While it is believed that the solution should work in production, it is provided for education only with no warranty that the example is fit for any purpose or that it is bug free and can scale to a large network.
+
+It is not a solution supported by OpenNMS group professional services.
+
+It has only been tested against a very small example network in docker-compose (currently using horizon 31).
+
+However if you find it useful or want to contribute any feedback or bug fixes will be most welcome, 
+
+
+ 
