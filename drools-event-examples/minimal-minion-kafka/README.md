@@ -1,7 +1,7 @@
 # Using Drools rules to change severity of alarms
 
 
-## introduction
+## Introduction
 In this example we look at how the in built drools rete engine can be use o change the severity of reported alarms depending on the criteria of the node reporting the alarm.
 
 The use case for this configuration is as follows. 
@@ -19,6 +19,7 @@ This requires the user to track copies of multiple configurations and it is diff
 The user wishes to reduce the number of OpenNMS instances and replace them with per-customer minions.  
 They also want ot make it easier to apply customer severities to alarms reported for each customer.
 
+## Solution
 In this solution we provide the following features
 
 1. we provide a severity configuration file, rules-constants.csv
@@ -140,7 +141,7 @@ which references
 
 [-opennms-home-/etc/events/opennms.alarm.drools.configuration.events.xml](../drools-event-examples/minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/events/opennms.alarm.drools.configuration.events.xml)
 
-## description of alarm-severirty-change.drl
+## Description of alarm-severirty-change.drl
 
 This feature is implemented in a single drools file
 [-opennms-home-/etc/alarmd/drools-rules.d/alarm-severirty-change.drl](../drools-event-examples/minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/alarmd/drools-rules.d/alarm-severirty-change.drl)
