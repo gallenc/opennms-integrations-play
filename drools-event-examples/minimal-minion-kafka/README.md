@@ -56,6 +56,8 @@ An example requisition with categories is here
 
 [-opennms-home-/etc/imports/testnetwork1.xml](../minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/imports/testnetwork1.xml)
 
+IMPORTANT: Because their contents are subject to runtime caching, never to work directly with the requisition XML files in the `etc/imports` directory hierarchy. All runtime interaction with requisitions must be done via the `requisittions` REST service.
+
 note that nodenetsnmp3 does not have a category so only DEFAULT mappings (if any) will be applied
 
 ```
