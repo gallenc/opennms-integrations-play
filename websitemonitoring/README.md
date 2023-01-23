@@ -313,7 +313,7 @@ This can be run on a PC using [docker desktop](https://www.docker.com/products/d
 The example project runs containers for OpenNMS Horizon, Kafka, Postgres and 3 OpenNMS minions. 
 (This example is based off other similar examples which you might find useful at [OpenNMS Forge stackplay](https://github.com/opennms-forge/stack-play) )
 
-The example congfigurations for this tutorial are all held within the docker-compose project and are injected to the OpenNMS container when the example is run
+The example configurations for this tutorial are all held within the docker-compose project and are injected to the OpenNMS container when the example is run
 
 The most important files for this demo are
 

@@ -1,5 +1,6 @@
 <events xmlns="http://xmlns.opennms.org/xsd/eventconf">
 
+<!-- this is the configuration event format. Note the &#13; is a line feed and may not be neccessary if csv entries are on separate lines -->
 <!-- <?xml version="1.0" encoding="UTF-8"?> -->
 <!-- <event> -->
 <!--     <uei>uei.opennms.org/alarms/drools/reloadmapping</uei> -->
