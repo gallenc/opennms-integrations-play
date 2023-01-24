@@ -4,7 +4,7 @@
 ## Introduction
 In this example we look at how the in-built drools rete engine can be used to change the severity of reported alarms depending on the criteria of the node reporting the alarm.
 
-A video demonstrating this use case is provided here: [OpenNMS drools alarm mapping for MSPs](https://youtu.be/bUCaqguwrhU)
+A video demonstrating this use case is provided here (opens in new tab): <a href="https://youtu.be/bUCaqguwrhU" target="_blank">OpenNMS drools alarm mapping for MSPs</a>
 
 The use case for this configuration is as follows.
  
