@@ -4,7 +4,10 @@
 ## Introduction
 In this example we look at how the in-built drools rete engine can be used to change the severity of reported alarms depending on the criteria of the node reporting the alarm.
 
-The use case for this configuration is as follows. 
+The use case for this configuration is as follows.
+ 
+![image](../minimal-minion-kafka/images/Scenario.png)
+
 An MSP uses OpenNMS to manage a number of accounts. 
 Each account has their own OpenNNS instance which has custom configurations to set the priority given to alarms reported by that account. The alarm severity is presently determined by changing the severity of the modified alarms in the file 
 
@@ -20,7 +23,22 @@ The user wishes to reduce the number of OpenNMS instances and replace them with 
 They also want ot make it easier to apply customer severities to alarms reported for each customer.
 
 ## Solution
-In this solution we provide the following features
+
+The figure below illustrates a possible solution using the Alarmd drools engine. 
+
+All events with an alarm reduction key are processed by the drools engine. 
+Here we provide a new rules-constants.csv file which maps the alarm uei, required severity and the category of a node to give a new severity for particular alarms.
+
+To avoid modifying directly the rules-constants.csv file, a new reloadmapping event is defined which causes drools to update the rules-constants.csv file with a new configuration in the event. 
+
+The solution allows the user to add categories to provisioned nodes which will cause the specific category mapping to be invoked for events received from that node.
+
+The category mapping can be changed by injecting a reloadmapping event through the ReST API.
+
+
+![image](../minimal-minion-kafka/images/Solution.png)
+
+A more detailed description is as follows;
 
 1. we provide a severity configuration file, rules-constants.csv
 This changes the severity only for alarms on nodes with a corresponding surveillence category.
