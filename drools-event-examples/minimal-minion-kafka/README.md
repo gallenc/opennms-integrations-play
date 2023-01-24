@@ -4,6 +4,8 @@
 ## Introduction
 In this example we look at how the in-built drools rete engine can be used to change the severity of reported alarms depending on the criteria of the node reporting the alarm.
 
+A video demonstrating this use case is provided here: [OpenNMS drools alarm mapping for MSPs](https://youtu.be/bUCaqguwrhU)
+
 The use case for this configuration is as follows.
  
 ![image](../minimal-minion-kafka/images/Scenario.png)
