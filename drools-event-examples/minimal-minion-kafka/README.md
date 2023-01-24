@@ -2,7 +2,7 @@
 
 
 ## Introduction
-In this example we look at how the in built drools rete engine can be use o change the severity of reported alarms depending on the criteria of the node reporting the alarm.
+In this example we look at how the in-built drools rete engine can be used to change the severity of reported alarms depending on the criteria of the node reporting the alarm.
 
 The use case for this configuration is as follows. 
 An MSP uses OpenNMS to manage a number of accounts. 
@@ -125,26 +125,26 @@ This feature is implimented entirely using the scripts in a drools configuration
 OpenNMS uses [Drools (jboss rules)](https://www.drools.org/) as it's inbuilt rules engine.
 Drools is used in a number of places but in this example we shall modify the configuration for the [drools integration with alarmd](https://docs.opennms.com/horizon/31/operation/deep-dive/alarms/alarmd.html)
 
-Drools configurations for Alarmd are held in the folder (-opennms-home-/etc/alarmd/drools-rools.d](https://github.com/OpenNMS/opennms/tree/develop/opennms-base-assembly/src/main/filtered/etc/alarmd/drools-rules.d)
+Drools configurations for Alarmd are held in the folder [-opennms-home-/etc/alarmd/drools-rools.d](https://github.com/OpenNMS/opennms/tree/develop/opennms-base-assembly/src/main/filtered/etc/alarmd/drools-rules.d)
 
 You can see here in github that two drools configuration files are provided as standard (alarmd.drl and situations.drl ).
 
 In this example we add a new drools configuration
 
-[-opennms-home-/etc/alarmd/drools-rules.d/alarm-severirty-change.drl](../drools-event-examples/minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/alarmd/drools-rules.d/alarm-severirty-change.drl)
+[-opennms-home-/etc/alarmd/drools-rules.d/alarm-severirty-change.drl](../minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/alarmd/drools-rules.d/alarm-severirty-change.drl)
 
 and a new event through 
 
-[-opennms-home-/etc/eventconf.xml](../drools-event-examples/minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/eventconf.xml)
+[-opennms-home-/etc/eventconf.xml](../minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/eventconf.xml)
 
 which references
 
-[-opennms-home-/etc/events/opennms.alarm.drools.configuration.events.xml](../drools-event-examples/minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/events/opennms.alarm.drools.configuration.events.xml)
+[-opennms-home-/etc/events/opennms.alarm.drools.configuration.events.xml](../minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/events/opennms.alarm.drools.configuration.events.xml)
 
 ## Description of alarm-severirty-change.drl
 
 This feature is implemented in a single drools file
-[-opennms-home-/etc/alarmd/drools-rules.d/alarm-severirty-change.drl](../drools-event-examples/minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/alarmd/drools-rules.d/alarm-severirty-change.drl)
+[-opennms-home-/etc/alarmd/drools-rules.d/alarm-severirty-change.drl](../minimal-minion-kafka/container-fs/horizon/opt/opennms-overlay/etc/alarmd/drools-rules.d/alarm-severirty-change.drl)
 
 This file contains data declarations, three rules and a number of functions.
 
