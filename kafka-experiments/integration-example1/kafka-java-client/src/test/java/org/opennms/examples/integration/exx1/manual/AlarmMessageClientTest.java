@@ -39,9 +39,11 @@ class AlarmMessageClientTest {
 		} catch (InterruptedException e) {
 			LOG.info("finisned test.");
 			return;
+		} finally {
+			if(aeclient!=null) aeclient.destroy();
 		}
 
-		aeclient.destroy();
+		
 	}
 
 }

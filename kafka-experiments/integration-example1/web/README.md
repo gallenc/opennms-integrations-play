@@ -11,10 +11,10 @@ mvn clean install
 
 ## running
 
-you can run the built JAR directly in the IDE or on the command line ( in web/target directory)
+you can run the built executable war directly in the IDE or on the command line ( in web/target directory)
 
 ```
-java -jar kafka-web-0.0.1-SNAPSHOT.jar
+java -jar .\kafka-web-0.0.1-SNAPSHOT-exec.war
 ```
 or you can run using the maven spring boot plugin in the web module
 

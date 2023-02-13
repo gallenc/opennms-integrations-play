@@ -53,7 +53,7 @@ class KtableAlarmClientTest {
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException e) {
-				LOG.info("waiting before polling fo alarms.");
+				LOG.info("waiting before polling for alarms.");
 				return;
 			}
 		}

@@ -62,6 +62,8 @@ To manually set up the alarm forwarder following the documentation
 docker-compose exec minion bash
 ssh -p 8101 admin@horizon
 
+(ssh -p 8101  -o UserKnownHostsFile=/dev/null  admin@localhost can be used from the docker host while avoiding host signature checking)
+
 admin@opennms()> config:edit org.opennms.features.kafka.producer.client
 admin@opennms()> config:property-set bootstrap.servers broker:29092
 admin@opennms()> config:update

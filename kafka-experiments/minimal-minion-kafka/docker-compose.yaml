@@ -1,6 +1,16 @@
 ---
 version: '3'
 
+# using fixed ip addresses so opennms config works
+# to see all netowrk use docker network ls
+# to see config use docker network inspect minimal-minion-kafka_frontend
+# note gateway is 172.20.0.1 
+networks:
+  frontend:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
 volumes:
   data-postgres: {}
   data-opennms: {}
@@ -24,6 +34,9 @@ services:
       interval: 10s
       timeout: 30s
       retries: 3
+    networks:
+      frontend:
+        ipv4_address: 172.20.0.2
 
   zookeeper:
     image: ${DOCKER_REGISTRY:-docker.io}/confluentinc/cp-zookeeper:${ZOOKEEPER_VERSION:-5.5.0}
@@ -33,6 +46,9 @@ services:
       TZ: ${TIMEZONE:-America/New_York}
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      frontend:
+        ipv4_address: 172.20.0.3
 
   broker:
     image: ${DOCKER_REGISTRY:-docker.io}/confluentinc/cp-kafka:${KAFKA_VERSION:-5.5.0}
@@ -54,6 +70,9 @@ services:
     ports:
       - "29092:29092/tcp"
       - "9092:9092/tcp"
+    networks:
+      frontend:
+        ipv4_address: 172.20.0.4
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -66,6 +85,9 @@ services:
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
     ports:
       - "8080:8080/tcp"
+    networks:
+      frontend:
+        ipv4_address: 172.20.0.5
 
   horizon:
     image: ${DOCKER_REGISTRY:-docker.io}/${DOCKER_ORG:-opennms}/${HORIZON_OCI:-horizon}:${ONMS_VERSION:-bleeding}
@@ -95,6 +117,9 @@ services:
       interval: 1m
       timeout: 5s
       retries: 3
+    networks:
+      frontend:
+        ipv4_address: 172.20.0.6
 
   minion:
     image: ${DOCKER_REGISTRY:-docker.io}/${DOCKER_ORG:-opennms}/${MINION_OCI:-minion}:${ONMS_VERSION:-bleeding}
@@ -118,6 +143,9 @@ services:
       - "8201:8201/tcp"
       - "1162:1162/udp"
       - "1514:1514/udp"
+    networks:
+      frontend:
+        ipv4_address: 172.20.0.7
       
  # first snmp container
   cameranetsnmp1:
@@ -126,3 +154,6 @@ services:
     hostname: cameranetsnmp1
     ports:
       - "11161:161/udp"
+    networks:
+      frontend:
+        ipv4_address: 172.20.0.8
