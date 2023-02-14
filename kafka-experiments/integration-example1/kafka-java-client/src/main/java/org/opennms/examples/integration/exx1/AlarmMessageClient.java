@@ -109,18 +109,20 @@ public class AlarmMessageClient implements Runnable {
 
 			final ConsumerRecords<String, byte[]> consumerRecords = alarmConsumer.poll(Duration.ofMillis(1000));
 
-			LOG.debug("received " + consumerRecords.count() + " alarmRecords");
+			if(consumerRecords.count()!=0) LOG.debug("received " + consumerRecords.count() + " alarmRecords");
 			
 			consumerRecords.forEach(record -> {
 				String reductionKey = record.key();
 				final byte[] alarmBytes = record.value();
-				try {
+				if (alarmBytes==null) {
+					LOG.error("record is null for reduction key " + reductionKey);
+				} else 	try {
 					OpennmsModelProtos.Alarm alarm = OpennmsModelProtos.Alarm.parseFrom(alarmBytes);
 					LOG.debug("Alarm Event key: " + record.key() + " id:" + alarm.getId() + " message:"
 							+ alarm.getLogMessage());
 					sendAlarmMessage(alarm);
-				} catch (InvalidProtocolBufferException e) {
-					throw new RuntimeException("Failed to parse alarm for bytes at reduction key " + reductionKey, e);
+				} catch (Exception e) {
+					LOG.error("Failed to parse alarm for bytes at reduction key " + reductionKey, e);
 				}
 
 			});
