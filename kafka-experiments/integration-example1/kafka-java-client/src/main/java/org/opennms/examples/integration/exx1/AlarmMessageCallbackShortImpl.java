@@ -19,7 +19,7 @@ public class AlarmMessageCallbackShortImpl implements AlarmMessageCallback {
 		}
 		
 		
-		LOG.info("***************************** callback received alarm message:"
+		LOG.info("\n***************************** callback received alarm message:"
 				+ "\nId: " + 
 				alarmEvent.getId()+
 				"\nseverity: " + 

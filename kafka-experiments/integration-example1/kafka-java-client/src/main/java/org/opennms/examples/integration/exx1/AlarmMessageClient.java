@@ -115,7 +115,10 @@ public class AlarmMessageClient implements Runnable {
 				String reductionKey = record.key();
 				final byte[] alarmBytes = record.value();
 				if (alarmBytes==null) {
-					LOG.info("clear alarm (record is null) for reduction key " + reductionKey);
+					LOG.info("*****************************\n"
+							+ "clear alarm (record is null) for reduction key " + reductionKey
+							+"*****************************\n"
+							);
 				} else 	try {
 					OpennmsModelProtos.Alarm alarm = OpennmsModelProtos.Alarm.parseFrom(alarmBytes);
 					LOG.debug("Alarm Event key: " + record.key() + " id:" + alarm.getId() + " message:"
