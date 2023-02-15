@@ -9,7 +9,10 @@ public class AlarmMessageCallbackSimpleImpl implements AlarmMessageCallback {
 
 	@Override
 	public void onAlarmEvent(OpennmsModelProtos.Alarm alarmEvent) {
-		LOG.info("callback received alarm message:" + alarmEvent);
+		LOG.info("*****************************\n"
+				+ "callback received alarm message:\n" 
+				+ alarmEvent
+				+"\n*****************************");
 
 	}
 

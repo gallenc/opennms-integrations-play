@@ -1,6 +1,7 @@
 package org.opennms.examples.integration.exx1;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 
@@ -11,6 +12,8 @@ public class Main {
 	private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String[] args) {
+
+		boolean shortmessages = Arrays.asList(args).contains("--shortmessages");
 
 		AlarmMessageClient aeclient = null;
 
@@ -37,7 +40,13 @@ public class Main {
 
 			aeclient.setAlarmTopic("alarms");
 
-			aeclient.subscribe(new AlarmMessageCallbackSimpleImpl());
+			if (shortmessages) {
+				LOG.debug("printing short messages");
+				aeclient.subscribe(new AlarmMessageCallbackShortImpl());
+			} else {
+				LOG.debug("printing full messages");
+				aeclient.subscribe(new AlarmMessageCallbackSimpleImpl());
+			}
 
 			aeclient.init();
 			LOG.debug("finished initialisation - waiting for alarm events ");
