@@ -17,7 +17,7 @@ the .env file sets the version of OpenNMS to use - currently 29.0.6
 (see https://docs.docker.com/compose/environment-variables/)
 
 
-##To run OpenMMS
+## To run OpenMMS
 
 ```
 docker-compose up -d
@@ -39,13 +39,43 @@ and to also clear the database volumes
 docker-compose down -v
 ```
 
-you can reach inside hte opennms container using
+you can reach inside the opennms container using
 
 ```
 docker-compose exec horizon bash
 ```
 
-# To activate and test alarms forwarder.
+# To run kafka-client and kafka-web
+Two simple containers are provided from the integrationexample1 project.
+These containers need to be built before they can be used.
+
+Both containers expect the kafka broker address to be injected to
+```
+ /tmp/kafkaclient.properties
+ ```
+
+If you have built the containers, use the following command with profile to activate or deactivate them in docker-compose
+
+```
+docker-compose  --profile kafka-client  up -d
+
+docker-compose  --profile kafka-client down
+```
+you can see any messages received by the kafka-client using
+
+```
+docker-compose  logs -f kafka-client
+```
+
+You should also be able to see the state of an alarms ktable on the kafka-web client at
+
+http://localhost:8081
+
+or 
+
+http://[::1]:8081
+
+# To activate and test opennms alarms forwarder.
 
 Based on https://docs.opennms.com/horizon/29/operation/kafka-producer/kafka-producer.html
 (see also https://rmoff.net/2018/08/02/kafka-listeners-explained/)

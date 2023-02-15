@@ -70,7 +70,7 @@
 							<images>
 								<image>
 									<name>opennms:kafka-client</name>
-									<alias>dockerfile</alias>
+									<alias>kafka-client</alias>
 									<build>
 										<!-- filter>@</filter-->
 										<contextDir>${project.basedir}</contextDir>
@@ -79,7 +79,7 @@
 								</image>
 								<image>
 									<name>opennms:kafka-web</name>
-									<alias>dockerfile</alias>
+									<alias>kafka-web</alias>
 									<build>
 										<!-- filter>@</filter-->
 										<contextDir>${project.basedir}</contextDir>

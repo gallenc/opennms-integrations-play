@@ -146,7 +146,7 @@ services:
     networks:
       frontend:
         ipv4_address: 172.20.0.7
-      
+        
  # first snmp container
   cameranetsnmp1:
     image: polinux/snmpd
@@ -157,3 +157,35 @@ services:
     networks:
       frontend:
         ipv4_address: 172.20.0.8
+        
+ # kafka client
+  kafka-client:
+    image: opennms:kafka-client
+    profiles: ["kafka-client"]
+    container_name: kafka-client
+    hostname: kafka-client
+    depends_on:
+      - broker
+    volumes:
+      - ./container-fs/kafka-client/kafkaclient.properties:/tmp/kafkaclient.properties
+    #ports:
+    #  - "11161:161/udp"
+    networks:
+      frontend:
+        ipv4_address: 172.20.0.9
+ 
+ # kafka web client
+  kafka-web:
+    image: opennms:kafka-web
+    profiles: ["kafka-client"]
+    container_name: kafka-web
+    hostname: kafka-web
+    depends_on:
+      - broker
+    volumes:
+      - ./container-fs/kafka-client/kafkaclient.properties:/tmp/kafkaclient.properties
+    ports:
+      - "8081:8081/tcp"
+    networks:
+      frontend:
+        ipv4_address: 172.20.0.10
