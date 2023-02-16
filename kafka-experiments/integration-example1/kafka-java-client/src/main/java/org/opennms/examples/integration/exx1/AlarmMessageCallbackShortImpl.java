@@ -11,7 +11,7 @@ public class AlarmMessageCallbackShortImpl implements AlarmMessageCallback {
 	@Override
 	public void onAlarmEvent(OpennmsModelProtos.Alarm alarmEvent) {
 		
-		String relatedAlarms = "related alarms count:"+alarmEvent.getRelatedAlarmCount()+" relatedAlarms: ";
+		String relatedAlarms = "related alarms count: "+alarmEvent.getRelatedAlarmCount()+" relatedAlarms: ";
 		if(alarmEvent.getRelatedAlarmList() !=null) {
 			for(Alarm a: alarmEvent.getRelatedAlarmList()) {
 				relatedAlarms = relatedAlarms +" "+a.getId();

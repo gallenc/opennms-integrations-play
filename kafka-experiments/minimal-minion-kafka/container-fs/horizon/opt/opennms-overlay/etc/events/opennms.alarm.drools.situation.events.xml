@@ -3,7 +3,7 @@
       <uei>uei.opennms.org/alarms/drools/situation</uei>
       <event-label>Alarm: Drools Situation Update</event-label>
       <logmsg dest="logndisplay">%parm[situationDescr]%</logmsg>
-      <descr>>%parm[situationLogMsg]%
+      <descr>%parm[situationLogMsg]%
       &lt;p>The event included the following parameters:&lt;/p> &lt;p>%parm[all]%&lt;/p>
       </descr>
 

@@ -123,13 +123,14 @@ rule "group mapping situation"
     $ueiGroups : LinkedList() from collect( Entry( key == $alarm.lastEvent.eventUei ) from $groupMap.euiGroupMap.entrySet() )
    
     // get any situations where node id and situationGroup matches the group for this alarm 
-    // there can be only one of each situation group per node
+    // there can be only one uncleared of each situation group per node
     $situations : LinkedList() from collect ( OnmsAlarm( $eventParameters : eventParameters,
                    isSituation() == true, 
+                   severity != OnmsSeverity.CLEARED,
                    nodeId == $alarm.nodeId,
                    ! ($ueiGroups == null),
                    ! $ueiGroups.isEmpty(),
-                   findEventParameter("situationGroup", $ueiGroups , $eventParameters)
+                   findEventParameter(alarmService, "situationGroup", $ueiGroups , $eventParameters)
                   ) )
 
   then
@@ -183,18 +184,17 @@ rule "group mapping situation"
        
     // dont send event if this alarm is already present in a situation (circular updates)
     // send event to update or create situation if this alarm is not in a situation
+    // the situation is created with the severity in the creating alarm
     if(! alarmReductionKeys.contains(alarmReductionKey)) {
        alarmReductionKeys.add(alarmReductionKey);
        Integer nodeId=$alarm.getNodeId();
-       sendUdateSituationEvent(alarmService, nodeId, ueiGroup, alarmReductionKeys);
+       sendUdateSituationEvent(alarmService, nodeId, ueiGroup, alarmReductionKeys, $alarm);
     }
     
 end
 
 /* searchs eventParameters list and returns true if name key with value is found. returns false if inputs are null */
-function boolean findEventParameter(String name, List ueiGroupsList, List eventParameters) {
-    // service doesnt work in functions
-    // alarmService.warn("new alarm rule find event param name {} value {} eventParameters  {}", name, value, eventParameters );
+function boolean findEventParameter(AlarmService alarmService, String name, List ueiGroupsList, List eventParameters) {
     
     if( name == null || eventParameters==null || ueiGroupsList==null || ueiGroupsList.isEmpty()) return false;
         
@@ -202,13 +202,11 @@ function boolean findEventParameter(String name, List ueiGroupsList, List eventP
     Entry e = (Entry) ueiGroupsList.get(0);
     String value = (String) e.getValue();
     
-    // TODO remove - cannot use alarmService to log inside when clause
-    System.out.println("group mapping situation rule: findEventParameter name "+name+" value "+value+" eventParameters "+ eventParameters );
+    alarmService.warn("group mapping situation rule: findEventParameter name "+name+" value "+value+" eventParameters "+ eventParameters );
 
     for (Object paramObj : eventParameters) {
         OnmsEventParameter param = (OnmsEventParameter) paramObj;
-        // TODO remove - cannot use alarmService to log inside when clause
-        System.out.println("new alarm rule findEventParameter name "+param.getName()+" value "+param.getValue() );
+        alarmService.warn("new alarm rule findEventParameter name "+param.getName()+" value "+param.getValue() );
         if (name.equals(param.getName()) &&  value.equals( param.getValue()) ) {
          return true;
         }
@@ -216,16 +214,20 @@ function boolean findEventParameter(String name, List ueiGroupsList, List eventP
     return false;
 }
 
-// creates and sends a situation update event 
+// creates and sends a situation update event with the severity of the alarm raising the event
 // see code in isRelatedReductionKeyWithContent(Parm param) in AlarmPersisterImpl to see how alarms are tagged as situations
 // if any param with name beginning 'related-reductionKey' exists this is used to match the related alarm reduction keys and mark this alarm as a situation.
-function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId, String ueiGroup, Set alarmReductionKeys) {
+function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId, String ueiGroup, Set alarmReductionKeys, OnmsAlarm currentAlarm) {
         EventBuilder builder = new EventBuilder("uei.opennms.org/alarms/drools/situation", "drools");
         AlarmData data = new AlarmData();
-        //data.setAlarmType(1);
+        //data.setAlarmType(1); 
         // data.setReductionKey(reductionKey);
         //builder.setAlarmData(data);
-        //builder.setSeverity(OnmsSeverity.MAJOR.getLabel());
+        
+        // set initial severity of drools situation one greater than alarm severity to avoid double events because of situation severity accumulation rules
+        int newSeverity = (currentSeverity >= OnmsSeverity.CRITICAL.getId()) ? OnmsSeverity.CRITICAL.getId() : currentSeverity + 1;
+        if(currentAlarm !=null) builder.setSeverity(OnmsSeverity.get(newSeverity).getLabel());
+        
         builder.setNodeid(nodeId);
         builder.setLogDest("logndisplay");
         builder.setLogMessage("updating situation");
@@ -233,7 +235,7 @@ function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId,
              String redux = (String) reduxObj;
             // TOOD revisit when event_parameters table supports multiple params with the same name (NMS-10214)
             // For now, suffix the parameter name with the value.
-            builder.addParam("related-reductionKey" + redux, redux);
+            builder.addParam("related-reductionKey-" + redux.hashCode(), redux);
         }
         builder.addParam("situationDescr","drools situation ueiGroup: "+ueiGroup);
         builder.addParam("situationLogMsg","drools situation");
