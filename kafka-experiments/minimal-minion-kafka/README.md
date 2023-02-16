@@ -50,6 +50,7 @@ Two simple containers are provided from the integrationexample1 project.
 These containers need to be built before they can be used.
 
 Both containers expect the kafka broker address to be injected to
+
 ```
  /tmp/kafkaclient.properties
  ```
@@ -88,6 +89,7 @@ There is an SSH client installed on the minion image but not the horizon image -
 note that docker-compose sets up the service names broker, horizon, database as dns names so ssh etc can reference these
 
 To manually set up the alarm forwarder following the documentation
+
 ```
 docker-compose exec minion bash
 ssh -p 8101 admin@horizon
@@ -112,6 +114,7 @@ bootstrap.servers = broker:29092
 ```
 
 This file is put in the docker-compose project
+
 ```
 container-fs\horizon\opt\opennms-overlay\etc\org.opennms.features.kafka.producer.client.cfg 
 ```
