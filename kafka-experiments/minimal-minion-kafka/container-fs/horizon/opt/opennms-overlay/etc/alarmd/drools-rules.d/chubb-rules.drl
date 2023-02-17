@@ -152,6 +152,7 @@ rule "group mapping situation"
         OnmsAlarm situation = (OnmsAlarm) onmsAlarmObject;
         alarmService.warn("  group mapping situation rule: existing situation {}", situation);
     }
+    // end of debugging messages
     
     // get the group which this alarm's uei is in
     String ueiGroup = "groupNotSet";
