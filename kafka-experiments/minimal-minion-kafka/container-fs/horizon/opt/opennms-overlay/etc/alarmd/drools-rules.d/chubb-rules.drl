@@ -184,7 +184,7 @@ rule "group mapping situation"
        
     // dont send event if this alarm is already present in a situation (circular updates)
     // send event to update or create situation if this alarm is not in a situation
-    // the situation is created with the severity in the creating alarm
+    // the situation is created with the severity one greater than in the creating alarm
     if(! alarmReductionKeys.contains(alarmReductionKey)) {
        alarmReductionKeys.add(alarmReductionKey);
        Integer nodeId=$alarm.getNodeId();

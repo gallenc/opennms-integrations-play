@@ -3,6 +3,7 @@
 <html>
 <head>
 <title>View Alarms</title>
+<meta http-equiv="refresh" content="30">
 <style>
 table, th, td {
 	border: 1px solid;
@@ -17,6 +18,8 @@ table, th, td {
 			<tr>
 				<th>Reduction Key (Ktable key)</th>
 				<th>Id</th>
+				<td>last Event Time</td>
+				<td>last Update Time</td>
 				<td>Severity</td>
 				<td>Log Message</td>
 				<td>Ip Address</td>
@@ -29,6 +32,8 @@ table, th, td {
 				<tr>
 					<td>${entry.key}</td>
 					<td>${entry.value.id}</td>
+					<td>${entry.value.lastEventTime}</td>
+					<td>${entry.value.lastUpdateTime}</td>
 					<td>${entry.value.severity}</td>
 					<td>${entry.value.logMessage}</td>
 					<td>${entry.value.ipAddress}</td>
