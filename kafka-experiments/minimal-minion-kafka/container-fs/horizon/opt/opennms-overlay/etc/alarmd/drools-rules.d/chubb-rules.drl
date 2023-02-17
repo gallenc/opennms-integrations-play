@@ -225,8 +225,11 @@ function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId,
         //builder.setAlarmData(data);
         
         // set initial severity of drools situation one greater than alarm severity to avoid double events because of situation severity accumulation rules
-        int newSeverity = (currentSeverity >= OnmsSeverity.CRITICAL.getId()) ? OnmsSeverity.CRITICAL.getId() : currentSeverity + 1;
-        if(currentAlarm !=null) builder.setSeverity(OnmsSeverity.get(newSeverity).getLabel());
+        if(currentAlarm !=null) {
+           int currentSeverity = currentAlarm.getSeverity().getId();
+           int newSeverity = (currentSeverity >= OnmsSeverity.CRITICAL.getId()) ? OnmsSeverity.CRITICAL.getId() : currentSeverity + 1;
+           builder.setSeverity(OnmsSeverity.get(newSeverity).getLabel());
+        }
         
         builder.setNodeid(nodeId);
         builder.setLogDest("logndisplay");
