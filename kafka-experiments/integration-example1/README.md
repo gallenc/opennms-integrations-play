@@ -1,4 +1,46 @@
-# notes
+# Experimental kafka clients for OpenNMS
+
+## Overview
+
+## building
+
+To build the project without docker use
+
+```
+ mvn clean install
+```
+
+To build the project and package the clients as docker images use the docker profile.
+This will work with a simple docker instlalation or with docker desktop on windows.
+
+```
+ mvn clean install -P docker
+```
+
+## running
+
+The simplest way to run the example is to run the full docker-compose script with the kafka-client profile  
+
+```
+docker-compose  --profile kafka-client up -d
+```
+OpenNMS should appear at
+http://[::1]:8980
+or
+http://localhost:8980
+
+The web-client which connects to the kafka broker will be at
+http://[::1]:8081
+or
+http://localhost:8081
+
+A simple log client which shows all of the messages will be visable if you use
+
+```
+docker-compose  --profile kafka-client logs -f kafka-client
+```
+
+
 
 ## kafka client
 
