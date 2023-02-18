@@ -116,7 +116,7 @@ public class AlarmMessageClient implements Runnable {
 				final byte[] alarmBytes = record.value();
 				if (alarmBytes==null) {
 					LOG.info("\n*****************************"
-							+ "\\nclear alarm (record is null) for reduction key " + reductionKey
+							+ "\n clear alarm (record is null) for reduction key " + reductionKey
 							+"\n*****************************\n"
 							);
 				} else 	try {
