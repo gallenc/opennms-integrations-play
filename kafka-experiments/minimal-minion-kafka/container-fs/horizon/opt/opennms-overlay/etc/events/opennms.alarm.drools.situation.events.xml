@@ -4,11 +4,14 @@
       <event-label>Alarm: Drools Situation Update</event-label>
       <logmsg dest="logndisplay">%parm[situationDescr]%</logmsg>
       <descr>%parm[situationLogMsg]%
-      &lt;p>The event included the following parameters:&lt;/p> &lt;p>%parm[all]%&lt;/p>
+         &lt;p>The event included the following parameters:&lt;/p> &lt;p>%parm[all]%&lt;/p>
       </descr>
 
       <severity>Normal</severity>
       <!-- auto-clean = false so we can see all past events for this situation -->
-      <alarm-data reduction-key="%uei%:%dpname%:%nodeid%:%parm[situationGroup]%" alarm-type="1" auto-clean="false" />
+      <alarm-data reduction-key="%uei%:%dpname%:%nodeid%:%parm[situationGroup]%" alarm-type="1" auto-clean="false">
+         <update-field field-name="descr" update-on-reduction="true" />
+         <update-field field-name="logmsg" update-on-reduction="true" />
+      </alarm-data>
    </event>
 </events>

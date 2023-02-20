@@ -173,6 +173,8 @@ rule "group mapping situation"
     // assumes only one matching situation from rule
     Set<String> alarmReductionKeys= new HashSet<String>();
     
+    String msg = "related alarms: ";
+    
     if (! $situations.isEmpty()) {
        OnmsAlarm matchedSituation = (OnmsAlarm) $situations.get(0);
        if(matchedSituation !=null){
@@ -181,6 +183,7 @@ rule "group mapping situation"
               for(OnmsAlarm related : relatedAlarms){
                   alarmService.warn("  group mapping situation rule: adding reduction key from related alarm {}", related);
                   alarmReductionKeys.add(related.getReductionKey());
+                  msg = msg +" "+ related.getId() +" "+ related.getSeverity().toString() +" |";
               }
            }
        }
@@ -195,7 +198,8 @@ rule "group mapping situation"
     if(! alarmReductionKeys.contains(alarmReductionKey)) {
        alarmReductionKeys.add(alarmReductionKey);
        Integer nodeId=$alarm.getNodeId();
-       sendUdateSituationEvent(alarmService, nodeId, ueiGroup, alarmReductionKeys, $alarm.getSeverity());
+       msg = msg +" "+ $alarm.getId()+" "+ $alarm.getSeverity().toString()+" |";
+       sendUdateSituationEvent(alarmService, nodeId, ueiGroup, alarmReductionKeys, $alarm.getSeverity(), msg);
     }
     
 end
@@ -224,7 +228,7 @@ function boolean findEventParameter(AlarmService alarmService, String name, List
 // creates and sends a situation update event with the severity of the alarm raising the event
 // see code in isRelatedReductionKeyWithContent(Parm param) in AlarmPersisterImpl to see how alarms are tagged as situations
 // if any param with name beginning 'related-reductionKey' exists this is used to match the related alarm reduction keys and mark this alarm as a situation.
-function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId, String ueiGroup, Set alarmReductionKeys, OnmsSeverity currentSeverity) {
+function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId, String ueiGroup, Set alarmReductionKeys, OnmsSeverity currentSeverity, String msg) {
         EventBuilder builder = new EventBuilder("uei.opennms.org/alarms/drools/situation", "drools");
         AlarmData data = new AlarmData();
         //data.setAlarmType(1); 
@@ -254,8 +258,8 @@ function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId,
             // For now, suffix the parameter name with the value.
             builder.addParam("related-reductionKey-" + redux.hashCode(), redux);
         }
-        builder.addParam("situationDescr","drools situation ueiGroup: "+ueiGroup);
-        builder.addParam("situationLogMsg","drools situation");
+        builder.addParam("situationDescr","drools situation ueiGroup: "+ueiGroup+" "+msg);
+        builder.addParam("situationLogMsg","drools situation ueiGroup: "+ueiGroup+" "+msg);
         
         builder.addParam("situationGroup", ueiGroup);
         alarmService.warn("alarm service sending update situation event: {}", builder.getEvent());
