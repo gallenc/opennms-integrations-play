@@ -62,6 +62,12 @@ rule "insert uei group map"
         eval( 1==1 )
     then
     
+        //print out the refresh interval property value
+        alarmService.warn("external property: org.opennms.netmgt.alarmd.drools.liveness_check_interval_ms=" + System.getProperty("org.opennms.netmgt.alarmd.drools.liveness_check_interval_ms"));
+    
+        // print out alarm listener snapshot property if set
+        alarmService.warn("external property org.opennms.alarms.snapshot.sync.ms=" + System.getProperty("org.opennms.alarms.snapshot.sync.ms"));
+    
         GroupMap groupMap = new GroupMap();
         
         HashMap<String, String> euiGroupMap = new HashMap<String,String>();
@@ -189,7 +195,7 @@ rule "group mapping situation"
     if(! alarmReductionKeys.contains(alarmReductionKey)) {
        alarmReductionKeys.add(alarmReductionKey);
        Integer nodeId=$alarm.getNodeId();
-       sendUdateSituationEvent(alarmService, nodeId, ueiGroup, alarmReductionKeys, $alarm);
+       sendUdateSituationEvent(alarmService, nodeId, ueiGroup, alarmReductionKeys, $alarm.getSeverity());
     }
     
 end
@@ -218,7 +224,7 @@ function boolean findEventParameter(AlarmService alarmService, String name, List
 // creates and sends a situation update event with the severity of the alarm raising the event
 // see code in isRelatedReductionKeyWithContent(Parm param) in AlarmPersisterImpl to see how alarms are tagged as situations
 // if any param with name beginning 'related-reductionKey' exists this is used to match the related alarm reduction keys and mark this alarm as a situation.
-function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId, String ueiGroup, Set alarmReductionKeys, OnmsAlarm currentAlarm) {
+function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId, String ueiGroup, Set alarmReductionKeys, OnmsSeverity currentSeverity) {
         EventBuilder builder = new EventBuilder("uei.opennms.org/alarms/drools/situation", "drools");
         AlarmData data = new AlarmData();
         //data.setAlarmType(1); 
@@ -226,10 +232,17 @@ function void sendUdateSituationEvent(AlarmService alarmService, Integer nodeId,
         //builder.setAlarmData(data);
         
         // set initial severity of drools situation one greater than alarm severity to avoid double events because of situation severity accumulation rules
-        if(currentAlarm !=null) {
-           int currentSeverity = currentAlarm.getSeverity().getId();
-           int newSeverity = (currentSeverity >= OnmsSeverity.CRITICAL.getId()) ? OnmsSeverity.CRITICAL.getId() : currentSeverity + 1;
-           builder.setSeverity(OnmsSeverity.get(newSeverity).getLabel());
+        if(currentSeverity !=null) {
+              // not sure how indeterminate will be handled in alarmd situations but there shouldnt be any - just set cleared
+              if(OnmsSeverity.INDETERMINATE == currentSeverity ){
+                 builder.setSeverity(OnmsSeverity.CLEARED.getLabel());
+              } else if(OnmsSeverity.CLEARED == currentSeverity ){
+                 builder.setSeverity(OnmsSeverity.CLEARED.getLabel());
+              } else {
+                 int currentSeverityInt = currentSeverity.getId();
+                 int newSeverity = (currentSeverityInt >= OnmsSeverity.CRITICAL.getId()) ? OnmsSeverity.CRITICAL.getId() : currentSeverityInt + 1;
+                 builder.setSeverity(OnmsSeverity.get(newSeverity).getLabel());
+              }
         }
         
         builder.setNodeid(nodeId);

@@ -8,6 +8,7 @@
       </descr>
 
       <severity>Normal</severity>
-      <alarm-data reduction-key="%uei%:%dpname%:%nodeid%:%parm[situationGroup]%" alarm-type="1" auto-clean="true" />
+      <!-- auto-clean = false so we can see all past events for this situation -->
+      <alarm-data reduction-key="%uei%:%dpname%:%nodeid%:%parm[situationGroup]%" alarm-type="1" auto-clean="false" />
    </event>
 </events>
