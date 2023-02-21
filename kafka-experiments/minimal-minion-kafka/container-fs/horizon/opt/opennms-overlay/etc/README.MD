@@ -17,11 +17,15 @@ situations.drl  - no changes from default
 
 opennms.alarm.drools.situation.events.xml
 
-* added update-on-reduction fields so that alarm fields are updated on every event. This forces the event to propogate over kafka
+* added update-on-reduction=true fields so that alarm fields are updated on every event. This forces the event to propagate over kafka for changes in severity of related alarms.
+* added auto-clean="false" so we can see all past events updating the situation 
 
 ```
+      <!-- auto-clean = false so we can see all past events for this situation -->
+      <alarm-data reduction-key="%uei%:%dpname%:%nodeid%:%parm[situationGroup]%" alarm-type="1" auto-clean="false">
          <update-field field-name="descr" update-on-reduction="true" />
          <update-field field-name="logmsg" update-on-reduction="true" />
+      </alarm-data>
 ```
 
 alarmd.properties
