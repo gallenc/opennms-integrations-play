@@ -7,7 +7,6 @@ This folder contains several examples of monitoring a popular web site from the 
 An introductory video is provided here [Overview of OpenNMS web monitoring](https://youtu.be/1PDJjAS2NrU)
 
 A more datailed video explains this example of monitoring a complex web site using OpenNMS. [Web Site Monitoring with OpenNMS](https://youtu.be/QcjqNDStjfw) 
-(Sorry  -videos are currently being created)
 
 
 The monitoring examples use 
