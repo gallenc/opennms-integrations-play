@@ -1,0 +1,24 @@
+# Example OpenNMS use of Scriptd for integration
+
+This docker-compose project can run a small web service which accepts OpenNMS posts
+
+First build the roadfaultintegration project using the docker profile
+
+```
+mvn clean install -P docker
+
+```
+
+You can then start and stop opennms and the roadfaultapi container in this project.
+(You should have docker installed on your host).
+
+```
+docker-compose  --profile roadfaultapi  up -d
+
+## to see the logs use
+docker-compose  --profile roadfaultapi  logs -f roadfaultapi
+
+## to shut down use
+
+docker-compose  --profile roadfaultapi down
+```

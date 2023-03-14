@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<scriptd-configuration>
+    <engine language="beanshell" className="bsh.util.BeanShellBSFEngine" extensions="bsh"/>
+    <start-script language="beanshell">
+        log = bsf.lookupBean("log");
+        log.debug("Starting Script");
+
+    </start-script>
+
+    <stop-script language="beanshell">
+
+        log.debug("executing a stop script");
+
+    </stop-script>
+
+    <event-script language="beanshell">
+        event = bsf.lookupBean("event");
+                
+        if (
+           (event.uei.equals("uei.opennms.org/internal/alarms/NotificationAlarm"))
+        || (event.uei.equals("uei.opennms.org/internal/alarms/AlarmCleared"))
+        || (event.uei.equals("uei.opennms.org/internal/alarms/AlarmRaised"))
+           )
+        {
+        
+            log.debug("received event ="+event.toString());
+        }
+        
+    </event-script>
+
+
+</scriptd-configuration>
