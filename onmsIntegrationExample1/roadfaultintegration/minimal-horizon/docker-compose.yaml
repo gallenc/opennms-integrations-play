@@ -69,7 +69,7 @@ services:
       frontend:
         ipv4_address: 172.20.0.6
 
-      
+# use docker-compose --profile roadfaultapi -d to activate if you have built the container
   roadfaultapi:
     image: opennms:roadfaultapi-web
     profiles: ["roadfaultapi"]
@@ -79,16 +79,31 @@ services:
       - "8080:8080"
     networks:
       frontend:
-        ipv4_address: 172.20.0.8
-
+        ipv4_address: 172.20.0.20
 
   # first snmp container
   cameranetsnmp1:
     image: polinux/snmpd
     container_name: cameranetsnmp1
     hostname: cameranetsnmp1
+    volumes:
+      - ./snmp/snmpd.conf:/etc/snmp/snmpd.conf
     ports:
       - "11161:161/udp"
     networks:
       frontend:
-        ipv4_address: 172.20.0.20
+        ipv4_address: 172.20.0.30
+
+# second snmp container
+  cameranetsnmp2:
+    image: polinux/snmpd
+    container_name: cameranetsnmp2
+    hostname: cameranetsnmp2
+    volumes:
+      - ./snmp/snmpd.conf:/etc/snmp/snmpd.conf
+    ports:
+      - "11162:161/udp"
+    networks:
+      frontend:
+        ipv4_address: 172.20.0.31
+

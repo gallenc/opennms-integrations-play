@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-    <parent>
-       <groupId>org.opennms.poc.api</groupId>
-       <artifactId>roadfaultapi-parent</artifactId>
-       <version>0.0.1-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>org.opennms.poc.api</groupId>
+		<artifactId>roadfaultapi-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
 	<artifactId>roadfaultapi-docker</artifactId>
 	<packaging>pom</packaging>
 
@@ -59,9 +61,9 @@
 							<images>
 								<image>
 									<name>opennms:roadfaultapi-web</name>
-									<alias>kafka-web</alias>
+									<alias>roadfaultapi-web</alias>
 									<build>
-										<!-- filter>@</filter-->
+										<!-- filter>@</filter -->
 										<contextDir>${project.basedir}</contextDir>
 										<dockerFile>Dockerfile-web</dockerFile>
 									</build>
@@ -76,20 +78,6 @@
 	</build>
 
 	<dependencies>
-
-		<dependency>
-			<groupId>org.opennms.examples.integration</groupId>
-			<artifactId>kafka-java-client</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.opennms.examples.integration</groupId>
-			<artifactId>kafka-web</artifactId>
-			<version>${project.version}</version>
-			<classifier>exec</classifier>
-		</dependency>
-
 
 	</dependencies>
 
