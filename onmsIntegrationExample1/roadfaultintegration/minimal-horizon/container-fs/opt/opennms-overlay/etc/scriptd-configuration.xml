@@ -4,17 +4,112 @@
     <start-script language="beanshell">
         log = bsf.lookupBean("log");
         log.debug("Starting Script");
+        
+              
+        import java.util.ArrayList;
+        import java.util.List;
+        import java.text.SimpleDateFormat;
+        import java.util.Date;
+        
+        /* username and password to use with basic authentication to api web site */
+        String username = "admin";
+        String password = "adminpass";
+        
+        /* url of api*/
+        String url = "http://roadfaultapi:8080/serviceHealth";
+        
+        /* utility class to create messages - could go in separate bsh file */
+        senderUtils() {
+
+        	public String convertStatus(String onmsSeverity) {
+        		/*HEALTHY – The given status name has no issues*/
+        		/*FAULTY – The given status name has a fault with no further granularity available*/
+        		/*WARN – The given status name has a fault that should be treated as a warning*/
+        		/*CRITICAL – The given status name has a fault that should be treated as critical*/
+
+                if (onmsSeverity==null) return "WARN";
+                
+        		switch (onmsSeverity) {
+        		case "INDETERMINATE":
+        			return "HEALTHY";
+        		case "CLEARED":
+        			return "HEALTHY";
+        		case "NORMAL":
+        			return "HEALTHY";
+        		case "WARNING":
+        			return "WARN";
+        		case "MINOR":
+        			return "FAULTY";
+        		case "MAJOR":
+        			return "CRITICAL";
+        		case "CRITICAL":
+        			return "CRITICAL";
+        		default:
+        			return "WARN";
+        		}
+
+        	}
+
+        	public  String encodeMessage(String source, String equipmentClass, String equipmentReference, Date statusTime,
+        			String statusInformation, String statusName, String statusValue, String statusAdditionalInfo) {
+
+        		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        		String time = formatter.format(statusTime);
+
+                encodedMessage = "[\n" 
+                		+ "{\n" 
+                				+ "\"source\":\"" + source + "\",\n" 
+                		        + "\"equipmentClass\":\""+ equipmentClass + "\",\n" 
+                		        + "\"equipmentReference\":\"" + equipmentReference + "\",\n"
+                				+ "\"statusTime\":\"" + time + "\",\n" 
+		                        + "\"statusInformation\":[\n" 
+                				      + "{\n" 
+                				         + "\"statusName\":\""+ statusName + "\",\n" 
+                		                 + "\"statusValue\":\"" + statusValue + "\",\n"
+                				         + "\"statusAdditionalInfo\":\""+ statusAdditionalInfo + "\"\n"  
+                		              + "}\n" 
+                				+ "]\n" 
+                		 + "}\n" 
+                	+ "]";
+
+        		return encodedMessage;
+        	}
+
+            /* returns this beanshell declaration so that its methods can be invoked */
+            return this;
+        }
+
+
+      source("/opt/opennms/etc/scriptedApacheHttpAsyncClient-v1.8.bsh");
+      scriptedClient = scriptedApacheHttpAsyncClient();
+      
+      /* set time out for async client http requests to 5 seconds */
+      /* scriptedClient.setTimeout(5000); */
+      
+      scriptedClient.setTimeout(5000);
+
+      log.debug("start script starting message listener");
+      scriptedClient.startListener();
+      
+      log.debug("start script starting httpAsyncClient");
+      scriptedClient.startClient();
+      
+      senderUtils = senderUtils();
 
     </start-script>
 
     <stop-script language="beanshell">
 
-        log.debug("executing a stop script");
+      log.debug("stop script stop listener");
+      scriptedClient.stopListener();
+      log.debug("stop script stop client");
+      scriptedClient.stopClient();
 
     </stop-script>
 
     <event-script language="beanshell">
         event = bsf.lookupBean("event");
+        node =  bsf.lookupBean("node");
                 
         if (
            (event.uei.equals("uei.opennms.org/internal/alarms/NotificationAlarm"))
@@ -23,7 +118,43 @@
            )
         {
         
-            log.debug("received event ="+event.toString());
+            log.debug("**** script received event ="+ event.toString());
+            log.debug("**** script received node ="+ node.toString());
+            
+            String label = "";
+            String discr = "";
+            String logmsg = "";
+            
+            /* replace non json characters */
+            if(node !=null && node.getLabel() !=null ){
+               label = node.getLabel().replaceAll("[^a-zA-Z0-9]","");
+            }
+            
+            if(node !=null && event.getDescr() !=null ){
+               discr = event.getDescr().replaceAll("[^a-zA-Z0-9]","");
+            }
+            
+           if(node !=null && event.getLogmsg() !=null ){
+               logmsg = event.getLogmsg().getContent().replaceAll("[^a-zA-Z0-9]","");
+           }
+            
+            
+            String source="OpenNMS Scriptd";
+            String equipmentClass="TBD";
+            String equipmentReference=label;
+            Date statusTime=new Date();
+            String statusInformation=discr;
+            String statusName="TBD";
+            String statusValue=senderUtils.convertStatus(event.getSeverity().toString());
+            String statusAdditionalInfo=logmsg;
+
+            String jsonMessage = senderUtils.encodeMessage(source, equipmentClass, equipmentReference, statusTime,
+        			statusInformation, statusName, statusValue, statusAdditionalInfo);
+        			
+            log.debug("**** message sent = "+ jsonMessage);		
+        			
+        	scriptedClient.postRequest(url, jsonMessage, username, password);
+
         }
         
     </event-script>
