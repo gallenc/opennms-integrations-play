@@ -121,24 +121,26 @@
             log.debug("**** script received event ="+ event.toString());
             log.debug("**** script received node ="+ node.toString());
             
-            String label = "";
-            String discr = "";
-            String logmsg = "";
+            /* setting without declaration so that we get data - issue with scriptd */
+            label = "";
+            discr = "";
+            logmsg = "";
             
             /* replace non json characters */
-            if(node !=null && node.getLabel() !=null ){
-               label = node.getLabel().replaceAll("[^a-zA-Z0-9]","");
+            if(node !=null ){
+                if( node.getLabel() !=null ){
+                  label = node.getLabel().replaceAll("[^a-zA-Z0-9]","");
+                }
+            }
+                        
+            if( event.getDescr() !=null ){
+                discr = event.getDescr().replaceAll("[^a-zA-Z0-9]","");
             }
             
-            if(node !=null && event.getDescr() !=null ){
-               discr = event.getDescr().replaceAll("[^a-zA-Z0-9]","");
+            if( event.getLogmsg() !=null ){
+                logmsg = event.getLogmsg().getContent().replaceAll("[^a-zA-Z0-9]","");
             }
-            
-           if(node !=null && event.getLogmsg() !=null ){
-               logmsg = event.getLogmsg().getContent().replaceAll("[^a-zA-Z0-9]","");
-           }
-            
-            
+
             String source="OpenNMS Scriptd";
             String equipmentClass="TBD";
             String equipmentReference=label;
