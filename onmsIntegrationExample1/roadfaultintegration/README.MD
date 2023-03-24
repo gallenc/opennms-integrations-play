@@ -2,7 +2,7 @@
 
 ## introduction
 
-This example shows how to use OpenNMS to forward event information to a simple ReST API.
+This example shows how to use OpenNMS to forward event information to a simple ReST API using scriptd.
 A simple simulator is provided which can receive ReST calls and display them on a web ui.
 This is quite a complex example but hopefully it will provide inspiration for scripting api's to other systems.
 
@@ -118,7 +118,7 @@ Body
 
 ## running the example
 
-In this example a simple ReST api is implemented using spring boot in the [roadfaultapi project](../roadfaultapi).
+In this example a simple ReST api is implemented using spring boot in the [roadfaultapi project](../roadfaultintegration/roadfaultapi).
 
 This can be built and packaged as a docker container using the docker profile. 
 To do this you must first have docker or docker-desktop installed on your host machine.
@@ -127,7 +127,7 @@ To do this you must first have docker or docker-desktop installed on your host m
 mvn clean install -P docker
 ```
 
-Once created, you can run this container along side OpenNMS using the docker-compose script in [minimal-horizon](../minimal-horizon). 
+Once created, you can run this container along side OpenNMS using the docker-compose script in [minimal-horizon](../roadfaultintegration/minimal-horizon). 
 
 to start
 
@@ -139,10 +139,14 @@ to view the simple ReST service browse to http://localhost:8080/home
 
 A Rester plugin configuration is provided in the [rester](../rester) folder to allow you to test sending events to the api or to OpenNMS 
 
-The [minimal-horizon](../minimal-horizon) project also contains the example scriptd script which can send events to the ReST api.
+The [minimal-horizon](../roadfaultintegration/minimal-horizon) project also contains the example scriptd script which can send events to the ReST api.
 This is described below.
 
 # Scriptd ReST API
+
+The OpenNMS code is contained in the scriptd configuration which is in the  [container-fs/opt/opennms-overlay/etc/](../onmsIntegrationExample1/roadfaultintegration/minimal-horizon/container-fs/opt/opennms-overlay/etc/) folder of the docker-compose project
+
+ [scriptd-configration.xml](../onmsIntegrationExample1/roadfaultintegration/minimal-horizon/container-fs/opt/opennms-overlay/etc/scriptd-configration.xml)
 
 ## Async Client
 
@@ -151,7 +155,7 @@ A synchronous HTTP ReST client could be used to send messages but there is no gu
 
 For this reason an asynchronous client is used which will dispatch the request in a separate thread and return to scriptd with minimal delay. 
 
-scriptedApacheHttpAsyncClient-v1.8.bsh contains the asynchronous client code written in beanshell for sending json messages to a ReST interface. 
+[scriptedApacheHttpAsyncClient-v1.8.bsh](../onmsIntegrationExample1/roadfaultintegration/minimal-horizon/container-fs/opt/opennms-overlay/etc/scriptedApacheHttpAsyncClient-v1.8.bsh) contains the asynchronous client code written in beanshell for sending json messages to a ReST interface. 
 
 The client uses the Apache HttpAsyncClient which is included in the OpenNMS library. 
 
@@ -171,7 +175,7 @@ A separate listener thread pulls these responses and can be used to initiate fur
 
 ## API implementation
 
-The scriptd-configration.xml script contains the business logic for the api client in OpenNMS.
+The [scriptd-configration.xml](../onmsIntegrationExample1/roadfaultintegration/minimal-horizon/container-fs/opt/opennms-overlay/etc/scriptd-configration.xml) script contains the business logic for the api client in OpenNMS.
 
 A beanshell senderUtils() class is defined in the start-script which contains methods to map OpenNMS event severities into the Api's 4 severities and to construct the json message to send.
 
