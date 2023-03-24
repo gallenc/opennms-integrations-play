@@ -7,4 +7,4 @@ or
 
 Chrome Rester]( https://chrome.google.com/webstore/detail/rester/eejfoncpjfgmeleakejdcanedmefagga?hl=en)
 
-Some example ResT calls are provided in [rester-export-postman.json](../rester-export-postman.json)
+Some example ResT calls are provided in [rester-export-postman.json](../rester/rester-export-postman.json)
