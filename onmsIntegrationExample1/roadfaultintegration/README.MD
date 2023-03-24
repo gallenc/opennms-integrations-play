@@ -135,9 +135,9 @@ to start
  docker-compose --profile roadfaultapi up -d
 ```
 
-to view the simple ReST service browse to http://localhost:8080/home
+To view the simple ReST service browse to http://localhost:8080/home
 
-A Rester plugin configuration is provided in the [rester](../rester) folder to allow you to test sending events to the api or to OpenNMS 
+A Rester plugin configuration is provided in the [rester](../roadfaultintegration/rester) folder to allow you to test sending events to the api or to OpenNMS 
 
 The [minimal-horizon](../roadfaultintegration/minimal-horizon) project also contains the example scriptd script which can send events to the ReST api.
 This is described below.
