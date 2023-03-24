@@ -144,9 +144,9 @@ This is described below.
 
 # Scriptd ReST API
 
-The OpenNMS code is contained in the scriptd configuration which is in the  [container-fs/opt/opennms-overlay/etc/](../onmsIntegrationExample1/roadfaultintegration/minimal-horizon/container-fs/opt/opennms-overlay/etc/) folder of the docker-compose project
+The OpenNMS code is contained in the scriptd configuration which is in the  [container-fs/opt/opennms-overlay/etc/](../roadfaultintegration/minimal-horizon/container-fs/opt/opennms-overlay/etc/) folder of the docker-compose project
 
- [scriptd-configration.xml](../onmsIntegrationExample1/roadfaultintegration/minimal-horizon/container-fs/opt/opennms-overlay/etc/scriptd-configration.xml)
+ [scriptd-configration.xml](../roadfaultintegration/minimal-horizon/container-fs/opt/opennms-overlay/etc/scriptd-configration.xml)
 
 ## Async Client
 
@@ -155,7 +155,7 @@ A synchronous HTTP ReST client could be used to send messages but there is no gu
 
 For this reason an asynchronous client is used which will dispatch the request in a separate thread and return to scriptd with minimal delay. 
 
-[scriptedApacheHttpAsyncClient-v1.8.bsh](../onmsIntegrationExample1/roadfaultintegration/minimal-horizon/container-fs/opt/opennms-overlay/etc/scriptedApacheHttpAsyncClient-v1.8.bsh) contains the asynchronous client code written in beanshell for sending json messages to a ReST interface. 
+[scriptedApacheHttpAsyncClient-v1.8.bsh](../roadfaultintegration/minimal-horizon/container-fs/opt/opennms-overlay/etc/scriptedApacheHttpAsyncClient-v1.8.bsh) contains the asynchronous client code written in beanshell for sending json messages to a ReST interface. 
 
 The client uses the Apache HttpAsyncClient which is included in the OpenNMS library. 
 
@@ -175,7 +175,7 @@ A separate listener thread pulls these responses and can be used to initiate fur
 
 ## API implementation
 
-The [scriptd-configration.xml](../onmsIntegrationExample1/roadfaultintegration/minimal-horizon/container-fs/opt/opennms-overlay/etc/scriptd-configration.xml) script contains the business logic for the api client in OpenNMS.
+The [scriptd-configration.xml](../roadfaultintegration/minimal-horizon/container-fs/opt/opennms-overlay/etc/scriptd-configration.xml) script contains the business logic for the api client in OpenNMS.
 
 A beanshell senderUtils() class is defined in the start-script which contains methods to map OpenNMS event severities into the Api's 4 severities and to construct the json message to send.
 
