@@ -1,0 +1,80 @@
+{
+    "info": {
+        "name": "RESTer",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "OpennMSAPI",
+            "item": [
+                {
+                    "request": {
+                        "url": "http://localhost:8980/opennms/rest/alarms/",
+                        "method": "GET",
+                        "header": []
+                    },
+                    "id": "rester-1",
+                    "name": "GetAlarms"
+                },
+                {
+                    "request": {
+                        "url": "http://localhost:8980/opennms/rest/events/",
+                        "method": "GET",
+                        "header": []
+                    },
+                    "id": "rester-2",
+                    "name": "GetEvents"
+                },
+                {
+                    "request": {
+                        "url": "http://localhost:8980/opennms/rest/events/",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/xml"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/xml"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "<event>\n<logmsg>alarm raised</logmsg>\n<severity>WARNING</severity>\n<uei>uei.opennms.org/internal/alarms/AlarmRaised</uei>\n<nodeid>1</nodeid>\n</event>"
+                        }
+                    },
+                    "id": "rester-3",
+                    "name": "PostEvent"
+                }
+            ]
+        },
+        {
+            "name": "RoadFaultAPI",
+            "item": [
+                {
+                    "request": {
+                        "url": "http://localhost:8080/serviceHealth",
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[\n    {\n        \"source\": \"APM-Checkmk\",\n        \"equipmentClass\": \"u_server_cluster\",\n        \"equipmentReference\": \"openshift12345\",\n        \"statusTime\": \"2020-03-26T10:15:40.857Z\",\n        \"statusInformation\": [\n            {\n                \"statusName\": \"AV Program Status\",\n                \"statusValue\": \"FAULTY\",\n                \"statusAdditionalInfo\": \"\"\n            }\n        ]\n    }\n]"
+                        }
+                    },
+                    "id": "rester-4",
+                    "name": "PostRoadFaultEvent"
+                }
+            ]
+        }
+    ]
+}

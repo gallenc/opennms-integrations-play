@@ -10,6 +10,7 @@
         import java.util.List;
         import java.text.SimpleDateFormat;
         import java.util.Date;
+        import org.jsoup.Jsoup;
         
         /* username and password to use with basic authentication to api web site */
         String username = "admin";
@@ -18,7 +19,7 @@
         /* url of api*/
         String url = "http://roadfaultapi:8080/serviceHealth";
         
-        /* utility class to create messages - could go in separate bsh file */
+        /* utility class to create messages - could go in a separate bsh file */
         senderUtils() {
 
         	public String convertStatus(String onmsSeverity) {
@@ -75,12 +76,17 @@
         		return encodedMessage;
         	}
 
-            /* returns this beanshell declaration so that its methods can be invoked */
+            /* returns this beanshell class declaration so that its methods can be invoked */
             return this;
         }
+        
+      /*create an instance of senderUtils to use in event script */ 
+      senderUtils = senderUtils();
 
-
+      /* import async client script */
       source("/opt/opennms/etc/scriptedApacheHttpAsyncClient-v1.8.bsh");
+      
+      /*create an instance of async client to use in event script */ 
       scriptedClient = scriptedApacheHttpAsyncClient();
       
       /* set time out for async client http requests to 5 seconds */
@@ -88,13 +94,12 @@
       
       scriptedClient.setTimeout(5000);
 
+      /* the listener handles asynchronous replies - in this case just debug logging results */
       log.debug("start script starting message listener");
       scriptedClient.startListener();
       
       log.debug("start script starting httpAsyncClient");
       scriptedClient.startClient();
-      
-      senderUtils = senderUtils();
 
     </start-script>
 
@@ -110,35 +115,41 @@
     <event-script language="beanshell">
         event = bsf.lookupBean("event");
         node =  bsf.lookupBean("node");
-                
+        
+        /* used to select which events will cause messages */
         if (
            (event.uei.equals("uei.opennms.org/internal/alarms/NotificationAlarm"))
         || (event.uei.equals("uei.opennms.org/internal/alarms/AlarmCleared"))
         || (event.uei.equals("uei.opennms.org/internal/alarms/AlarmRaised"))
+        
+        || (event.uei.equals("uei.opennms.org/nodes/nodeDown"))
+        || (event.uei.equals("uei.opennms.org/nodes/nodeUp"))
            )
         {
         
             log.debug("**** script received event ="+ event.toString());
             log.debug("**** script received node ="+ node.toString());
             
-            /* setting without declaration so that we get data - issue with scriptd */
+            /* setting vars without type declaration so that visible in if statements - an issue with beanshell */
             label = "";
             discr = "";
             logmsg = "";
             
-            /* replace non json characters */
+
+            /* replace non json characters and html tags */
+            
             if(node !=null ){
                 if( node.getLabel() !=null ){
-                  label = node.getLabel().replaceAll("[^a-zA-Z0-9]","");
+                  label = node.getLabel();
                 }
             }
                         
             if( event.getDescr() !=null ){
-                discr = event.getDescr().replaceAll("[^a-zA-Z0-9]","");
+                discr = Jsoup.parse(event.getDescr()).text();
             }
             
             if( event.getLogmsg() !=null ){
-                logmsg = event.getLogmsg().getContent().replaceAll("[^a-zA-Z0-9]","");
+                logmsg = Jsoup.parse(event.getLogmsg().getContent()).text();
             }
 
             String source="OpenNMS Scriptd";
@@ -146,7 +157,7 @@
             String equipmentReference=label;
             Date statusTime=new Date();
             String statusInformation=discr;
-            String statusName="TBD";
+            String statusName=event.uei;
             String statusValue=senderUtils.convertStatus(event.getSeverity().toString());
             String statusAdditionalInfo=logmsg;
 

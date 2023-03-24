@@ -19,6 +19,18 @@ docker-compose  --profile roadfaultapi  up -d
 docker-compose  --profile roadfaultapi  logs -f roadfaultapi
 
 ## to shut down use
-
 docker-compose  --profile roadfaultapi down
 ```
+
+## to view OpenNMS logs as opennms starts up use
+
+```
+ docker-compose --profile roadfaultapi logs -f horizon
+```
+
+## to open a terminal in the running opennms container use
+
+```
+docker-compose --profile roadfaultapi exec horizon bash
+```
+
