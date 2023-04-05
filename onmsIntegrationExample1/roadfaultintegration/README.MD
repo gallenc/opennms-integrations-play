@@ -16,6 +16,23 @@ When I wrote this, I wrote and tested the more complex code (i.e. the async clie
 
 When testing in OpenNMS, you need to look at the scriptd.log for errors and debug messages.
 
+## video 
+A youtube video for this exampe is available here https://youtu.be/snl0QNedIYI 
+
+This video provides an example of a simple integration from OpenNMS to a ReST api based on certain opennms events. The video complements the code example and documentation on github 
+https://github.com/gallenc/opennms-integrations-play/tree/main/onmsIntegrationExample1/roadfaultintegration
+
+and also references the opennms example scriptd configuration here
+
+opennms /etc/examples 
+https://github.com/OpenNMS/opennms/blob/develop/opennms-base-assembly/src/main/filtered/etc/examples/scriptd-event-forwarder.bsh
+
+https://github.com/OpenNMS/opennms/blob/develop/opennms-base-assembly/src/main/filtered/etc/examples/scriptd-configuration.xml
+
+opennms scriptd executor code
+
+https://github.com/OpenNMS/opennms/blob/develop/opennms-services/src/main/java/org/opennms/netmgt/scriptd/Executor.java
+
 ## ReST api details
 
 This section describes the ReST api in the form of a specification received from the end user
