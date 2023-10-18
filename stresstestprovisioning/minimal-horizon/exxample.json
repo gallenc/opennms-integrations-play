@@ -1,0 +1,133 @@
+{
+    "location": "IF12001",
+    "interface": [
+        {
+            "monitored-service": [
+                {
+                    "category": [],
+                    "meta-data": [],
+                    "service-name": "ICMP"
+                }
+            ],
+            "category": [],
+            "meta-data": [],
+            "descr": null,
+            "ip-addr": "172.20.0.51",
+            "managed": null,
+            "status": 1,
+            "snmp-primary": "P"
+        }
+    ],
+    "category": [
+        {
+            "name": "CUST"
+        },
+        {
+            "name": "Production"
+        },
+        {
+            "name": "SWITCH"
+        },
+        {
+            "name": "ONEACCESS"
+        },
+        {
+            "name": "Model_xxx"
+        },
+        {
+            "name": "DGC"
+        },
+        {
+            "name": "CUSTOMERID:xxx"
+        },
+        {
+            "name": "OFS"
+        }
+    ],
+    "asset": [
+        {
+            "name": "assetNumber",
+            "value": "xxx"
+        },
+        {
+            "name": "building",
+            "value": "xxx"
+        },
+        {
+            "name": "latitude",
+            "value": "xx.xxx"
+        },
+        {
+            "name": "longitude",
+            "value": "xx.xxx"
+        },
+        {
+            "name": "manufacturer",
+            "value": "xxx"
+        },
+        {
+            "name": "modelNumber",
+            "value": "xxx"
+        },
+        {
+            "name": "category",
+            "value": "SWITCH"
+        },
+        {
+            "name": "displayCategory",
+            "value": "CUST"
+        },
+        {
+            "name": "pollerCategory",
+            "value": "CUST"
+        },
+        {
+            "name": "thresholdCategory",
+            "value": "CUST"
+        },
+        {
+            "name": "dateInstalled",
+            "value": "07/09/2020"
+        },
+        {
+            "name": "lastModifiedDate",
+            "value": "10/16/2023"
+        },
+        {
+            "name": "lastModifiedBy",
+            "value": "xxx"
+        },
+        {
+            "name": "comment",
+            "value": "xxx, (xxx)"
+        },
+        {
+            "name": "description",
+            "value": "CUST"
+        },
+        {
+            "name": "address1",
+            "value": "xxx"
+        },
+        {
+            "name": "address2",
+            "value": "xxx"
+        },
+        {
+            "name": "zip",
+            "value": "xxx"
+        },
+        {
+            "name": "city",
+            "value": "xxx"
+        }
+    ],
+    "meta-data": [],
+    "building": "xxx",
+    "city": null,
+    "foreign-id": "xxx.x",
+    "node-label": "xxx.x",
+    "parent-foreign-source": null,
+    "parent-foreign-id": null,
+    "parent-node-label": null
+}
